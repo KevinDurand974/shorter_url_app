@@ -6,12 +6,12 @@ let DataSourceInstance: DataSource;
 
 const AppDataSource = new DataSource({
 	type: "postgres",
-	host: "localhost",
-	port: 5432,
-	username: "postgres",
-	password: "root",
-	database: "shorterurl",
-	schema: "public",
+	host: process.env.DB_HOST!,
+	port: +process.env.DB_PORT!,
+	username: process.env.DB_USERNAME!,
+	password: process.env.DB_PASSWORD!,
+	database: process.env.DB_DATABASE!,
+	schema: process.env.DB_SCHEMA!,
 	entities: [Profile, User, ShortUrl],
 	synchronize: true,
 	logging: false,
