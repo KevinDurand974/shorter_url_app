@@ -1,5 +1,9 @@
 import { Profile, ShortUrl, User } from "@ORM/entities";
-import { comparePassword, hashPassword } from "@ORM/helpers";
+import {
+	comparePassword,
+	findOneProfileByUuid,
+	hashPassword,
+} from "@ORM/helpers";
 import {
 	parseZodError,
 	validateNewUser,
@@ -133,12 +137,7 @@ export const updateUserEmail = async (
 
 		// Check if uuid exist and get user email
 		const profileRep = datasource.getRepository(Profile);
-		const profile = await profileRep.findOne({
-			where: {
-				uuid: validedData.uuid,
-			},
-			relations: ["user"],
-		});
+		const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 		if (!profile)
 			throw {
 				statusCode: 404,
@@ -204,12 +203,7 @@ export const updateUserPassword = async (
 
 		// Check if uuid exist and get user email
 		const profileRep = datasource.getRepository(Profile);
-		const profile = await profileRep.findOne({
-			where: {
-				uuid: validedData.uuid,
-			},
-			relations: ["user"],
-		});
+		const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 		if (!profile)
 			throw {
 				statusCode: 404,
@@ -275,12 +269,7 @@ export const updateUserUrlName = async (
 
 		// Check if uuid exist and get user email
 		const profileRep = datasource.getRepository(Profile);
-		const profile = await profileRep.findOne({
-			where: {
-				uuid: validedData.uuid,
-			},
-			relations: ["user"],
-		});
+		const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 		if (!profile)
 			throw {
 				statusCode: 404,
@@ -334,12 +323,7 @@ export const updateUserUrlActive = async (
 
 		// Check if uuid exist and get user
 		const profileRep = datasource.getRepository(Profile);
-		const profile = await profileRep.findOne({
-			where: {
-				uuid: validedData.uuid,
-			},
-			relations: ["user"],
-		});
+		const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 		if (!profile)
 			throw {
 				statusCode: 404,
@@ -390,11 +374,7 @@ export const updateUserVip = async (
 
 		// Check if uuid exist and get user
 		const profileRep = datasource.getRepository(Profile);
-		const profile = await profileRep.findOne({
-			where: {
-				uuid: validedData.uuid,
-			},
-		});
+		const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 		if (!profile)
 			throw {
 				statusCode: 404,
@@ -440,12 +420,7 @@ export const updateUserPseudo = async (
 		// Check if uuid exist and get user
 		const profileRep = datasource.getRepository(Profile);
 		const userRep = datasource.getRepository(User);
-		const profile = await profileRep.findOne({
-			where: {
-				uuid: validedData.uuid,
-			},
-			relations: ["user"],
-		});
+		const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 		if (!profile)
 			throw {
 				statusCode: 404,
@@ -507,12 +482,7 @@ export const removeUserByUuid = async (
 
 		// Check if uuid exist and get user
 		const profileRep = datasource.getRepository(Profile);
-		const profile = await profileRep.findOne({
-			where: {
-				uuid: validedData.uuid,
-			},
-			relations: ["user", "shortUrls"],
-		});
+		const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 		if (!profile)
 			throw {
 				statusCode: 404,
@@ -560,12 +530,7 @@ export const getUserByUuid = async (
 
 		// Get user by uuid
 		const profileRep = datasource.getRepository(Profile);
-		const profile = await profileRep.findOne({
-			where: {
-				uuid: validedData.uuid,
-			},
-			relations: ["user", "shortUrls"],
-		});
+		const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 
 		if (!profile)
 			throw {

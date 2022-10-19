@@ -1,4 +1,5 @@
 import { Profile, ShortUrl } from "@ORM/entities";
+import { findOneProfileByUuid } from "@ORM/helpers";
 import {
 	parseZodError,
 	validateCreateShortUrl,
@@ -29,12 +30,7 @@ export const createShortUrl = async (
 
 		// Check if the user exist
 		const ProfileRep = datasource.getRepository(Profile);
-		const profile = await ProfileRep.findOne({
-			where: {
-				uuid: validatedData.uuid,
-			},
-			relations: ["shortUrls"],
-		});
+		const profile = await findOneProfileByUuid(ProfileRep, validatedData.uuid);
 		if (!profile) {
 			throw {
 				statusCode: 404,
@@ -141,12 +137,10 @@ export const deleteShortUrl = async (
 
 		// Check if the user exist
 		const ProfileRep = datasource.getRepository(Profile);
-		const profile = await ProfileRep.findOne({
-			where: {
-				uuid: validatedData.userUuid,
-			},
-			relations: ["shortUrls"],
-		});
+		const profile = await findOneProfileByUuid(
+			ProfileRep,
+			validatedData.userUuid
+		);
 		if (!profile) {
 			throw {
 				statusCode: 404,
