@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"target": "ES2015",
+		"sourceMap": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"module": "CommonJS",
+		"baseUrl": "./src",
+		"paths": {},
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist"]
+}
