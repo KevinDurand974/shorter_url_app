@@ -13,6 +13,7 @@ importers:
       '@shorter/validators': workspace:^1.0.0
       '@types/bcrypt': ^5.0.0
       '@types/express': ^4.17.14
+      '@types/http-errors': ^1.8.2
       '@types/jsonwebtoken': ^8.5.9
       '@types/node': 18.8.3
       '@typescript-eslint/eslint-plugin': ^5.0.0
@@ -28,6 +29,7 @@ importers:
       eslint-plugin-prettier: ^4.2.1
       eslint-plugin-promise: ^6.0.0
       express: ^4.18.2
+      http-errors: ^2.0.0
       jsonwebtoken: ^8.5.1
       nanoid: ^4.0.0
       nodemon: ^2.0.20
@@ -42,6 +44,7 @@ importers:
       date-fns: 2.29.3
       dotenv: 16.0.3
       express: 4.18.2
+      http-errors: 2.0.0
       jsonwebtoken: 8.5.1
       nanoid: 4.0.0
       pg: 8.8.0
@@ -50,6 +53,7 @@ importers:
     devDependencies:
       '@types/bcrypt': 5.0.0
       '@types/express': 4.17.14
+      '@types/http-errors': 1.8.2
       '@types/jsonwebtoken': 8.5.9
       '@types/node': 18.8.3
       '@typescript-eslint/eslint-plugin': 5.41.0_sraqwkbur6c6ax5yfsr6ug327i
@@ -174,6 +178,10 @@ packages:
       '@types/express-serve-static-core': 4.17.31
       '@types/qs': 6.9.7
       '@types/serve-static': 1.15.0
+    dev: true
+
+  /@types/http-errors/1.8.2:
+    resolution: {integrity: sha512-EqX+YQxINb+MeXaIqYDASb6U6FCHbWjkj4a1CKDBks3d/QiB2+PqBLyO72vLDgAO1wUI4O+9gweRcQK11bTL/w==}
     dev: true
 
   /@types/json-schema/7.0.11:
