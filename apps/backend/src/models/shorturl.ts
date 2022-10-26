@@ -10,7 +10,6 @@ import {
   GetShortUrlSchema,
 } from '@shorter/validators';
 import { add, isAfter } from 'date-fns';
-import { customAlphabet } from 'nanoid';
 import { DataSource } from 'typeorm';
 import createError from 'http-errors';
 
@@ -46,6 +45,7 @@ export const createShortUrl = async (datasource: DataSource, data: CreateShortUr
     // VIP can use custom url
     const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&';
     const length = 12;
+    const { customAlphabet } = await import('nanoid');
     const nanoid = customAlphabet(alphabet, length);
     let customUrl = '';
     if (profile.vip) {

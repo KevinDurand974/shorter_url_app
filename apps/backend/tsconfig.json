@@ -3,17 +3,18 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "target": "ES2015",
-    "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,
-    "module": "CommonJS",
     "baseUrl": "./src",
     "paths": {
       "@entities": ["entities"],
       "@helpers": ["helpers"],
-      "@models": ["models"],
-      "@routes": ["routes"]
+      "@models": ["models"]
     },
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true

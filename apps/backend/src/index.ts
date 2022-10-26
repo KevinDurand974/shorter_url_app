@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
-import routing from './routes';
-import { getDataSource } from 'datasource';
+import { getDataSource } from './datasource';
+import routes from './routes';
 import createError, { HttpError } from 'http-errors';
 
 const app = express();
@@ -11,10 +11,10 @@ const app = express();
 app.use(express.json());
 
 // NOTE: Router
-app.use('/api/v1', routing);
+app.use('/api/v1', routes);
 
 // NOTE: Error Handler
-app.use((_req, __res, next) => {
+app.use((_req: Request, __res: Response, next: NextFunction) => {
   next(new createError.NotFound());
 });
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
