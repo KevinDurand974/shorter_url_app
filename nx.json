@@ -16,7 +16,7 @@
 			"dependsOn": ["^build"]
 		},
 		"dev": {
-			"dependsOn": ["^build"]
+			"dependsOn": [{ "projects": "dependencies", "target": "build" }]
 		}
 	}
 }
