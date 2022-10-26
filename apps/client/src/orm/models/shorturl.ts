@@ -8,7 +8,7 @@ import {
 	CreateShortUrlSchema,
 	DeleteShortUrlSchema,
 	GetShortUrlSchema,
-} from "@ORM/validators";
+} from "@shorter/validators";
 import { add, isAfter } from "date-fns";
 import { customAlphabet } from "nanoid";
 import { DataSource } from "typeorm";

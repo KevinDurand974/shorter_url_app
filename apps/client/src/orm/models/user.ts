@@ -24,7 +24,7 @@ import {
 	validateUserDeleting,
 	ValidateUserGetSchema,
 	validateUserGet,
-} from "@ORM/validators";
+} from "@shorter/validators";
 import { DataSource } from "typeorm";
 
 export const createUser = async (
