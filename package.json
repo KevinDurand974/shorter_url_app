@@ -6,5 +6,13 @@
 	"license": "ISC",
 	"devDependencies": {
 		"nx": "^15.0.3"
+	},
+	"scripts": {
+		"dev": "npx nx run-many --target=dev --all",
+		"build:client": "npx nx build client",
+		"build:validators": "npx nx build @shorter/validators",
+		"affected:dev": "npx nx affected --target=dev",
+		"graph": "npx nx graph",
+		"graph:affected": "npx nx affected:graph"
 	}
 }
