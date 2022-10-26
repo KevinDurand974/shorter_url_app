@@ -8,6 +8,8 @@
 		"nx": "^15.0.3"
 	},
 	"scripts": {
+		"dev:client": "npx nx dev client",
+		"dev:backend": "npx nx dev backend",
 		"dev": "npx nx run-many --target=dev --all",
 		"build:client": "npx nx build client",
 		"build:validators": "npx nx build @shorter/validators",
