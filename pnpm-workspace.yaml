@@ -1,0 +1,5 @@
+packages:
+  # Front / Back
+  - "apps/*"
+  # Libs
+  - "libs/*"
