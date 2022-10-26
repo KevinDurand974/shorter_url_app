@@ -1,0 +1,22 @@
+{
+	"tasksRunnerOptions": {
+		"default": {
+			"runner": "nx/tasks-runners/default",
+			"options": {
+				"cacheableOperations": ["build", "lint", "test", "e2e"]
+			}
+		}
+	},
+	"nameInputs": {
+		"noMorkdown": ["!{projectRoot}/**/*.md"]
+	},
+	"targetDefaults": {
+		"build": {
+			"inputs": ["noMorkdown", "^noMorkdown"],
+			"dependsOn": ["^build"]
+		},
+		"dev": {
+			"dependsOn": ["^build"]
+		}
+	}
+}
