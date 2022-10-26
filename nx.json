@@ -7,12 +7,12 @@
 			}
 		}
 	},
-	"nameInputs": {
-		"noMorkdown": ["!{projectRoot}/**/*.md"]
+	"namedInputs": {
+		"noMarkdown": ["!{projectRoot}/**/*.md"]
 	},
 	"targetDefaults": {
 		"build": {
-			"inputs": ["noMorkdown", "^noMorkdown"],
+			"inputs": ["noMarkdown", "^noMarkdown"],
 			"dependsOn": ["^build"]
 		},
 		"dev": {
