@@ -4,11 +4,24 @@ import express, { NextFunction, Request, Response } from 'express';
 import { getDataSource } from './datasource';
 import routes from './routes';
 import createError, { HttpError } from 'http-errors';
+import morgan from 'morgan';
+
+type JsonErrorResult = {
+  status: number;
+  data: {
+    message: string;
+    errors?: {
+      key: string;
+      problem: string;
+    }[];
+  };
+};
 
 const app = express();
 
 // NOTE: Middleware
 app.use(express.json());
+app.use(morgan('dev'));
 
 // NOTE: Router
 app.use('/api/v1', routes);
@@ -19,9 +32,16 @@ app.use((_req: Request, __res: Response, next: NextFunction) => {
 });
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof HttpError) {
-    res.status(err.status).json({ status: err.status, message: err.message });
+    const json: JsonErrorResult = {
+      status: err.status,
+      data: {
+        message: err.message,
+      },
+    };
+    if (err.zod) json.data.errors = err.zod;
+    res.status(err.status).json(json);
   } else {
-    res.status(500).json({ status: 500, message: 'Internal Server Error' });
+    res.status(500).json({ status: 500, data: { message: err.message || 'Internal Server Error' } });
   }
 });
 
