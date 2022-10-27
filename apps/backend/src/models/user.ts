@@ -1,7 +1,7 @@
 import { Profile, ShortUrl, User } from '@entities';
 import { comparePassword, findOneProfileByUuid, hashPassword } from '@helpers';
+import { createError400, createError404, createValidationError } from '@shorter/errors';
 import {
-  parseZodError,
   validateNewUser,
   ValidateNewUserSchema,
   validateNewUserEmail,
@@ -23,8 +23,6 @@ import {
 } from '@shorter/validators';
 import { DataSource } from 'typeorm';
 
-// TODO: Change all throw to throw with createError (HTTP Error)
-
 export const createUser = async (datasource: DataSource, data: ValidateNewUserSchema) => {
   try {
     const ProfileRep = datasource.getRepository(Profile);
@@ -36,20 +34,12 @@ export const createUser = async (datasource: DataSource, data: ValidateNewUserSc
       },
     });
 
-    if (emailUser)
-      throw {
-        statusCode: 400,
-        message: 'Email already exists',
-      };
+    if (emailUser) throw createError400('Email already exists');
 
     if (!data.vip) delete data.urlName;
 
     const valideData = await validateNewUser(data);
-    if (!valideData.success)
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+    if (!valideData.success) throw createValidationError(valideData.error.issues);
 
     const validatedData = valideData.data;
 
@@ -69,19 +59,13 @@ export const createUser = async (datasource: DataSource, data: ValidateNewUserSc
           },
         });
         if (count > 0) {
-          throw {
-            statusCode: 400,
-            message: 'UrlName already exists',
-          };
+          throw createError400('UrlName already exists');
         }
         profile.urlName = validatedData.urlName;
         profile.maxUrls = 250;
         profile.availableUrls = 250;
       } else {
-        throw {
-          statusCode: 400,
-          message: 'UrlName is required',
-        };
+        throw createError400('UrlName is required for VIP user');
       }
     } else {
       profile.urlName = '';
@@ -96,11 +80,7 @@ export const createUser = async (datasource: DataSource, data: ValidateNewUserSc
       relations: ['profile'],
     });
 
-    if (!thisUser)
-      throw {
-        statusCode: 404,
-        message: 'User has not been saved!',
-      };
+    if (!thisUser) throw createError404("User hasn't been created");
 
     const returnUser = {
       uuid: thisUser.profile.uuid,
@@ -120,29 +100,19 @@ export const updateUserEmail = async (datasource: DataSource, data: ValidateNewU
     // Verif all user values
     const valideData = await validateNewUserEmail(data);
     if (!valideData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+      throw createValidationError(valideData.error.issues);
     }
     const validedData = valideData.data;
 
     // Check if uuid exist and get user email
     const profileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile)
-      throw {
-        statusCode: 404,
-        message: 'User not found',
-      };
+    if (!profile) throw createError404('User not found');
     const { email } = profile.user;
 
     // Check if current email == email
     if (email !== validedData.currentEmail) {
-      throw {
-        statusCode: 400,
-        message: 'Entered current email is not correct',
-      };
+      throw createError400('Entered current email is not correct');
     }
 
     // Check if new email is not already used
@@ -152,11 +122,7 @@ export const updateUserEmail = async (datasource: DataSource, data: ValidateNewU
         email: validedData.newEmail,
       },
     });
-    if (user)
-      throw {
-        statusCode: 400,
-        message: 'Email already exists',
-      };
+    if (user) throw createError404('Email is already used');
 
     // Update email
     profile.user.email = validedData.newEmail;
@@ -183,38 +149,25 @@ export const updateUserPassword = async (datasource: DataSource, data: ValidateN
     // Verif all user values
     const valideData = await validateNewUserPassword(data);
     if (!valideData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+      throw createValidationError(valideData.error.issues);
     }
     const validedData = valideData.data;
 
     // Check if uuid exist and get user email
     const profileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile)
-      throw {
-        statusCode: 404,
-        message: 'User not found',
-      };
+    if (!profile) throw createError404('User not found');
     const { password } = profile.user;
 
     // Check if current and new password are not the same
     if (validedData.currentPassword === validedData.newPassword) {
-      throw {
-        statusCode: 400,
-        message: 'Current and new password are the same',
-      };
+      throw createError400('Current and new password are the same');
     }
 
     // Compare current password and db password
     const isPasswordMatch = await comparePassword(password, validedData.currentPassword);
     if (!isPasswordMatch) {
-      throw {
-        statusCode: 400,
-        message: 'Entered current password is not correct',
-      };
+      throw createError400('Entered current password is not correct');
     }
 
     // Hash new password
@@ -243,21 +196,14 @@ export const updateUserUrlName = async (datasource: DataSource, data: ValidateNe
     // Verif all user values
     const valideData = await validateNewUserUrlName(data);
     if (!valideData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+      throw createValidationError(valideData.error.issues);
     }
     const validedData = valideData.data;
 
     // Check if uuid exist and get user email
     const profileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile)
-      throw {
-        statusCode: 404,
-        message: 'User not found',
-      };
+    if (!profile) throw createError404('User not found');
     const { urlName } = profile;
 
     // Check if new urlName is not already used
@@ -267,18 +213,12 @@ export const updateUserUrlName = async (datasource: DataSource, data: ValidateNe
       },
     });
     if (isUrlNameUsed > 0) {
-      throw {
-        statusCode: 400,
-        message: 'Url name already exists',
-      };
+      throw createError400('Url name is already used');
     }
 
     // Check if urlName and new urlName are not the same
     if (urlName === validedData.urlName) {
-      throw {
-        statusCode: 400,
-        message: 'Current and new url name are the same',
-      };
+      throw createError400('Current and new url name are the same');
     }
 
     // Update urlName
@@ -294,38 +234,25 @@ export const updateUserUrlActive = async (datasource: DataSource, data: Validate
     // Verif all user values
     const valideData = await validateUserUrlActive(data);
     if (!valideData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+      throw createValidationError(valideData.error.issues);
     }
     const validedData = valideData.data;
 
     // Check if uuid exist and get user
     const profileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile)
-      throw {
-        statusCode: 404,
-        message: 'User not found',
-      };
+    if (!profile) throw createError404('User not found');
 
     // Check password
     const { password } = profile.user;
     const isPasswordMatch = await comparePassword(password, validedData.password);
     if (!isPasswordMatch) {
-      throw {
-        statusCode: 400,
-        message: 'Entered password is not correct',
-      };
+      throw createError400('Entered password is not correct');
     }
 
     // Check if urlActive not equal to current urlActive, set and save if not
     if (profile.urlActive === validedData.urlActive) {
-      throw {
-        statusCode: 400,
-        message: 'An error is occured, please try again',
-      };
+      throw createError400('An error is occured, please try again');
     }
     profile.urlActive = validedData.urlActive;
     await profileRep.save(profile);
@@ -339,28 +266,18 @@ export const updateUserVip = async (datasource: DataSource, data: ValidateUserVi
     // Verif all user values
     const valideData = await validateUserVip(data);
     if (!valideData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+      throw createValidationError(valideData.error.issues);
     }
     const validedData = valideData.data;
 
     // Check if uuid exist and get user
     const profileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile)
-      throw {
-        statusCode: 404,
-        message: 'User not found',
-      };
+    if (!profile) throw createError404('User not found');
 
     // Check if vip not equal to current vip, set and save if not
     if (profile.vip === validedData.vip) {
-      throw {
-        statusCode: 400,
-        message: 'An error is occured, please try again',
-      };
+      throw createError400('An error is occured, please try again');
     }
     profile.vip = validedData.vip;
     if (validedData.vip) {
@@ -381,10 +298,7 @@ export const updateUserPseudo = async (datasource: DataSource, data: ValidateUse
     // Verif all user values
     const valideData = await validateUserPseudo(data);
     if (!valideData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+      throw createValidationError(valideData.error.issues);
     }
     const validedData = valideData.data;
 
@@ -392,18 +306,11 @@ export const updateUserPseudo = async (datasource: DataSource, data: ValidateUse
     const profileRep = datasource.getRepository(Profile);
     const userRep = datasource.getRepository(User);
     const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile)
-      throw {
-        statusCode: 404,
-        message: 'User not found',
-      };
+    if (!profile) throw createError404('User not found');
 
     // Check if pseudo not equal to current pseudo, set and save if not
     if (profile.user.pseudo === validedData.pseudo) {
-      throw {
-        statusCode: 400,
-        message: 'An error is occured, please try again',
-      };
+      throw createError400('Current and new pseudo are the same');
     }
 
     // Save
@@ -417,11 +324,7 @@ export const updateUserPseudo = async (datasource: DataSource, data: ValidateUse
       relations: ['profile'],
     });
 
-    if (!thisUser)
-      throw {
-        statusCode: 404,
-        message: 'User not found!',
-      };
+    if (!thisUser) throw createError404('User not found');
 
     const returnUser = {
       uuid: thisUser.profile.uuid,
@@ -441,30 +344,20 @@ export const removeUserByUuid = async (datasource: DataSource, data: ValidateUse
     // Verif all user values
     const valideData = await validateUserDeleting(data);
     if (!valideData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+      throw createValidationError(valideData.error.issues);
     }
     const validedData = valideData.data;
 
     // Check if uuid exist and get user
     const profileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile)
-      throw {
-        statusCode: 404,
-        message: 'User not found',
-      };
+    if (!profile) throw createError404('User not found');
 
     // Check password
     const { password } = profile.user;
     const isPasswordMatch = await comparePassword(password, validedData.password);
     if (!isPasswordMatch) {
-      throw {
-        statusCode: 400,
-        message: 'Entered password is not correct',
-      };
+      throw createError400('Entered password is not correct');
     }
 
     // Remove user
@@ -483,10 +376,7 @@ export const getUserByUuid = async (datasource: DataSource, data: ValidateUserGe
     // Verif all user values
     const valideData = await validateUserGet(data);
     if (!valideData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(valideData.error.issues),
-      };
+      throw createValidationError(valideData.error.issues);
     }
     const validedData = valideData.data;
 
@@ -494,11 +384,7 @@ export const getUserByUuid = async (datasource: DataSource, data: ValidateUserGe
     const profileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
 
-    if (!profile)
-      throw {
-        statusCode: 404,
-        message: 'User not found',
-      };
+    if (!profile) throw createError404('User not found');
 
     const returnUser = {
       ...profile,

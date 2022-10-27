@@ -29,6 +29,7 @@
     "typescript": "4.8.4"
   },
   "dependencies": {
+    "@shorter/errors": "workspace:^1.0.0",
     "@shorter/validators": "workspace:^1.0.0",
     "bcrypt": "^5.1.0",
     "date-fns": "^2.29.3",

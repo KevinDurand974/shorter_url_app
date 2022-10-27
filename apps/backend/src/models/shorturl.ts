@@ -1,7 +1,7 @@
 import { Profile, ShortUrl } from '@entities';
 import { findOneProfileByUuid } from '@helpers';
+import { createError400, createError404, createValidationError } from '@shorter/errors';
 import {
-  parseZodError,
   validateCreateShortUrl,
   validateDeleteShortUrl,
   validateGetShortUrl,
@@ -11,17 +11,13 @@ import {
 } from '@shorter/validators';
 import { add, isAfter } from 'date-fns';
 import { DataSource } from 'typeorm';
-import createError from 'http-errors';
 
 export const createShortUrl = async (datasource: DataSource, data: CreateShortUrlSchema) => {
   try {
     // Validating Data
     const validatingData = await validateCreateShortUrl(data);
     if (!validatingData.success) {
-      throw {
-        statusCode: 400,
-        message: parseZodError(validatingData.error.issues),
-      };
+      throw createValidationError(validatingData.error.issues);
     }
     const validatedData = validatingData.data;
 
@@ -29,17 +25,17 @@ export const createShortUrl = async (datasource: DataSource, data: CreateShortUr
     const ProfileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(ProfileRep, validatedData.uuid);
     if (!profile) {
-      throw createError(404, 'Profile not found');
+      throw createError404('Profile not found');
     }
 
     // Check if the user has available urls
     if (+profile.availableUrls <= 0) {
-      throw createError(400, 'You have no urls remaining');
+      throw createError400('You have no urls remaining');
     }
 
     // No VIP cant use urlName
     if (!profile.vip && validatedData.useUrlName) {
-      throw createError(400, "You are not a VIP user, you can't use urlName for your url");
+      throw createError400("You are not a VIP user, you can't use urlName for your url");
     }
 
     // VIP can use custom url
@@ -56,7 +52,7 @@ export const createShortUrl = async (datasource: DataSource, data: CreateShortUr
       }
     } else {
       if (validatedData.custom) {
-        throw createError(400, "You are not a VIP user, you can't use custom url");
+        throw createError400("You are not a VIP user, you can't use custom url");
       } else {
         customUrl = nanoid();
       }
@@ -67,7 +63,7 @@ export const createShortUrl = async (datasource: DataSource, data: CreateShortUr
     const vipUrlSkeleton = profile.urlName + '/' + customUrl;
     if (profile.vip && validatedData.custom) {
       if (shortUrls.find((s) => s.generatedUrl === vipUrlSkeleton)) {
-        throw createError(400, 'This custom url is already in use');
+        throw createError400('This custom url is already in use');
       }
     }
     let generatedUrl = '';
@@ -107,7 +103,7 @@ export const deleteShortUrl = async (datasource: DataSource, data: DeleteShortUr
     // Validating Data
     const validatingData = await validateDeleteShortUrl(data);
     if (!validatingData.success) {
-      throw createError(400, 'Error on validating data', parseZodError(validatingData.error.issues));
+      throw createValidationError(validatingData.error.issues);
     }
     const validatedData = validatingData.data;
 
@@ -115,7 +111,7 @@ export const deleteShortUrl = async (datasource: DataSource, data: DeleteShortUr
     const ProfileRep = datasource.getRepository(Profile);
     const profile = await findOneProfileByUuid(ProfileRep, validatedData.userUuid);
     if (!profile) {
-      throw createError(404, 'User not found');
+      throw createError404('User not found');
     }
 
     // Check if the short url exist
@@ -127,12 +123,12 @@ export const deleteShortUrl = async (datasource: DataSource, data: DeleteShortUr
       relations: ['profile'],
     });
     if (!shortUrl) {
-      throw createError(404, 'Cannot found the url to remove');
+      throw createError404('Cannot found the url to remove');
     }
 
     // Check if the short url belong to the user
     if (shortUrl.profile.uuid !== validatedData.userUuid) {
-      throw createError(400, 'This url does not belong to you');
+      throw createError400('This url does not belong to you');
     }
 
     // Increment the available urls by 1
@@ -152,7 +148,7 @@ export const getShortUrl = async (datasource: DataSource, data: GetShortUrlSchem
     // Validating Data
     const validatingData = await validateGetShortUrl(data);
     if (!validatingData.success) {
-      throw createError(400, 'Error on validating data', parseZodError(validatingData.error.issues));
+      throw createValidationError(validatingData.error.issues);
     }
     const validatedData = validatingData.data;
 
