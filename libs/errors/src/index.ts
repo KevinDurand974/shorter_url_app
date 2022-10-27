@@ -3,11 +3,9 @@ import createError from "http-errors";
 import { parseZodError } from "@shorter/validators";
 
 export const createValidationError = (zodErrors: ZodIssue[]) => {
-	return createError(
-		400,
-		"Error when validating data",
-		parseZodError(zodErrors)
-	);
+	return createError(400, "Error while validating data", {
+		zod: parseZodError(zodErrors),
+	});
 };
 
 export const createError404 = (message: string) => {
