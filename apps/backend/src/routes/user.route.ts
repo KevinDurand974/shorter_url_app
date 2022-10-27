@@ -35,7 +35,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // NOTE: GET /api/v1/user - Get User with UUID
-router.post('/', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
     const user = await getUserByUuid(datasource, req.body);
