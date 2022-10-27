@@ -14,7 +14,6 @@ const AppDataSource = new DataSource({
   entities: [Profile, User, ShortUrl],
   synchronize: true,
   logging: false,
-  cache: true,
 });
 
 export const getDataSource = async () => {

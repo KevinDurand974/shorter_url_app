@@ -5,6 +5,5 @@ export const findOneProfileByUuid = async (repository: Repository<Profile>, uuid
   return repository.findOne({
     where: { uuid },
     relations: ['user', 'shortUrls'],
-    cache: 60000,
   });
 };
