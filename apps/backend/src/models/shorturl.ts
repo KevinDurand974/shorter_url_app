@@ -123,7 +123,7 @@ export const deleteShortUrl = async (datasource: DataSource, data: DeleteShortUr
       relations: ['profile'],
     });
     if (!shortUrl) {
-      throw createError404('Cannot found the url to remove');
+      throw createError404('This url does not exist');
     }
 
     // Check if the short url belong to the user
