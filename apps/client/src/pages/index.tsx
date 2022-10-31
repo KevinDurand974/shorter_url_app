@@ -1,10 +1,21 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 
 import style from "@styles/home.module.scss";
+import { trpc } from "hooks/trpc";
 
 const Home: NextPage = () => {
+	console.count("render");
+
+	useEffect(() => {
+		const run = async () => {
+			const test = await trpc.test.query();
+			console.log(test); // <- Works
+		};
+		run();
+	}, []);
+
 	return (
 		<Fragment>
 			<Head>
