@@ -12,8 +12,11 @@ importers:
     specifiers:
       '@shorter/errors': workspace:^1.0.0
       '@shorter/validators': workspace:^1.0.0
+      '@trpc/server': 10.0.0-proxy-beta.26
       '@types/bcrypt': ^5.0.0
+      '@types/cors': ^2.8.12
       '@types/express': ^4.17.14
+      '@types/express-serve-static-core': ^4.17.31
       '@types/http-errors': ^1.8.2
       '@types/jsonwebtoken': ^8.5.9
       '@types/morgan': ^1.9.3
@@ -21,6 +24,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.0.0
       '@typescript-eslint/parser': ^5.0.0
       bcrypt: ^5.1.0
+      cors: ^2.8.5
       date-fns: ^2.29.3
       dotenv: ^16.0.3
       eslint: ^8.0.1
@@ -46,7 +50,9 @@ importers:
     dependencies:
       '@shorter/errors': link:../../libs/errors
       '@shorter/validators': link:../../libs/validators
+      '@trpc/server': 10.0.0-proxy-beta.26
       bcrypt: 5.1.0
+      cors: 2.8.5
       date-fns: 2.29.3
       dotenv: 16.0.3
       express: 4.18.2
@@ -59,7 +65,9 @@ importers:
       typeorm: 0.3.10_pg@8.8.0+ts-node@10.9.1
     devDependencies:
       '@types/bcrypt': 5.0.0
+      '@types/cors': 2.8.12
       '@types/express': 4.17.14
+      '@types/express-serve-static-core': 4.17.31
       '@types/http-errors': 1.8.2
       '@types/jsonwebtoken': 8.5.9
       '@types/morgan': 1.9.3
@@ -81,6 +89,11 @@ importers:
 
   apps/client:
     specifiers:
+      '@shorter/backend': workspace:^1.0.0
+      '@tanstack/react-query': ^4.13.5
+      '@trpc/client': 10.0.0-proxy-beta.26
+      '@trpc/react-query': 10.0.0-proxy-beta.26
+      '@trpc/server': 10.0.0-proxy-beta.26
       '@types/node': 18.8.3
       '@types/react': 18.0.21
       '@types/react-dom': 18.0.6
@@ -92,6 +105,11 @@ importers:
       sass: ^1.55.0
       typescript: 4.8.4
     dependencies:
+      '@shorter/backend': link:../backend
+      '@tanstack/react-query': 4.13.5_biqbaboplfbrettd7655fr4n2y
+      '@trpc/client': 10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4
+      '@trpc/react-query': 10.0.0-proxy-beta.26_ohyd6l6vhvpejm47z3mooixuqa
+      '@trpc/server': 10.0.0-proxy-beta.26
       next: 12.3.1_2mygebwfgdyopr3fy2qddu2eli
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -365,6 +383,56 @@ packages:
       tslib: 2.4.0
     dev: false
 
+  /@tanstack/query-core/4.13.4:
+    resolution: {integrity: sha512-DMIy6tgGehYoRUFyoR186+pQspOicyZNSGvBWxPc2CinHjWOQ7DPnGr9zmn/kE9xK4Zd3GXd25Nj3X20+TF6Lw==}
+    dev: false
+
+  /@tanstack/react-query/4.13.5_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-p2HcWGuqfvG7Pz04un4phWZeXzlITD7Ue0gMXjD56g8y3rP1r5qEYC/BckffrZLf4dZtQeVPCWOa8RYAqx036g==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 4.13.4
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
+
+  /@trpc/client/10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4:
+    resolution: {integrity: sha512-NTAqTtMCsB5DneoseK/oFYA9YkcIXHuYp1zojnhNpNA+HFzFvkDUHsKNmaPwd5c/KxLr7nP/jQvRzvVuZbgBng==}
+    peerDependencies:
+      '@trpc/server': 10.0.0-proxy-beta.26
+    dependencies:
+      '@trpc/server': 10.0.0-proxy-beta.26
+    dev: false
+
+  /@trpc/react-query/10.0.0-proxy-beta.26_ohyd6l6vhvpejm47z3mooixuqa:
+    resolution: {integrity: sha512-8/wDnNTNsn9ULXldegpqoNCgMMepVTU66t7ynyNFuSHE9eSd8J2sWKyEzK7lxVHa1kU+NjWhYoG+iDoXrKE6Cg==}
+    peerDependencies:
+      '@tanstack/react-query': ^4.3.8
+      '@trpc/client': 10.0.0-proxy-beta.26
+      '@trpc/server': 10.0.0-proxy-beta.26
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@tanstack/react-query': 4.13.5_biqbaboplfbrettd7655fr4n2y
+      '@trpc/client': 10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4
+      '@trpc/server': 10.0.0-proxy-beta.26
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@trpc/server/10.0.0-proxy-beta.26:
+    resolution: {integrity: sha512-XMpsQnH5s5Mn7CbRUMq2qT8TlHWNSygAizmpKnMhk3JDuLtqQNfxqGG41JzXiKNUcDrfcWt+MEyEa18sEjLYiA==}
+    dev: false
+
   /@tsconfig/node10/1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
 
@@ -394,6 +462,10 @@ packages:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
       '@types/node': 18.8.3
+    dev: true
+
+  /@types/cors/2.8.12:
+    resolution: {integrity: sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==}
     dev: true
 
   /@types/express-serve-static-core/4.17.31:
@@ -966,6 +1038,14 @@ packages:
     resolution: {integrity: sha512-LiN6fylpVBVwT8twhhluD9TzXmZQQsr2I2eIKtWNbZI1XMfBT7CV18itaN6RA7EtQd/SDdRx/wzvAShX2HvhQA==}
     requiresBuild: true
     dev: true
+
+  /cors/2.8.5:
+    resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      object-assign: 4.1.1
+      vary: 1.1.2
+    dev: false
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}

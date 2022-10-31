@@ -8,11 +8,13 @@
 		"nx": "^15.0.3"
 	},
 	"scripts": {
-		"dev:client": "npx nx dev client",
-		"dev:backend": "npx nx dev backend",
+		"dev:client": "npx nx dev @shorter/client",
+		"dev:backend": "npx nx dev @shorter/backend",
 		"dev": "npx nx run-many --target=dev --all",
 		"build:client": "npx nx build client",
+		"build:backend": "npx nx build @shorter/backend",
 		"build:validators": "npx nx build @shorter/validators",
+		"build:errors": "npx nx build @shorter/errors",
 		"affected:dev": "npx nx affected --target=dev",
 		"graph": "npx nx graph",
 		"graph:affected": "npx nx affected:graph"
