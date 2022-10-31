@@ -14,12 +14,7 @@ import { DataSource } from 'typeorm';
 
 export const createShortUrl = async (datasource: DataSource, data: CreateShortUrlSchema) => {
   try {
-    // Validating Data
-    const validatingData = await validateCreateShortUrl(data);
-    if (!validatingData.success) {
-      throw createValidationError(validatingData.error.issues);
-    }
-    const validatedData = validatingData.data;
+    const validatedData = data;
 
     // Check if the user exist
     const ProfileRep = datasource.getRepository(Profile);

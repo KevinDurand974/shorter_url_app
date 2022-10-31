@@ -1,11 +1,11 @@
 import { createShortUrl, deleteShortUrl, getShortUrl, updateUserUrlActive, updateUserUrlName } from '@models';
-import { getDataSource } from 'datasource';
+import { getDataSource } from '@libs/typeorm';
 import { Router } from 'express';
 
 const router = Router();
 
 // NOTE: POST /api/v1/url - Create Short URL
-router.post('/', async (req, res, next) => {
+/* router.post('/', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
     const newShortUrl = await createShortUrl(datasource, req.body);
@@ -13,7 +13,7 @@ router.post('/', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+}); */
 
 // NOTE: DELETE /api/v1/url - Delete Short URL
 router.delete('/', async (req, res, next) => {

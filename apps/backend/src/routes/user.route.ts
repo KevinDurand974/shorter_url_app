@@ -7,7 +7,7 @@ import {
   updateUserPseudo,
   updateUserVip,
 } from '@models';
-import { getDataSource } from 'datasource';
+import { getDataSource } from '@libs/typeorm';
 import { Router } from 'express';
 
 const router = Router();
