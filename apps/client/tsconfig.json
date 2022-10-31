@@ -11,7 +11,10 @@
 			"@ORM/*": ["orm/*"],
 			"@styles/*": ["styles/*"],
 			"@components": ["components"],
-			"@components/*": ["components/*"]
+			"@components/*": ["components/*"],
+			"@hooks": ["hooks"],
+			"@hooks/*": ["hooks/*"],
+			"@libs/*": ["libs/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

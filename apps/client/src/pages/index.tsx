@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Fragment, useEffect } from "react";
+import { trpc } from "@libs/trpc";
 
 import style from "@styles/home.module.scss";
-import { trpc } from "hooks/trpc";
 
 const Home: NextPage = () => {
 	console.count("render");
