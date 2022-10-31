@@ -5,7 +5,7 @@ export const parseZodError = (errors: any[]) => {
 	return errors.map((e) => {
 		return {
 			key: e.path.join(", "),
-			problem: e.message,
+			message: e.message,
 		};
 	});
 };
