@@ -1,15 +1,15 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
-import { getDataSource } from './datasource';
 import routes from './routes';
 import createError, { HttpError } from 'http-errors';
 import morgan from 'morgan';
 import cors from 'cors';
-
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
-import { createContext, mergeRouters } from './trpc';
-import { testRouter } from '@procedures';
+
+import { getDataSource } from '@libs/typeorm';
+import { createContext, mergeRouters } from '@libs/trpc';
+import { testRouter } from '@libs/trpc/procedures';
 
 type JsonErrorResult = {
   status: number;

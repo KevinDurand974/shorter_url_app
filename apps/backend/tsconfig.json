@@ -10,7 +10,8 @@
       "@entities": ["entities"],
       "@helpers": ["helpers"],
       "@models": ["models"],
-      "@procedures": ["procedures"]
+      "@procedures": ["procedures"],
+      "@libs/*": ["libs/*"]
     },
     "moduleResolution": "Node",
     "module": "CommonJS",
