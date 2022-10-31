@@ -5,6 +5,11 @@ import { getDataSource } from './datasource';
 import routes from './routes';
 import createError, { HttpError } from 'http-errors';
 import morgan from 'morgan';
+import cors from 'cors';
+
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { createContext, mergeRouters } from './trpc';
+import { testRouter } from '@procedures';
 
 type JsonErrorResult = {
   status: number;
@@ -17,14 +22,32 @@ type JsonErrorResult = {
   };
 };
 
+// CONFIG TRPC HERE
+const appRouter = mergeRouters(testRouter);
+
 const app = express();
 
 // NOTE: Middleware
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 
 // NOTE: Router
 app.use('/api/v1', routes);
+
+// NOTE: TRPC
+app.use(
+  '/trpc',
+  createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  })
+);
 
 // NOTE: Error Handler
 app.use((_req: Request, __res: Response, next: NextFunction) => {
@@ -54,3 +77,5 @@ app.listen(process.env.PORT, async () => {
     console.error(err);
   }
 });
+
+export type AppRouter = typeof appRouter;
