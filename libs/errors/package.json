@@ -8,6 +8,7 @@
 	},
 	"dependencies": {
 		"@shorter/validators": "workspace:^1.0.0",
+		"@trpc/server": "10.0.0-proxy-beta.26",
 		"http-errors": "^2.0.0",
 		"zod": "^3.19.1"
 	},
