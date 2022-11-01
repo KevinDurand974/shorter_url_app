@@ -1,40 +1,44 @@
-import { z } from 'zod';
-import isURL from 'validator/lib/isURL';
-
-import { createShortUrl, deleteShortUrl, updateUserUrlActive, updateUserUrlName } from '@models';
 import { getDataSource } from '@libs/typeorm';
+import { createUrl, deleteUrl, getUrl, getUrls, updateUrl } from '@models';
+import { createUrlSchema, deleteUrlSchema, getUrlSchema, updateUrlSchema } from '@shorter/validators';
 
-import { router, publicProcedure } from '../configuration';
+import { publicProcedure, router } from '../configuration';
 
+// FIX: use authProcedure - It's User based only
+// FIX: use Context to get User UUID
 export const urlRouter = router({
-  createShortUrl: publicProcedure
-    .input(
-      z.object({
-        uuid: z.string().uuid(),
-        useUrlName: z.boolean(),
-        to: z.string().refine(
-          (url) =>
-            isURL(url, {
-              allow_fragments: false,
-            }),
-          'Invalid URL, please check your url, fragments are not allowed'
-        ),
-        ephemeral: z.boolean(),
-        custom: z.string().min(5).max(60).optional(),
-        duration: z
-          .number()
-          .int()
-          .positive('Duration must be a positive integer')
-          .min(3600, 'Minimum duration is 1 hour')
-          .max(5184000, 'Maximum duration is 60 days')
-          .optional()
-          .default(86400),
-      })
-    )
-    .mutation(async (req) => {
-      const datasource = await getDataSource();
-      const validatedData = req.input;
-      const newShortUrl = await createShortUrl(datasource, validatedData);
-      return { status: 201, data: newShortUrl };
-    }),
+  createUrl: publicProcedure.input(createUrlSchema).mutation(async ({ input, ctx }) => {
+    const datasource = await getDataSource();
+    return createUrl(datasource, {
+      ...input,
+      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+    });
+  }),
+  deleteUrl: publicProcedure.input(deleteUrlSchema).mutation(async ({ input, ctx }) => {
+    const datasource = await getDataSource();
+    return deleteUrl(datasource, {
+      ...input,
+      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+    });
+  }),
+  updateUrl: publicProcedure.input(updateUrlSchema).mutation(async ({ input, ctx }) => {
+    const datasource = await getDataSource();
+    return updateUrl(datasource, {
+      ...input,
+      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+    });
+  }),
+  getUrls: publicProcedure.input(getUrlSchema).query(async ({ input, ctx }) => {
+    const datasource = await getDataSource();
+    return getUrl(datasource, {
+      ...input,
+      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+    });
+  }),
+  getUrl: publicProcedure.query(async ({ ctx }) => {
+    const datasource = await getDataSource();
+    return getUrls(datasource, {
+      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+    });
+  }),
 });
