@@ -1,28 +1,25 @@
-import {
-	Column,
-	Entity,
-	Index,
-	OneToOne,
-	PrimaryGeneratedColumn,
-} from "typeorm";
-import type { Relation } from "typeorm";
-import { Profile } from "./Profile";
+import { Column, Entity, Index, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { Profile } from './Profile';
 
-@Entity("users")
+@Entity('users')
 export class User {
-	@PrimaryGeneratedColumn()
-	id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-	@Index()
-	@Column({ type: "character varying", length: 254, unique: true })
-	email!: string;
+  // NOTE: User Email
+  @Index()
+  @Column({ type: 'character varying', length: 254, unique: true })
+  email!: string;
 
-	@Column({ type: "character varying", length: 255 })
-	pseudo!: string;
+  // NOTE: User Pseudo, visual only
+  @Column({ type: 'character varying', length: 255 })
+  pseudo!: string;
 
-	@Column("text")
-	password!: string;
+  // NOTE: User Password
+  @Column('text')
+  password!: string;
 
-	@OneToOne(() => Profile, (p) => p.user)
-	profile!: Relation<Profile>;
+  @OneToOne(() => Profile, (p) => p.user)
+  profile!: Relation<Profile>;
 }
