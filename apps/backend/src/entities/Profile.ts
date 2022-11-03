@@ -34,7 +34,6 @@ export class Profile {
   @Column({
     length: 20,
     type: 'character varying',
-    nullable: true,
   })
   urlName!: string;
 
