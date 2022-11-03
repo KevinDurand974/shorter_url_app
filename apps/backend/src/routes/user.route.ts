@@ -1,12 +1,4 @@
-import {
-  createUser,
-  getUserByUuid,
-  removeUserByUuid,
-  updateUserEmail,
-  updateUserPassword,
-  updateUserPseudo,
-  updateUserVip,
-} from '@models';
+import { createUser } from '@models';
 import { getDataSource } from '@libs/typeorm';
 import { Router } from 'express';
 
@@ -27,7 +19,7 @@ router.post('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    await removeUserByUuid(datasource, req.body);
+    // await removeUserByUuid(datasource, req.body);
     res.status(204).end();
   } catch (err) {
     next(err);
@@ -38,8 +30,8 @@ router.post('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    const user = await getUserByUuid(datasource, req.body);
-    res.status(200).json({ status: 200, data: user });
+    // const user = await getUserByUuid(datasource, req.body);
+    res.status(200).json({ status: 200, data: null });
   } catch (err) {
     next(err);
   }
@@ -49,8 +41,8 @@ router.get('/', async (req, res, next) => {
 router.put('/email', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    const updatedUser = await updateUserEmail(datasource, req.body);
-    res.status(200).json({ status: 200, data: updatedUser });
+    // const updatedUser = await updateUserEmail(datasource, req.body);
+    res.status(200).json({ status: 200, data: null });
   } catch (err) {
     next(err);
   }
@@ -60,8 +52,8 @@ router.put('/email', async (req, res, next) => {
 router.put('/password', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    const updatedUser = await updateUserPassword(datasource, req.body);
-    res.status(200).json({ status: 200, data: updatedUser });
+    // const updatedUser = await updateUserPassword(datasource, req.body);
+    res.status(200).json({ status: 200, data: null });
   } catch (err) {
     next(err);
   }
@@ -71,8 +63,8 @@ router.put('/password', async (req, res, next) => {
 router.put('/pseudo', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    const user = await updateUserPseudo(datasource, req.body);
-    res.status(200).json({ status: 200, data: user });
+    // const user = await updateUserPseudo(datasource, req.body);
+    res.status(200).json({ status: 200, data: null });
   } catch (err) {
     next(err);
   }
@@ -82,7 +74,7 @@ router.put('/pseudo', async (req, res, next) => {
 router.put('/vip', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    await updateUserVip(datasource, req.body);
+    // await updateUserVip(datasource, req.body);
     res.status(204).end();
   } catch (err) {
     next(err);

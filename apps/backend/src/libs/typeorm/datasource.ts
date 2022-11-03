@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Profile, ShortUrl, User } from '@entities';
+import { Profile, Url, User } from '@entities';
 
 let DataSourceInstance: DataSource;
 
@@ -11,7 +11,7 @@ const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD!,
   database: process.env.DB_DATABASE!,
   schema: process.env.DB_SCHEMA!,
-  entities: [Profile, User, ShortUrl],
+  entities: [Profile, User, Url],
   synchronize: true,
   logging: false,
 });

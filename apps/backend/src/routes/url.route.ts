@@ -1,4 +1,4 @@
-import { createUrl, deleteUrl, updateUserUrlActive, updateUserUrlName } from '@models';
+import { createUrl, deleteUrl } from '@models';
 import { getDataSource } from '@libs/typeorm';
 import { Router } from 'express';
 
@@ -30,7 +30,7 @@ router.delete('/', async (req, res, next) => {
 router.put('/active', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    await updateUserUrlActive(datasource, req.body);
+    // await updateUserUrlActive(datasource, req.body);
     res.status(204).end();
   } catch (err) {
     next(err);
@@ -41,7 +41,7 @@ router.put('/active', async (req, res, next) => {
 router.put('/name', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    await updateUserUrlName(datasource, req.body);
+    // await updateUserUrlName(datasource, req.body);
     res.status(204).end();
   } catch (err) {
     next(err);

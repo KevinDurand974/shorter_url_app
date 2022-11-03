@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { add, isAfter } from 'date-fns';
-import { ShortUrl } from '@entities';
+import { Url } from '@entities';
 import { createValidationError } from '@shorter/errors';
 import { GetShortUrlSchema, validateGetShortUrl } from '@shorter/validators';
 
@@ -14,7 +14,7 @@ export const getShortUrl = async (datasource: DataSource, data: GetShortUrlSchem
     const validatedData = validatingData.data;
 
     // Check if the short url exist
-    const ShortUrlRep = datasource.getRepository(ShortUrl);
+    const ShortUrlRep = datasource.getRepository(Url);
     const shortUrl = await ShortUrlRep.findOneBy({
       generatedUrl: validatedData.url,
     });
