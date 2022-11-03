@@ -23,7 +23,10 @@ const t = initTRPC.context<Context>().create({
 
     if (error.cause instanceof ZodError) {
       const issues = error.cause.issues;
-      const fixedMessage = issues.length > 1 ? issues.map((msg, i) => msg.message) : issues[0].message;
+      const fixedMessage =
+        issues.length > 1
+          ? issues.map((msg, i) => `${msg.path} - ${msg.message}`)
+          : `${issues[0].path} - ${issues[0].message}`;
       errorFormat.message = fixedMessage as any;
     }
 
