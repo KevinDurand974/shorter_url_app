@@ -1,7 +1,9 @@
 import { getDataSource } from '@libs/typeorm';
+import { createUser, deleteUser, getUser, getUsers } from '@models';
 import {
   createUserSchema,
   deleteUserSchema,
+  getUserSchema,
   updateUserEmailSchema,
   updateUserPasswordSchema,
   updateUserPseudoSchema,
@@ -14,36 +16,41 @@ import { publicProcedure, router } from '../configuration';
 export const userRouter = router({
   createUser: publicProcedure.input(createUserSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return true;
+    return createUser(datasource, input);
   }),
   deleteUser: publicProcedure.input(deleteUserSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return true;
+    return deleteUser(datasource, input);
   }),
-  getUser: publicProcedure.query(async ({ input, ctx }) => {
+  getUser: publicProcedure.input(getUserSchema).query(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return true;
+    return getUser(datasource, input);
   }),
-  getUsers: publicProcedure.query(async ({ input, ctx }) => {
+  getUsers: publicProcedure.query(async () => {
     const datasource = await getDataSource();
-    return true;
+    return getUsers(datasource);
   }),
+  // TODO:
   updateUserEmail: publicProcedure.input(updateUserEmailSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return true;
   }),
+  // TODO:
   updateUserPassword: publicProcedure.input(updateUserPasswordSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return true;
   }),
+  // TODO:
   updateUserVIp: publicProcedure.input(updateUserVIPSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return true;
   }),
+  // TODO:
   updateUserPseudo: publicProcedure.input(updateUserPseudoSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return true;
   }),
+  // TODO:
   updateUserUrlName: publicProcedure.input(updateUserUrlNameSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return true;

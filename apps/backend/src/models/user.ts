@@ -1,16 +1,22 @@
 import { DataSource } from 'typeorm';
 import { Profile, Url, User } from '@entities';
-import { comparePassword, findOneProfileByUuid, hashPassword } from '@helpers';
+import {
+  comparePassword,
+  findOneProfileByUuid,
+  hashPassword,
+  profileSelectors,
+  urlSelectors,
+  userSelectors,
+} from '@helpers';
 import { createError400, createError404, createValidationError } from '@shorter/errors';
 import {
   CreateUserSchema,
   DeleteUserSchema,
-  GetUserSchema,
   UpdateUserEmailSchema,
   UpdateUserPasswordSchema,
-  UpdateUserPseudo,
+  UpdateUserPseudoSchema,
   UpdateUserUrlNameSchema,
-  UpdateUserVIP,
+  UpdateUserVIPSchema,
 } from '@shorter/validators';
 
 type Uuid = { uuid: string };
@@ -18,10 +24,9 @@ type CreateUserInput = CreateUserSchema;
 type UpdateEmailInput = UpdateUserEmailSchema & Uuid;
 type UpdatePasswordInput = UpdateUserPasswordSchema & Uuid;
 type UpdateUrlNameInput = UpdateUserUrlNameSchema & Uuid;
-type UpdateVipInput = UpdateUserVIP & Uuid;
-type UpdatePseudoInput = UpdateUserPseudo & Uuid;
+type UpdateVipInput = UpdateUserVIPSchema & Uuid;
+type UpdatePseudoInput = UpdateUserPseudoSchema & Uuid;
 type DeleteUserInput = DeleteUserSchema & Uuid;
-type GetUserInput = GetUserSchema & Uuid;
 
 // NOTE: Create User
 export const createUser = async (datasource: DataSource, data: CreateUserInput) => {
@@ -31,7 +36,14 @@ export const createUser = async (datasource: DataSource, data: CreateUserInput) 
     const userExist = !!(await UserRep.count({
       where: { email: data.email },
     }));
-    if (!userExist) throw createError400('Email already assigned to an account');
+    if (userExist) throw createError400('Email already assigned to an account');
+
+    // If UrlName exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profileExist = !!(await ProfileRep.count({
+      where: { urlName: data.urlName },
+    }));
+    if (profileExist) throw createError400('UrlName already assigned to an account');
 
     // Create User
     const user = new User();
@@ -48,7 +60,6 @@ export const createUser = async (datasource: DataSource, data: CreateUserInput) 
     const newUser = await UserRep.save(user);
 
     // Save Profile
-    const ProfileRep = datasource.getRepository(Profile);
     const newProfile = await ProfileRep.save(profile);
 
     // return
@@ -59,17 +70,94 @@ export const createUser = async (datasource: DataSource, data: CreateUserInput) 
 };
 
 // NOTE: Delete User
+export const deleteUser = async (datasource: DataSource, data: DeleteUserInput) => {
+  try {
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    if (!profile) throw createError404("This User doesn't exist");
+
+    // Vefify password
+    const hashedPassword = profile.user.password;
+    const isPasswordValid = await comparePassword(hashedPassword, data.password);
+    if (!isPasswordValid) throw createError400('Cannot delete this user');
+
+    // Delete User
+    const UserRep = datasource.getRepository(User);
+    const UrlRep = datasource.getRepository(Url);
+    await UserRep.remove(profile.user);
+    await UrlRep.remove(profile.urls);
+    await ProfileRep.remove(profile);
+  } catch (err) {
+    throw err;
+  }
+};
 
 // NOTE: Get User
+export const getUser = async (datasource: DataSource, data: Uuid) => {
+  try {
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await ProfileRep.findOne({
+      where: { uuid: data.uuid },
+      relations: ['user', 'urls'],
+      select: {
+        id: true,
+        ...profileSelectors,
+        user: {
+          ...userSelectors,
+        },
+        urls: {
+          ...urlSelectors,
+        },
+      },
+    });
+
+    // Remove Id from Profile if exist
+    delete (profile as any)?.id;
+
+    // Return
+    return profile;
+  } catch (err) {
+    throw err;
+  }
+};
 
 // NOTE: Get All Users
+export const getUsers = async (datasource: DataSource) => {
+  try {
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profiles = await ProfileRep.find({
+      relations: ['user', 'urls'],
+      select: {
+        id: true,
+        ...profileSelectors,
+        user: {
+          ...userSelectors,
+        },
+        urls: {
+          ...urlSelectors,
+        },
+      },
+    });
 
-// NOTE: Update User Email
+    // Remove Id from Profiles if exist
+    profiles.forEach((p: any) => delete p?.id);
 
-// NOTE: Update User Password
+    // Return
+    return profiles;
+  } catch (err) {
+    throw err;
+  }
+};
 
-// NOTE: Update User Url Name
+// TODO: Update User Email
 
-// NOTE: Update User Pseudo
+// TODO: Update User Password
 
-// NOTE: Update User VIP
+// TODO: Update User Url Name
+
+// TODO: Update User Pseudo
+
+// TODO: Update User VIP
