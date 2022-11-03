@@ -34,11 +34,7 @@ export const updateUserPseudoSchema = z.object({
 	pseudo: z.string().min(3).max(255),
 });
 export const deleteUserSchema = z.object({
-	uuid: z.string().uuid(),
 	password: z.string(),
-});
-export const getUserSchema = z.object({
-	uuid: z.string().uuid(),
 });
 
 // Types
@@ -49,4 +45,3 @@ export type UpdateUserUrlNameSchema = z.infer<typeof updateUserUrlNameSchema>;
 export type UpdateUserVIP = z.infer<typeof updateUserVIPSchema>;
 export type UpdateUserPseudo = z.infer<typeof updateUserPseudoSchema>;
 export type DeleteUserSchema = z.infer<typeof deleteUserSchema>;
-export type GetUserSchema = z.infer<typeof getUserSchema>;

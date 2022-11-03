@@ -2,7 +2,6 @@ import { getDataSource } from '@libs/typeorm';
 import {
   createUserSchema,
   deleteUserSchema,
-  getUserSchema,
   updateUserEmailSchema,
   updateUserPasswordSchema,
   updateUserPseudoSchema,
@@ -21,7 +20,7 @@ export const userRouter = router({
     const datasource = await getDataSource();
     return true;
   }),
-  getUser: publicProcedure.input(getUserSchema).query(async ({ input, ctx }) => {
+  getUser: publicProcedure.query(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return true;
   }),
