@@ -11,34 +11,34 @@ export const urlRouter = router({
     const datasource = await getDataSource();
     return createUrl(datasource, {
       ...input,
-      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+      uuid: '38284f50-f39b-4754-b67b-791e79200efc', // FIX:
     });
   }),
   deleteUrl: publicProcedure.input(deleteUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return deleteUrl(datasource, {
       ...input,
-      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+      uuid: '38284f50-f39b-4754-b67b-791e79200efc', // FIX:
     });
   }),
   updateUrl: publicProcedure.input(updateUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return updateUrl(datasource, {
       ...input,
-      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+      uuid: '38284f50-f39b-4754-b67b-791e79200efc', // FIX:
     });
   }),
   getUrls: publicProcedure.input(getUrlSchema).query(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return getUrl(datasource, {
       ...input,
-      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+      uuid: '38284f50-f39b-4754-b67b-791e79200efc', // FIX:
     });
   }),
   getUrl: publicProcedure.query(async ({ ctx }) => {
     const datasource = await getDataSource();
     return getUrls(datasource, {
-      uuid: '88a72f9c-2ca4-41cc-a577-f09f3f17aad9', // FIX:
+      uuid: '38284f50-f39b-4754-b67b-791e79200efc', // FIX:
     });
   }),
 });
