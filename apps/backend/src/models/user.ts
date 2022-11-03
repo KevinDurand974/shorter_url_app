@@ -1,408 +1,75 @@
-import { Profile, ShortUrl, User } from '@entities';
+import { DataSource } from 'typeorm';
+import { Profile, Url, User } from '@entities';
 import { comparePassword, findOneProfileByUuid, hashPassword } from '@helpers';
 import { createError400, createError404, createValidationError } from '@shorter/errors';
 import {
-  validateNewUser,
-  ValidateNewUserSchema,
-  validateNewUserEmail,
-  ValidateNewUserEmailSchema,
-  validateNewUserPassword,
-  ValidateNewUserPasswordSchema,
-  validateNewUserUrlName,
-  ValidateNewUserUrlNameSchema,
-  ValidateUserUrlActiveSchema,
-  validateUserUrlActive,
-  validateUserVip,
-  ValidateUserVipSchema,
-  ValidateUserPseudoSchema,
-  validateUserPseudo,
-  ValidateUserDeletingSchema,
-  validateUserDeleting,
-  ValidateUserGetSchema,
-  validateUserGet,
+  CreateUserSchema,
+  DeleteUserSchema,
+  GetUserSchema,
+  UpdateUserEmailSchema,
+  UpdateUserPasswordSchema,
+  UpdateUserPseudo,
+  UpdateUserUrlNameSchema,
+  UpdateUserVIP,
 } from '@shorter/validators';
-import { DataSource } from 'typeorm';
 
-export const createUser = async (datasource: DataSource, data: ValidateNewUserSchema) => {
+type Uuid = { uuid: string };
+type CreateUserInput = CreateUserSchema;
+type UpdateEmailInput = UpdateUserEmailSchema & Uuid;
+type UpdatePasswordInput = UpdateUserPasswordSchema & Uuid;
+type UpdateUrlNameInput = UpdateUserUrlNameSchema & Uuid;
+type UpdateVipInput = UpdateUserVIP & Uuid;
+type UpdatePseudoInput = UpdateUserPseudo & Uuid;
+type DeleteUserInput = DeleteUserSchema & Uuid;
+type GetUserInput = GetUserSchema & Uuid;
+
+// NOTE: Create User
+export const createUser = async (datasource: DataSource, data: CreateUserInput) => {
   try {
-    const ProfileRep = datasource.getRepository(Profile);
+    // If email exist
     const UserRep = datasource.getRepository(User);
+    const userExist = !!(await UserRep.count({
+      where: { email: data.email },
+    }));
+    if (!userExist) throw createError400('Email already assigned to an account');
 
-    const emailUser = await UserRep.findOne({
-      where: {
-        email: data.email,
-      },
-    });
-
-    if (emailUser) throw createError400('Email already exists');
-
-    if (!data.vip) delete data.urlName;
-
-    const valideData = await validateNewUser(data);
-    if (!valideData.success) throw createValidationError(valideData.error.issues);
-
-    const validatedData = valideData.data;
-
+    // Create User
     const user = new User();
-    user.email = validatedData.email;
-    user.pseudo = validatedData.pseudo;
-    user.password = await hashPassword(validatedData.password);
+    user.email = data.email;
+    user.password = await hashPassword(data.password);
+    user.pseudo = data.pseudo;
 
+    // Create Profile
     const profile = new Profile();
-    profile.vip = validatedData.vip;
-
-    if (validatedData.vip) {
-      if (validatedData.urlName) {
-        const count = await ProfileRep.count({
-          where: {
-            urlName: validatedData.urlName,
-          },
-        });
-        if (count > 0) {
-          throw createError400('UrlName already exists');
-        }
-        profile.urlName = validatedData.urlName;
-        profile.maxUrls = 250;
-        profile.availableUrls = 250;
-      } else {
-        throw createError400('UrlName is required for VIP user');
-      }
-    } else {
-      profile.urlName = '';
-    }
-
     profile.user = user;
+    profile.urlName = data.urlName;
 
-    await ProfileRep.save(profile);
+    // Save User
+    const newUser = await UserRep.save(user);
 
-    const thisUser = await UserRep.findOne({
-      where: { email: user.email },
-      relations: ['profile'],
-    });
+    // Save Profile
+    const ProfileRep = datasource.getRepository(Profile);
+    const newProfile = await ProfileRep.save(profile);
 
-    if (!thisUser) throw createError404("User hasn't been created");
-
-    const returnUser = {
-      uuid: thisUser.profile.uuid,
-      vip: thisUser.profile.vip,
-      pseudo: thisUser.pseudo,
-      email: thisUser.email,
-    };
-
-    return returnUser;
+    // return
+    return { uuid: newProfile.uuid, email: newUser.email, pseudo: newUser.pseudo, vip: newProfile.vip };
   } catch (err) {
     throw err;
   }
 };
 
-export const updateUserEmail = async (datasource: DataSource, data: ValidateNewUserEmailSchema) => {
-  try {
-    // Verif all user values
-    const valideData = await validateNewUserEmail(data);
-    if (!valideData.success) {
-      throw createValidationError(valideData.error.issues);
-    }
-    const validedData = valideData.data;
+// NOTE: Delete User
 
-    // Check if uuid exist and get user email
-    const profileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile) throw createError404('User not found');
-    const { email } = profile.user;
+// NOTE: Get User
 
-    // Check if current email == email
-    if (email !== validedData.currentEmail) {
-      throw createError400('Entered current email is not correct');
-    }
+// NOTE: Get All Users
 
-    // Check if new email is not already used
-    const userRep = datasource.getRepository(User);
-    const user = await userRep.findOne({
-      where: {
-        email: validedData.newEmail,
-      },
-    });
-    if (user) throw createError404('Email is already used');
+// NOTE: Update User Email
 
-    // Update email
-    profile.user.email = validedData.newEmail;
-    profile.verified = false;
-    await userRep.save(profile.user);
-    await profileRep.save(profile);
+// NOTE: Update User Password
 
-    // Return new user profile
-    const returnUser = {
-      uuid: profile.uuid,
-      vip: profile.vip,
-      pseudo: profile.user.pseudo,
-      email: validedData.newEmail,
-    };
+// NOTE: Update User Url Name
 
-    return returnUser;
-  } catch (err) {
-    throw err;
-  }
-};
+// NOTE: Update User Pseudo
 
-export const updateUserPassword = async (datasource: DataSource, data: ValidateNewUserPasswordSchema) => {
-  try {
-    // Verif all user values
-    const valideData = await validateNewUserPassword(data);
-    if (!valideData.success) {
-      throw createValidationError(valideData.error.issues);
-    }
-    const validedData = valideData.data;
-
-    // Check if uuid exist and get user email
-    const profileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile) throw createError404('User not found');
-    const { password } = profile.user;
-
-    // Check if current and new password are not the same
-    if (validedData.currentPassword === validedData.newPassword) {
-      throw createError400('Current and new password are the same');
-    }
-
-    // Compare current password and db password
-    const isPasswordMatch = await comparePassword(password, validedData.currentPassword);
-    if (!isPasswordMatch) {
-      throw createError400('Entered current password is not correct');
-    }
-
-    // Hash new password
-    const hashedPassword = await hashPassword(validedData.newPassword);
-
-    // Update password
-    profile.user.password = hashedPassword;
-    await profileRep.save(profile);
-
-    // Return new user profile
-    const returnUser = {
-      uuid: profile.uuid,
-      vip: profile.vip,
-      pseudo: profile.user.pseudo,
-      email: profile.user.email,
-    };
-
-    return returnUser;
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const updateUserUrlName = async (datasource: DataSource, data: ValidateNewUserUrlNameSchema) => {
-  try {
-    // Verif all user values
-    const valideData = await validateNewUserUrlName(data);
-    if (!valideData.success) {
-      throw createValidationError(valideData.error.issues);
-    }
-    const validedData = valideData.data;
-
-    // Check if uuid exist and get user email
-    const profileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile) throw createError404('User not found');
-    const { urlName } = profile;
-
-    // Check if new urlName is not already used
-    const isUrlNameUsed = await profileRep.count({
-      where: {
-        urlName: validedData.urlName,
-      },
-    });
-    if (isUrlNameUsed > 0) {
-      throw createError400('Url name is already used');
-    }
-
-    // Check if urlName and new urlName are not the same
-    if (urlName === validedData.urlName) {
-      throw createError400('Current and new url name are the same');
-    }
-
-    // Update urlName
-    profile.urlName = validedData.urlName;
-    await profileRep.save(profile);
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const updateUserUrlActive = async (datasource: DataSource, data: ValidateUserUrlActiveSchema) => {
-  try {
-    // Verif all user values
-    const valideData = await validateUserUrlActive(data);
-    if (!valideData.success) {
-      throw createValidationError(valideData.error.issues);
-    }
-    const validedData = valideData.data;
-
-    // Check if uuid exist and get user
-    const profileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile) throw createError404('User not found');
-
-    // Check password
-    const { password } = profile.user;
-    const isPasswordMatch = await comparePassword(password, validedData.password);
-    if (!isPasswordMatch) {
-      throw createError400('Entered password is not correct');
-    }
-
-    // Check if urlActive not equal to current urlActive, set and save if not
-    if (profile.urlActive === validedData.urlActive) {
-      throw createError400('An error is occured, please try again');
-    }
-    profile.urlActive = validedData.urlActive;
-    await profileRep.save(profile);
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const updateUserVip = async (datasource: DataSource, data: ValidateUserVipSchema) => {
-  try {
-    // Verif all user values
-    const valideData = await validateUserVip(data);
-    if (!valideData.success) {
-      throw createValidationError(valideData.error.issues);
-    }
-    const validedData = valideData.data;
-
-    // Check if uuid exist and get user
-    const profileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile) throw createError404('User not found');
-
-    // Check if vip not equal to current vip, set and save if not
-    if (profile.vip === validedData.vip) {
-      throw createError400('An error is occured, please try again');
-    }
-    profile.vip = validedData.vip;
-    if (validedData.vip) {
-      profile.maxUrls = 250;
-      profile.availableUrls = 250 - profile.availableUrls;
-    } else {
-      profile.maxUrls = 25;
-      profile.availableUrls = 25 - profile.availableUrls;
-    }
-    await profileRep.save(profile);
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const updateUserPseudo = async (datasource: DataSource, data: ValidateUserPseudoSchema) => {
-  try {
-    // Verif all user values
-    const valideData = await validateUserPseudo(data);
-    if (!valideData.success) {
-      throw createValidationError(valideData.error.issues);
-    }
-    const validedData = valideData.data;
-
-    // Check if uuid exist and get user
-    const profileRep = datasource.getRepository(Profile);
-    const userRep = datasource.getRepository(User);
-    const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile) throw createError404('User not found');
-
-    // Check if pseudo not equal to current pseudo, set and save if not
-    if (profile.user.pseudo === validedData.pseudo) {
-      throw createError400('Current and new pseudo are the same');
-    }
-
-    // Save
-    profile.user.pseudo = validedData.pseudo;
-    await userRep.save(profile.user);
-    await profileRep.save(profile);
-
-    // Get updated user
-    const thisUser = await userRep.findOne({
-      where: { email: profile.user.email },
-      relations: ['profile'],
-    });
-
-    if (!thisUser) throw createError404('User not found');
-
-    const returnUser = {
-      uuid: thisUser.profile.uuid,
-      vip: thisUser.profile.vip,
-      pseudo: thisUser.pseudo,
-      email: thisUser.email,
-    };
-
-    return returnUser;
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const removeUserByUuid = async (datasource: DataSource, data: ValidateUserDeletingSchema) => {
-  try {
-    // Verif all user values
-    const valideData = await validateUserDeleting(data);
-    if (!valideData.success) {
-      throw createValidationError(valideData.error.issues);
-    }
-    const validedData = valideData.data;
-
-    // Check if uuid exist and get user
-    const profileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-    if (!profile) throw createError404('User not found');
-
-    // Check password
-    const { password } = profile.user;
-    const isPasswordMatch = await comparePassword(password, validedData.password);
-    if (!isPasswordMatch) {
-      throw createError400('Entered password is not correct');
-    }
-
-    // Remove user
-    const userRep = datasource.getRepository(User);
-    const shortUrlRep = datasource.getRepository(ShortUrl);
-    await userRep.remove(profile.user);
-    await shortUrlRep.remove(profile.shortUrls);
-    await profileRep.remove(profile);
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const getUserByUuid = async (datasource: DataSource, data: ValidateUserGetSchema) => {
-  try {
-    // Verif all user values
-    const valideData = await validateUserGet(data);
-    if (!valideData.success) {
-      throw createValidationError(valideData.error.issues);
-    }
-    const validedData = valideData.data;
-
-    // Get user by uuid
-    const profileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(profileRep, validedData.uuid);
-
-    if (!profile) throw createError404('User not found');
-
-    const returnUser = {
-      ...profile,
-      user: {
-        ...profile.user,
-        password: undefined,
-        id: undefined,
-      },
-      shortUrls: profile.shortUrls.map((url) => ({
-        ...url,
-        profile: undefined,
-        id: undefined,
-      })),
-      id: undefined,
-    };
-
-    return returnUser;
-  } catch (err) {
-    throw err;
-  }
-};
+// NOTE: Update User VIP
