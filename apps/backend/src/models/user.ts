@@ -100,15 +100,12 @@ export const getUser = async (datasource: DataSource, data: Uuid) => {
     const ProfileRep = datasource.getRepository(Profile);
     const profile = await ProfileRep.findOne({
       where: { uuid: data.uuid },
-      relations: ['user', 'urls'],
+      relations: ['user'],
       select: {
         id: true,
         ...profileSelectors,
         user: {
           ...userSelectors,
-        },
-        urls: {
-          ...urlSelectors,
         },
       },
     });
@@ -129,15 +126,12 @@ export const getUsers = async (datasource: DataSource) => {
     // If User exist
     const ProfileRep = datasource.getRepository(Profile);
     const profiles = await ProfileRep.find({
-      relations: ['user', 'urls'],
+      relations: ['user'],
       select: {
         id: true,
         ...profileSelectors,
         user: {
           ...userSelectors,
-        },
-        urls: {
-          ...urlSelectors,
         },
       },
     });
