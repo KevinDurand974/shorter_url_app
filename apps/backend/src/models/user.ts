@@ -146,12 +146,151 @@ export const getUsers = async (datasource: DataSource) => {
   }
 };
 
-// TODO: Update User Email
+// NOTE: Update User Email
+export const updateUserEmail = async (datasource: DataSource, data: UpdateEmailInput) => {
+  try {
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    if (!profile) throw createError404("This User doesn't exist");
 
-// TODO: Update User Password
+    // If this user has this email
+    if (profile.user.email !== data.currentEmail) throw createError400('User has not this email');
 
-// TODO: Update User Url Name
+    // if new email is the same as current email
+    if (profile.user.email === data.newEmail) throw createError400('Same email, nothing to update');
 
-// TODO: Update User Pseudo
+    // If new email exist
+    const UserRep = datasource.getRepository(User);
+    const userExist = !!(await UserRep.count({
+      where: { email: data.newEmail },
+    }));
+    if (userExist) throw createError400('Email already assigned to an account');
 
-// TODO: Update User VIP
+    // Update User
+    profile.user.email = data.newEmail;
+
+    // Save User
+    await UserRep.save(profile.user);
+  } catch (err) {
+    throw err;
+  }
+};
+
+// NOTE: Update User Password
+export const updateUserPassword = async (datasource: DataSource, data: UpdatePasswordInput) => {
+  try {
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    if (!profile) throw createError404("This User doesn't exist");
+
+    // If same password
+    if (data.currentPassword === data.newPassword) throw createError400('Same password, nothing to update');
+
+    // Verify password
+    const hashedPassword = profile.user.password;
+    const isPasswordValid = await comparePassword(hashedPassword, data.currentPassword);
+    if (!isPasswordValid) throw createError400('Wrong password');
+
+    // Update User
+    profile.user.password = await hashPassword(data.newPassword);
+
+    // Save User
+    await ProfileRep.save(profile);
+  } catch (err) {
+    throw err;
+  }
+};
+
+// NOTE: Update User Url Name
+export const updateUserUrlName = async (datasource: DataSource, data: UpdateUrlNameInput) => {
+  try {
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    if (!profile) throw createError404("This User doesn't exist");
+
+    // If same UrlName
+    if (profile.urlName === data.urlName) throw createError400('Same Url name, nothing to update');
+
+    // If UrlName exist
+    const profileExist = !!(await ProfileRep.count({
+      where: { urlName: data.urlName },
+    }));
+    if (profileExist) throw createError400('Url name already assigned to an account');
+
+    // Update User
+    profile.urlName = data.urlName;
+
+    // Save User
+    await ProfileRep.save(profile);
+  } catch (err) {
+    throw err;
+  }
+};
+
+// NOTE: Update User Pseudo
+export const updateUserPseudo = async (datasource: DataSource, data: UpdatePseudoInput) => {
+  try {
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    if (!profile) throw createError404("This User doesn't exist");
+
+    // If same Pseudo
+    if (profile.user.pseudo === data.pseudo) throw createError400('Same Pseudo, nothing to update');
+
+    // Update User
+    profile.user.pseudo = data.pseudo;
+
+    // Save User
+    await ProfileRep.save(profile);
+  } catch (err) {
+    throw err;
+  }
+};
+
+// NOTE: Update User VIP
+export const updateUserVip = async (datasource: DataSource, data: UpdateVipInput) => {
+  try {
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    if (!profile) throw createError404("This User doesn't exist");
+
+    // Update User
+    const vip = data.vip;
+    profile.vip = vip;
+
+    // User is VIP
+    if (vip) {
+      profile.maxUrls = 250;
+      profile.availableUrls += 225;
+
+      // Disable restricted ones if user has old VIP urls
+      const oldVipUrls = profile.urls.filter((url) => url.restricted);
+      const updatedVipUrls = oldVipUrls.map((url) => ({ ...url, restricted: false }));
+      profile.urls = [...profile.urls.filter((url) => !url.restricted), ...updatedVipUrls];
+    }
+    // User is not VIP
+    else {
+      profile.maxUrls = 25;
+      profile.availableUrls -= 225;
+
+      // Restrict old urls to match new maxUrls
+      const oldUrls = profile.urls.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+      const restrictingUrls = oldUrls.slice(25).map((url) => ({ ...url, restricted: true }));
+      profile.urls = [...oldUrls.slice(0, 25), ...restrictingUrls];
+    }
+
+    // Update Urls
+    const UrlRep = datasource.getRepository(Url);
+    await UrlRep.save(profile.urls);
+
+    // Save User
+    await ProfileRep.save(profile);
+  } catch (err) {
+    throw err;
+  }
+};

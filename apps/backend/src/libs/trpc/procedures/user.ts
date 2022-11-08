@@ -1,5 +1,15 @@
 import { getDataSource } from '@libs/typeorm';
-import { createUser, deleteUser, getUser, getUsers } from '@models';
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUserEmail,
+  updateUserPassword,
+  updateUserPseudo,
+  updateUserUrlName,
+  updateUserVip,
+} from '@models';
 import {
   createUserSchema,
   deleteUserSchema,
@@ -30,29 +40,29 @@ export const userRouter = router({
     const datasource = await getDataSource();
     return getUsers(datasource);
   }),
-  // TODO:
+  // FIX: Use authProcedure to get UUID
   updateUserEmail: publicProcedure.input(updateUserEmailSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return true;
+    return updateUserEmail(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
   }),
-  // TODO:
+  // FIX: Use authProcedure to get UUID
   updateUserPassword: publicProcedure.input(updateUserPasswordSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return true;
+    return updateUserPassword(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
   }),
-  // TODO:
-  updateUserVIp: publicProcedure.input(updateUserVIPSchema).mutation(async ({ input, ctx }) => {
+  // FIX: Use authProcedure to get UUID
+  updateUserVip: publicProcedure.input(updateUserVIPSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return true;
+    return updateUserVip(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
   }),
-  // TODO:
+  // FIX: Use authProcedure to get UUID
   updateUserPseudo: publicProcedure.input(updateUserPseudoSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return true;
+    return updateUserPseudo(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
   }),
-  // TODO:
+  // FIX: Use authProcedure to get UUID
   updateUserUrlName: publicProcedure.input(updateUserUrlNameSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return true;
+    return updateUserUrlName(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
   }),
 });
