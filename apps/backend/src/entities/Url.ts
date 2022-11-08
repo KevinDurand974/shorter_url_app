@@ -51,6 +51,10 @@ export class Url {
   @Column({ type: 'boolean', default: true })
   enabled!: boolean;
 
+  // NOTE: Restricted
+  @Column({ type: 'boolean', default: false })
+  restricted!: boolean;
+
   // NOTE: Url creation date
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
