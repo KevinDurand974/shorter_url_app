@@ -129,12 +129,17 @@ export const updateUrl = async (datasource: DataSource, data: UpdateUrlInput) =>
       } else {
         url.ephemeral = false;
       }
+      updated = true;
+    }
+
+    // Compare Duration if Ephemeral is true
+    if (url.ephemeral && url.duration !== data.duration) {
       url.duration = data.duration;
       updated = true;
     }
 
     // Throw error if no change
-    if (updated) throw createError400('No changes made');
+    if (!updated) throw createError400('No changes made');
 
     // Reset all counters
     url.useCount = 0;
