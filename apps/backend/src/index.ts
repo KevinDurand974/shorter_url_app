@@ -9,7 +9,7 @@ import { createExpressMiddleware } from '@trpc/server/adapters/express';
 
 import { getDataSource } from '@libs/typeorm';
 import { createContext, mergeRouters } from '@libs/trpc';
-import { urlRouter, userRouter, redirectRouter } from '@libs/trpc/procedures';
+import { urlRouter, userRouter, redirectRouter, authRouter } from '@libs/trpc/procedures';
 
 type JsonErrorResult = {
   status: number;
@@ -23,7 +23,7 @@ type JsonErrorResult = {
 };
 
 // CONFIG TRPC HERE
-const appRouter = mergeRouters(urlRouter, userRouter, redirectRouter);
+const appRouter = mergeRouters(urlRouter, userRouter, redirectRouter, authRouter);
 
 const app = express();
 
