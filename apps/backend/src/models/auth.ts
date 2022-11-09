@@ -15,10 +15,3 @@ export const logout = async (datasource: DataSource, data: any) => {
     throw err;
   }
 };
-
-export const register = async (datasource: DataSource, data: any) => {
-  try {
-  } catch (err) {
-    throw err;
-  }
-};

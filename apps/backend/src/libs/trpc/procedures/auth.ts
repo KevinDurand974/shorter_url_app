@@ -16,11 +16,5 @@ export const authRouter = router({
       const datasource = await getDataSource();
       return true;
     }),
-  register: publicProcedure
-    .input((a) => a)
-    .mutation(async ({ input }) => {
-      const datasource = await getDataSource();
-      return true;
-    }),
   // TODO: Forgot Password ?
 });
