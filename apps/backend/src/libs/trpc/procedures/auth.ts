@@ -2,6 +2,7 @@ import { getDataSource } from '@libs/typeorm';
 
 import { publicProcedure, router } from '../configuration';
 
+// FIX: Use authProcedure to get UUID
 export const authRouter = router({
   login: publicProcedure
     .input((a) => a)
