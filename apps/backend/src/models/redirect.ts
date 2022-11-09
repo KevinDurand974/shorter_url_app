@@ -13,10 +13,10 @@ export const getRedirectUrl = async (datasource: DataSource, data: GetRedirectUr
     if (!url) throw createError404('Url not found');
 
     // If restricted
-    if (url.restricted) throw createError400("Cannot use this url because it's restricted");
+    if (url.restricted) throw createError400('Cancelled, this url is restricted');
 
     // If disabled
-    if (!url.enabled) throw createError400("Cannot use this url because it's disabled by the owner");
+    if (!url.enabled) throw createError400('Cancelled this url is disabled by his owner');
 
     // If the url is ephemeral, check if it has expired
     if (url.ephemeral) {
@@ -24,6 +24,8 @@ export const getRedirectUrl = async (datasource: DataSource, data: GetRedirectUr
       const now = new Date();
       if (isAfter(now, maxDate)) throw createError400('This url has expired');
     }
+
+    // DEV: Add increment count to this url (websocket ?)
 
     // Return the redirect url
     return url.redirect;
