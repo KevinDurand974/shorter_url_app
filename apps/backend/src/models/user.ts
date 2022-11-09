@@ -1,14 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Profile, Url, User } from '@entities';
-import {
-  comparePassword,
-  findOneProfileByUuid,
-  hashPassword,
-  profileSelectors,
-  urlSelectors,
-  userSelectors,
-} from '@helpers';
-import { createError400, createError404, createValidationError } from '@shorter/errors';
+import { comparePassword, findOneProfileByUuid, hashPassword, profileSelectors, userSelectors } from '@helpers';
+import { createError400, createError404 } from '@shorter/errors';
 import {
   CreateUserSchema,
   DeleteUserSchema,
