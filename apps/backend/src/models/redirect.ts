@@ -13,10 +13,10 @@ export const getRedirectUrl = async (datasource: DataSource, data: GetRedirectUr
     if (!url) throw createError404('Url not found');
 
     // If restricted
-    if (url.restricted) throw createError400('Cancelled, this url is restricted');
+    if (url.restricted) throw createError400('Error, this url is restricted');
 
     // If disabled
-    if (!url.enabled) throw createError400('Cancelled this url is disabled by his owner');
+    if (!url.enabled) throw createError400('Error, this url is disabled by its owner');
 
     // If the url is ephemeral, check if it has expired
     if (url.ephemeral) {
