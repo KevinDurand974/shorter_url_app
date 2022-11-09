@@ -164,6 +164,34 @@ export const updateUrl = async (datasource: DataSource, data: UpdateUrlInput) =>
   }
 };
 
+// NOTE: Update Url - Change active status
+export const updateUrlActiveStatus = async (datasource: DataSource, data: UpdateUrlActiveStatusInput) => {
+  try {
+    // Check if the user exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    if (!profile) {
+      throw createError404('User not found');
+    }
+
+    // If the url exist and belong to the user
+    const url = profile.urls.find((url) => url.uuid === data.urlUuid);
+    if (!url) throw createError404('Url not found');
+
+    // If status is the same
+    if (url.enabled === data.active) throw createError400('No changes made');
+
+    // Change the active status
+    url.enabled = data.active;
+
+    // Save the URL
+    const UrlRep = datasource.getRepository(Url);
+    await UrlRep.save(url);
+  } catch (err) {
+    throw err;
+  }
+};
+
 // NOTE: Get One Url
 export const getUrl = async (datasource: DataSource, data: GetUrlInput) => {
   try {
