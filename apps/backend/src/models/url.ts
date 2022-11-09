@@ -2,13 +2,22 @@ import { DataSource } from 'typeorm';
 import { Profile, Url } from '@entities';
 import { findOneProfileByUuid, generateUUID } from '@helpers';
 import { createError400, createError404 } from '@shorter/errors';
-import type { CreateUrlSchema, DeleteUrlSchema, UpdateUrlSchema, GetUrlSchema } from '@shorter/validators';
+import type {
+  CreateUrlSchema,
+  DeleteUrlSchema,
+  UpdateUrlSchema,
+  GetUrlSchema,
+  UpdateUrlActiveStatusSchema,
+} from '@shorter/validators';
 
 type Uuid = { uuid: string };
 type CreateUrlInput = CreateUrlSchema & Uuid;
 type DeleteUrlInput = DeleteUrlSchema & Uuid;
 type UpdateUrlInput = UpdateUrlSchema & Uuid;
 type GetUrlInput = GetUrlSchema & Uuid;
+type UpdateUrlActiveStatusInput = UpdateUrlActiveStatusSchema & Uuid;
+
+// FIX: Check if email verified on authProcedure and not here
 
 // NOTE: Create Url
 export const createUrl = async (datasource: DataSource, data: CreateUrlInput) => {
@@ -141,8 +150,8 @@ export const updateUrl = async (datasource: DataSource, data: UpdateUrlInput) =>
     // Throw error if no change
     if (!updated) throw createError400('No changes made');
 
-    // Reset all counters
-    url.useCount = 0;
+    // Reset all counters if not the same redirect url
+    if (url.redirect !== data.to) url.useCount = 0;
 
     // Save the URL
     const UrlRep = datasource.getRepository(Url);
