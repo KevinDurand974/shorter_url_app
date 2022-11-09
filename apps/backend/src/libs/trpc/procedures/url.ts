@@ -1,6 +1,12 @@
 import { getDataSource } from '@libs/typeorm';
-import { createUrl, deleteUrl, getUrl, getUrls, updateUrl } from '@models';
-import { createUrlSchema, deleteUrlSchema, getUrlSchema, updateUrlSchema } from '@shorter/validators';
+import { createUrl, deleteUrl, getUrl, getUrls, updateUrl, updateUrlActiveStatus } from '@models';
+import {
+  createUrlSchema,
+  deleteUrlSchema,
+  getUrlSchema,
+  updateUrlActiveStatusSchema,
+  updateUrlSchema,
+} from '@shorter/validators';
 
 import { publicProcedure, router } from '../configuration';
 
@@ -24,6 +30,13 @@ export const urlRouter = router({
   updateUrl: publicProcedure.input(updateUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return updateUrl(datasource, {
+      ...input,
+      uuid: process.env.UUID_TESTING!, // FIX:
+    });
+  }),
+  updateUrlActiveStatus: publicProcedure.input(updateUrlActiveStatusSchema).mutation(async ({ input, ctx }) => {
+    const datasource = await getDataSource();
+    return updateUrlActiveStatus(datasource, {
       ...input,
       uuid: process.env.UUID_TESTING!, // FIX:
     });
