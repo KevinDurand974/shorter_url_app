@@ -1,5 +1,5 @@
 export * from "./user";
-export * from "./shorturl";
+export * from "./redirect";
 export * from "./url";
 
 export const parseZodError = (errors: any[]) => {
