@@ -43,26 +43,26 @@ export const userRouter = router({
   // FIX: Use authProcedure to get UUID
   updateUserEmail: publicProcedure.input(updateUserEmailSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUserEmail(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
+    return updateUserEmail(datasource, { ...input, uuid: process.env.UUID_TESTING! });
   }),
   // FIX: Use authProcedure to get UUID
   updateUserPassword: publicProcedure.input(updateUserPasswordSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUserPassword(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
+    return updateUserPassword(datasource, { ...input, uuid: process.env.UUID_TESTING! });
   }),
   // FIX: Use authProcedure to get UUID
   updateUserVip: publicProcedure.input(updateUserVIPSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUserVip(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
+    return updateUserVip(datasource, { ...input, uuid: process.env.UUID_TESTING! });
   }),
   // FIX: Use authProcedure to get UUID
   updateUserPseudo: publicProcedure.input(updateUserPseudoSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUserPseudo(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
+    return updateUserPseudo(datasource, { ...input, uuid: process.env.UUID_TESTING! });
   }),
   // FIX: Use authProcedure to get UUID
   updateUserUrlName: publicProcedure.input(updateUserUrlNameSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUserUrlName(datasource, { ...input, uuid: '38284f50-f39b-4754-b67b-791e79200efc' });
+    return updateUserUrlName(datasource, { ...input, uuid: process.env.UUID_TESTING! });
   }),
 });
