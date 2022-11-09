@@ -32,7 +32,7 @@ export class Url {
   redirect!: string;
 
   // NOTE: Use number
-  @Column({ type: 'bigint', default: 0 })
+  @Column({ type: 'numeric', default: 0 })
   useCount!: number;
 
   // NOTE: If ephemeral is enabled
