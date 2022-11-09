@@ -50,7 +50,15 @@ export const getUrlSchema = z.object({
 	urlUuid: z.string().uuid(),
 });
 
+export const updateUrlActiveStatusSchema = z.object({
+	urlUuid: z.string().uuid(),
+	active: z.boolean(),
+});
+
 export type CreateUrlSchema = z.infer<typeof createUrlSchema>;
 export type DeleteUrlSchema = z.infer<typeof deleteUrlSchema>;
 export type UpdateUrlSchema = z.infer<typeof updateUrlSchema>;
 export type GetUrlSchema = z.infer<typeof getUrlSchema>;
+export type UpdateUrlActiveStatusSchema = z.infer<
+	typeof updateUrlActiveStatusSchema
+>;
