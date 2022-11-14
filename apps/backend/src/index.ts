@@ -5,6 +5,7 @@ import routes from './routes';
 import createError, { HttpError } from 'http-errors';
 import morgan from 'morgan';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 
 import { getDataSource } from '@libs/typeorm';
@@ -29,6 +30,7 @@ const app = express();
 
 // NOTE: Middleware
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(
   cors({
