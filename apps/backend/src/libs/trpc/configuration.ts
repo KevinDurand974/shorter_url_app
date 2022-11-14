@@ -4,8 +4,14 @@ import { ZodError } from 'zod';
 
 import { parseZodError } from '@shorter/validators';
 
-export const createContext = ({ req, res }: CreateExpressContextOptions) => ({});
-type Context = inferAsyncReturnType<typeof createContext>;
+export const createContext = async ({ req, res }: CreateExpressContextOptions) => {
+  return {
+    headers: req.headers,
+    cookies: req.cookies,
+    res,
+  };
+};
+export type Context = inferAsyncReturnType<typeof createContext>;
 
 const t = initTRPC.context<Context>().create({
   errorFormatter: ({ shape, error }) => {
@@ -34,12 +40,31 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
+const isAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.headers.autorization) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'Unauthenticated',
+    });
+  }
+
+  return next({
+    ctx: {
+      ...ctx,
+      headers: {
+        ...ctx.headers,
+        authorization: ctx.headers.autorization as string,
+      },
+    },
+  });
+});
+
 export const router = t.router;
-export const publicProcedure = t.procedure;
 export const mergeRouters = t.mergeRouters;
+export const publicProcedure = t.procedure;
+export const authProcedure = t.procedure.use(isAuthed);
 
 /* TODO: Add Procedures:
-  - Auth
   - Admin
 
   -> maybe other ?
