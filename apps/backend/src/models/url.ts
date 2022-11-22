@@ -13,8 +13,6 @@ import { Context } from '@libs/trpc';
 
 type ContextWithPayload = Context & { payload: Payload };
 
-// FIX: Check if email verified on authProcedure and not here
-
 // NOTE: Create Url
 export const createUrl = async (datasource: DataSource, data: CreateUrlSchema, ctx: ContextWithPayload) => {
   try {
@@ -27,9 +25,6 @@ export const createUrl = async (datasource: DataSource, data: CreateUrlSchema, c
     if (!profile) {
       throw createError404('Profile not found');
     }
-
-    // If Email is verified
-    if (!profile.verified) throw createError400('Email is not verified');
 
     // If the user has available urls
     if (+profile.availableUrls <= 0) throw createError400('You have no urls remaining');
@@ -88,9 +83,6 @@ export const deleteUrl = async (datasource: DataSource, data: DeleteUrlSchema, c
       throw createError404('User not found');
     }
 
-    // If Email is verified
-    if (!profile.verified) throw createError400('Email is not verified');
-
     // If the url exist and belong to the user
     const url = profile.urls.find((url) => url.uuid === data.urlUuid);
     if (!url) throw createError404('Url not found');
@@ -122,9 +114,6 @@ export const updateUrl = async (datasource: DataSource, data: UpdateUrlSchema, c
     if (!profile) {
       throw createError404('User not found');
     }
-
-    // If Email is verified
-    if (!profile.verified) throw createError400('Email is not verified');
 
     // If the url exist and belong to the user
     const url = profile.urls.find((url) => url.uuid === data.urlUuid);
@@ -217,9 +206,6 @@ export const getUrl = async (datasource: DataSource, data: GetUrlSchema, ctx: Co
       throw createError404('User not found');
     }
 
-    // If Email is verified
-    if (!profile.verified) throw createError400('Email is not verified');
-
     // Get and Check if the url exist
     const url = profile.urls.find((url) => url.uuid === data.urlUuid);
     if (!url) throw createError404('Url not found');
@@ -243,9 +229,6 @@ export const getUrls = async (datasource: DataSource, ctx: ContextWithPayload) =
     if (!profile) {
       throw createError404('User not found');
     }
-
-    // If Email is verified
-    if (!profile.verified) throw createError400('Email is not verified');
 
     // Return the urls
     return profile.urls;

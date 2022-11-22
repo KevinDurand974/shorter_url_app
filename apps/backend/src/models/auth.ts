@@ -30,7 +30,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
       uuid: user.profile.uuid,
       vip: user.profile.vip,
       pseudo: user.pseudo,
-      emailChecked: user.profile.verified,
+      emailVerified: user.profile.verified,
     });
 
     // Create cookie for refresh_token
@@ -52,7 +52,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
       uuid: user.profile.uuid,
       vip: user.profile.vip,
       pseudo: user.pseudo,
-      emailChecked: user.profile.verified,
+      emailVerified: user.profile.verified,
     });
 
     // Return access_token
@@ -100,7 +100,7 @@ export const refreshToken = async (datasource: DataSource, ctx: ContextWithPaylo
       uuid: payload.uuid,
       vip: payload.vip,
       pseudo: payload.pseudo,
-      emailChecked: payload.emailChecked,
+      emailVerified: payload.emailVerified,
     });
 
     // Return access_token
@@ -150,7 +150,7 @@ export const register = async (datasource: DataSource, data: CreateUserSchema, c
       uuid: user.profile.uuid,
       vip: user.profile.vip,
       pseudo: user.pseudo,
-      emailChecked: user.profile.verified,
+      emailVerified: user.profile.verified,
     });
 
     // Create cookie for refresh_token
@@ -172,7 +172,7 @@ export const register = async (datasource: DataSource, data: CreateUserSchema, c
       uuid: user.profile.uuid,
       vip: user.profile.vip,
       pseudo: user.pseudo,
-      emailChecked: user.profile.verified,
+      emailVerified: user.profile.verified,
     });
 
     // Return access_token

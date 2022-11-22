@@ -4,13 +4,13 @@ export type Payload = {
   uuid: string;
   vip: boolean;
   pseudo: string;
-  emailChecked: boolean;
+  emailVerified: boolean;
 };
 
 export const createAccessToken = (payload: Payload) => {
   return sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
-    // expiresIn: '5m',
-    expiresIn: '1m',
+    // expiresIn: '5m', // FIX:
+    expiresIn: '5m',
   });
 };
 export const createRefreshToken = (payload: Payload) => {
