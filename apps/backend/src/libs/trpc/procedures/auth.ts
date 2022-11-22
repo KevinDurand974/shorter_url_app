@@ -2,7 +2,7 @@ import { createUserSchema, loginSchema } from '@shorter/validators';
 import { getDataSource } from '@libs/typeorm';
 
 import { publicProcedure, authProcedure, router } from '../configuration';
-import { createUser, login, logout, refreshToken } from '@models';
+import { register, login, logout, refreshToken } from '@models';
 
 export const authRouter = router({
   // NOTE: Public Procedures
@@ -10,9 +10,9 @@ export const authRouter = router({
     const datasource = await getDataSource();
     return login(datasource, input, ctx);
   }),
-  register: publicProcedure.input(createUserSchema).mutation(async ({ input }) => {
+  register: publicProcedure.input(createUserSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return createUser(datasource, input);
+    return register(datasource, input, ctx);
   }),
   // NOTE: Auth Procedures
   logout: authProcedure.mutation(async ({ ctx }) => {

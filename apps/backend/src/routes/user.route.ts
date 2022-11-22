@@ -1,4 +1,4 @@
-import { createUser } from '@models';
+import { register } from '@models';
 import { getDataSource } from '@libs/typeorm';
 import { Router } from 'express';
 
@@ -8,7 +8,7 @@ const router = Router();
 router.post('/', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    const newUser = await createUser(datasource, req.body);
+    const newUser = await register(datasource, req.body);
     res.status(201).json({ status: 201, data: newUser });
   } catch (err) {
     next(err);

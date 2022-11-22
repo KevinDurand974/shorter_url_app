@@ -6,8 +6,10 @@ import { createError400, createError401, createError404 } from '@shorter/errors'
 import { CreateUserSchema, LoginSchema } from '@shorter/validators';
 
 import { Profile, User, Token } from '@entities';
-import { comparePassword, createAccessToken, createRefreshToken, hashPassword, verifyToken } from '@helpers';
+import { comparePassword, createAccessToken, createRefreshToken, hashPassword, Payload, verifyToken } from '@helpers';
 import { Context } from '@libs/trpc';
+
+type ContextWithPayload = Context & { payload: Payload };
 
 // NOTE: Login
 export const login = async (datasource: DataSource, data: LoginSchema, ctx: Context) => {
@@ -62,7 +64,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
 };
 
 // NOTE: Logout
-export const logout = async (datasource: DataSource, ctx: Context) => {
+export const logout = async (datasource: DataSource, ctx: ContextWithPayload) => {
   // Get refresh_token from cookies
   const refresh_token = ctx.cookies.refresh_token;
 
@@ -77,19 +79,10 @@ export const logout = async (datasource: DataSource, ctx: Context) => {
 };
 
 // NOTE: Refresh Token
-export const refreshToken = async (datasource: DataSource, ctx: Context) => {
+export const refreshToken = async (datasource: DataSource, ctx: ContextWithPayload) => {
   try {
-    // Get refresh_token
-    const refresh_token = ctx.cookies.refresh_token;
-
-    // If refresh_token exist
-    if (!refresh_token) throw createError401('Unauthenticated');
-
-    // If refresh_token is valid or Expired
-    const payload = verifyToken(refresh_token, 'refresh');
-
-    // If there a Payload
-    if (!payload) throw createError401('Unauthenticated');
+    // Get Payload from context
+    const payload = ctx.payload;
 
     // Check token in database
     const TokenRep = datasource.getRepository(Token);
@@ -120,9 +113,7 @@ export const refreshToken = async (datasource: DataSource, ctx: Context) => {
 };
 
 // NOTE: Register
-// FIX: Remove duplicate in User model
-// FIX: Export it when up done
-const createUser = async (datasource: DataSource, data: CreateUserSchema, ctx: Context) => {
+export const register = async (datasource: DataSource, data: CreateUserSchema, ctx: Context) => {
   try {
     // If email exist
     const UserRep = datasource.getRepository(User);

@@ -1,6 +1,5 @@
 import { getDataSource } from '@libs/typeorm';
 import {
-  createUser,
   deleteUser,
   getUser,
   getUsers,
@@ -11,7 +10,6 @@ import {
   updateUserVip,
 } from '@models';
 import {
-  createUserSchema,
   deleteUserSchema,
   getUserSchema,
   updateUserEmailSchema,
@@ -24,10 +22,6 @@ import {
 import { publicProcedure, router } from '../configuration';
 
 export const userRouter = router({
-  createUser: publicProcedure.input(createUserSchema).mutation(async ({ input, ctx }) => {
-    const datasource = await getDataSource();
-    return createUser(datasource, input);
-  }),
   deleteUser: publicProcedure.input(deleteUserSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return deleteUser(datasource, input);

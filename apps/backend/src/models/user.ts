@@ -3,7 +3,6 @@ import { Profile, Url, User } from '@entities';
 import { comparePassword, findOneProfileByUuid, hashPassword, profileSelectors, userSelectors } from '@helpers';
 import { createError400, createError404 } from '@shorter/errors';
 import {
-  CreateUserSchema,
   DeleteUserSchema,
   UpdateUserEmailSchema,
   UpdateUserPasswordSchema,
@@ -13,54 +12,12 @@ import {
 } from '@shorter/validators';
 
 type Uuid = { uuid: string };
-type CreateUserInput = CreateUserSchema;
 type UpdateEmailInput = UpdateUserEmailSchema & Uuid;
 type UpdatePasswordInput = UpdateUserPasswordSchema & Uuid;
 type UpdateUrlNameInput = UpdateUserUrlNameSchema & Uuid;
 type UpdateVipInput = UpdateUserVIPSchema & Uuid;
 type UpdatePseudoInput = UpdateUserPseudoSchema & Uuid;
 type DeleteUserInput = DeleteUserSchema & Uuid;
-
-// NOTE: Create User
-export const createUser = async (datasource: DataSource, data: CreateUserInput) => {
-  try {
-    // If email exist
-    const UserRep = datasource.getRepository(User);
-    const userExist = !!(await UserRep.count({
-      where: { email: data.email },
-    }));
-    if (userExist) throw createError400('Email already assigned to an account');
-
-    // If UrlName exist
-    const ProfileRep = datasource.getRepository(Profile);
-    const profileExist = !!(await ProfileRep.count({
-      where: { urlName: data.urlName },
-    }));
-    if (profileExist) throw createError400('UrlName already assigned to an account');
-
-    // Create User
-    const user = new User();
-    user.email = data.email;
-    user.password = await hashPassword(data.password);
-    user.pseudo = data.pseudo;
-
-    // Create Profile
-    const profile = new Profile();
-    profile.user = user;
-    profile.urlName = data.urlName;
-
-    // Save User
-    const newUser = await UserRep.save(user);
-
-    // Save Profile
-    const newProfile = await ProfileRep.save(profile);
-
-    // return
-    return { uuid: newProfile.uuid, email: newUser.email, pseudo: newUser.pseudo, vip: newProfile.vip };
-  } catch (err) {
-    throw err;
-  }
-};
 
 // NOTE: Delete User
 export const deleteUser = async (datasource: DataSource, data: DeleteUserInput) => {
