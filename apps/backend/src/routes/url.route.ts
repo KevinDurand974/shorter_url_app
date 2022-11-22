@@ -19,7 +19,7 @@ const router = Router();
 router.delete('/', async (req, res, next) => {
   try {
     const datasource = await getDataSource();
-    await deleteUrl(datasource, req.body);
+    // await deleteUrl(datasource, req.body);
     res.status(204).end();
   } catch (err) {
     next(err);
