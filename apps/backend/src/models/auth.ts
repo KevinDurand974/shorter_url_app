@@ -1,12 +1,11 @@
 import { DataSource, MoreThanOrEqual } from 'typeorm';
-import { verify } from 'jsonwebtoken';
 import { add } from 'date-fns';
 
-import { createError400, createError401, createError404 } from '@shorter/errors';
+import { createError400, createError401 } from '@shorter/errors';
 import { CreateUserSchema, LoginSchema } from '@shorter/validators';
 
 import { Profile, User, Token } from '@entities';
-import { comparePassword, createAccessToken, createRefreshToken, hashPassword, Payload, verifyToken } from '@helpers';
+import { comparePassword, createAccessToken, createRefreshToken, hashPassword, Payload } from '@helpers';
 import { Context } from '@libs/trpc';
 
 type ContextWithPayload = Context & { payload: Payload };
