@@ -38,10 +38,9 @@ export const userRouter = router({
     const datasource = await getDataSource();
     return updateUserEmail(datasource, input, ctx);
   }),
-  // FIX: Use authProcedure to get UUID
-  updateUserPassword: publicProcedure.input(updateUserPasswordSchema).mutation(async ({ input, ctx }) => {
+  updateUserPassword: authProcedure.input(updateUserPasswordSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUserPassword(datasource, { ...input, uuid: process.env.UUID_TESTING! });
+    return updateUserPassword(datasource, input, ctx);
   }),
   // FIX: Use authProcedure to get UUID
   updateUserVip: publicProcedure.input(updateUserVIPSchema).mutation(async ({ input, ctx }) => {

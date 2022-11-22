@@ -21,7 +21,6 @@ import { Context } from '@libs/trpc';
 
 type ContextWithPayload = Context & { payload: Payload };
 type Uuid = { uuid: string };
-type UpdatePasswordInput = UpdateUserPasswordSchema & Uuid;
 type UpdateUrlNameInput = UpdateUserUrlNameSchema & Uuid;
 type UpdateVipInput = UpdateUserVIPSchema & Uuid;
 type UpdatePseudoInput = UpdateUserPseudoSchema & Uuid;
@@ -139,11 +138,18 @@ export const updateUserEmail = async (datasource: DataSource, data: UpdateUserEm
 };
 
 // NOTE: Update User Password
-export const updateUserPassword = async (datasource: DataSource, data: UpdatePasswordInput) => {
+export const updateUserPassword = async (
+  datasource: DataSource,
+  data: UpdateUserPasswordSchema,
+  ctx: ContextWithPayload
+) => {
   try {
+    // Get payload Data
+    const { uuid } = ctx.payload;
+
     // If User exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) throw createError404("This User doesn't exist");
 
     // If same password
