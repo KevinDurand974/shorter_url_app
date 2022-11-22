@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
-import routes from './routes';
 import createError, { HttpError } from 'http-errors';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -38,9 +37,6 @@ app.use(
     credentials: true,
   })
 );
-
-// NOTE: Router
-app.use('/api/v1', routes);
 
 // NOTE: TRPC
 app.use(
