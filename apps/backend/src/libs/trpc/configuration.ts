@@ -3,6 +3,8 @@ import { CreateExpressContextOptions, createExpressMiddleware } from '@trpc/serv
 import { ZodError } from 'zod';
 
 import { parseZodError } from '@shorter/validators';
+import { createError401 } from '@shorter/errors';
+import { verifyToken } from '@helpers';
 
 export const createContext = async ({ req, res }: CreateExpressContextOptions) => {
   return {
@@ -48,6 +50,12 @@ const isAuthed = t.middleware(({ next, ctx }) => {
     });
   }
 
+  const access_token = ctx.headers.authorization?.split(' ')[1];
+  if (!access_token) throw createError401('Unauthenticated');
+
+  const payload = verifyToken(access_token, 'access');
+  if (!payload) throw createError401('Unauthenticated');
+
   return next({
     ctx: {
       ...ctx,
@@ -55,6 +63,7 @@ const isAuthed = t.middleware(({ next, ctx }) => {
         ...ctx.headers,
         authorization: ctx.headers.autorization as string,
       },
+      payload,
     },
   });
 });
