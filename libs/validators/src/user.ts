@@ -34,7 +34,6 @@ export const updateUserPseudoSchema = z.object({
 	pseudo: z.string().min(3).max(255),
 });
 export const deleteUserSchema = z.object({
-	uuid: z.string().uuid(),
 	password: z.string(),
 });
 export const getUserSchema = z.object({
