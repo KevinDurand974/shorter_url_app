@@ -1,6 +1,6 @@
 import { sign, verify } from 'jsonwebtoken';
 
-type Payload = {
+export type Payload = {
   uuid: string;
   vip: boolean;
   pseudo: string;
