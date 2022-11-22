@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Profile, Url } from '@entities';
-import { findOneProfileByUuid, generateUUID } from '@helpers';
+import { findOneProfileByUuid, generateUUID, Payload } from '@helpers';
 import { createError400, createError404 } from '@shorter/errors';
 import type {
   CreateUrlSchema,
@@ -9,22 +9,21 @@ import type {
   GetUrlSchema,
   UpdateUrlActiveStatusSchema,
 } from '@shorter/validators';
+import { Context } from '@libs/trpc';
 
-type Uuid = { uuid: string };
-type CreateUrlInput = CreateUrlSchema & Uuid;
-type DeleteUrlInput = DeleteUrlSchema & Uuid;
-type UpdateUrlInput = UpdateUrlSchema & Uuid;
-type GetUrlInput = GetUrlSchema & Uuid;
-type UpdateUrlActiveStatusInput = UpdateUrlActiveStatusSchema & Uuid;
+type ContextWithPayload = Context & { payload: Payload };
 
 // FIX: Check if email verified on authProcedure and not here
 
 // NOTE: Create Url
-export const createUrl = async (datasource: DataSource, data: CreateUrlInput) => {
+export const createUrl = async (datasource: DataSource, data: CreateUrlSchema, ctx: ContextWithPayload) => {
   try {
+    // Get Uuid from the context
+    const { uuid } = ctx.payload;
+
     // If the user exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) {
       throw createError404('Profile not found');
     }
@@ -77,11 +76,14 @@ export const createUrl = async (datasource: DataSource, data: CreateUrlInput) =>
 };
 
 // NOTE: Delete Url
-export const deleteUrl = async (datasource: DataSource, data: DeleteUrlInput) => {
+export const deleteUrl = async (datasource: DataSource, data: DeleteUrlSchema, ctx: ContextWithPayload) => {
   try {
+    // Get Uuid from the context
+    const { uuid } = ctx.payload;
+
     // Check if the user exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) {
       throw createError404('User not found');
     }
@@ -107,13 +109,16 @@ export const deleteUrl = async (datasource: DataSource, data: DeleteUrlInput) =>
 };
 
 // NOTE: Update Url
-export const updateUrl = async (datasource: DataSource, data: UpdateUrlInput) => {
+export const updateUrl = async (datasource: DataSource, data: UpdateUrlSchema, ctx: ContextWithPayload) => {
   try {
     let updated = false;
 
+    // Get Uuid from the context
+    const { uuid } = ctx.payload;
+
     // Check if the user exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) {
       throw createError404('User not found');
     }
@@ -165,11 +170,18 @@ export const updateUrl = async (datasource: DataSource, data: UpdateUrlInput) =>
 };
 
 // NOTE: Update Url - Change active status
-export const updateUrlActiveStatus = async (datasource: DataSource, data: UpdateUrlActiveStatusInput) => {
+export const updateUrlActiveStatus = async (
+  datasource: DataSource,
+  data: UpdateUrlActiveStatusSchema,
+  ctx: ContextWithPayload
+) => {
   try {
+    // Get Uuid from the context
+    const { uuid } = ctx.payload;
+
     // Check if the user exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) {
       throw createError404('User not found');
     }
@@ -193,11 +205,14 @@ export const updateUrlActiveStatus = async (datasource: DataSource, data: Update
 };
 
 // NOTE: Get One Url
-export const getUrl = async (datasource: DataSource, data: GetUrlInput) => {
+export const getUrl = async (datasource: DataSource, data: GetUrlSchema, ctx: ContextWithPayload) => {
   try {
+    // Get Uuid from the context
+    const { uuid } = ctx.payload;
+
     // Check if the user exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) {
       throw createError404('User not found');
     }
@@ -217,11 +232,14 @@ export const getUrl = async (datasource: DataSource, data: GetUrlInput) => {
 };
 
 // NOTE: Get All Urls
-export const getUrls = async (datasource: DataSource, data: Uuid) => {
+export const getUrls = async (datasource: DataSource, ctx: ContextWithPayload) => {
   try {
+    // Get Uuid from the context
+    const { uuid } = ctx.payload;
+
     // Check if the user exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) {
       throw createError404('User not found');
     }

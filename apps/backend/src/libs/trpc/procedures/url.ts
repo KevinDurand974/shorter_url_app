@@ -8,50 +8,31 @@ import {
   updateUrlSchema,
 } from '@shorter/validators';
 
-import { publicProcedure, router } from '../configuration';
+import { authProcedure, router } from '../configuration';
 
-// FIX: use authProcedure - It's User based only
-// FIX: use Context to get User UUID
 export const urlRouter = router({
-  createUrl: publicProcedure.input(createUrlSchema).mutation(async ({ input, ctx }) => {
+  createUrl: authProcedure.input(createUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return createUrl(datasource, {
-      ...input,
-      uuid: process.env.UUID_TESTING!, // FIX:
-    });
+    return createUrl(datasource, input, ctx);
   }),
-  deleteUrl: publicProcedure.input(deleteUrlSchema).mutation(async ({ input, ctx }) => {
+  deleteUrl: authProcedure.input(deleteUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return deleteUrl(datasource, {
-      ...input,
-      uuid: process.env.UUID_TESTING!, // FIX:
-    });
+    return deleteUrl(datasource, input, ctx);
   }),
-  updateUrl: publicProcedure.input(updateUrlSchema).mutation(async ({ input, ctx }) => {
+  updateUrl: authProcedure.input(updateUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUrl(datasource, {
-      ...input,
-      uuid: process.env.UUID_TESTING!, // FIX:
-    });
+    return updateUrl(datasource, input, ctx);
   }),
-  updateUrlActiveStatus: publicProcedure.input(updateUrlActiveStatusSchema).mutation(async ({ input, ctx }) => {
+  updateUrlActiveStatus: authProcedure.input(updateUrlActiveStatusSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUrlActiveStatus(datasource, {
-      ...input,
-      uuid: process.env.UUID_TESTING!, // FIX:
-    });
+    return updateUrlActiveStatus(datasource, input, ctx);
   }),
-  getUrl: publicProcedure.input(getUrlSchema).query(async ({ input, ctx }) => {
+  getUrl: authProcedure.input(getUrlSchema).query(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return getUrl(datasource, {
-      ...input,
-      uuid: process.env.UUID_TESTING!, // FIX:
-    });
+    return getUrl(datasource, input, ctx);
   }),
-  getUrls: publicProcedure.query(async ({ ctx }) => {
+  getUrls: authProcedure.query(async ({ ctx }) => {
     const datasource = await getDataSource();
-    return getUrls(datasource, {
-      uuid: process.env.UUID_TESTING!, // FIX:
-    });
+    return getUrls(datasource, ctx);
   }),
 });
