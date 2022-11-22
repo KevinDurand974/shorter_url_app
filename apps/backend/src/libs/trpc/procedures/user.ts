@@ -19,7 +19,7 @@ import {
   updateUserVIPSchema,
 } from '@shorter/validators';
 
-import { publicProcedure, router } from '../configuration';
+import { publicProcedure, authProcedure, router } from '../configuration';
 
 export const userRouter = router({
   deleteUser: publicProcedure.input(deleteUserSchema).mutation(async ({ input, ctx }) => {
@@ -34,10 +34,9 @@ export const userRouter = router({
     const datasource = await getDataSource();
     return getUsers(datasource);
   }),
-  // FIX: Use authProcedure to get UUID
-  updateUserEmail: publicProcedure.input(updateUserEmailSchema).mutation(async ({ input, ctx }) => {
+  updateUserEmail: authProcedure.input(updateUserEmailSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUserEmail(datasource, { ...input, uuid: process.env.UUID_TESTING! });
+    return updateUserEmail(datasource, input, ctx);
   }),
   // FIX: Use authProcedure to get UUID
   updateUserPassword: publicProcedure.input(updateUserPasswordSchema).mutation(async ({ input, ctx }) => {

@@ -1,6 +1,13 @@
 import { DataSource } from 'typeorm';
 import { Profile, Url, User } from '@entities';
-import { comparePassword, findOneProfileByUuid, hashPassword, profileSelectors, userSelectors } from '@helpers';
+import {
+  comparePassword,
+  findOneProfileByUuid,
+  hashPassword,
+  Payload,
+  profileSelectors,
+  userSelectors,
+} from '@helpers';
 import { createError400, createError404 } from '@shorter/errors';
 import {
   DeleteUserSchema,
@@ -10,9 +17,10 @@ import {
   UpdateUserUrlNameSchema,
   UpdateUserVIPSchema,
 } from '@shorter/validators';
+import { Context } from '@libs/trpc';
 
+type ContextWithPayload = Context & { payload: Payload };
 type Uuid = { uuid: string };
-type UpdateEmailInput = UpdateUserEmailSchema & Uuid;
 type UpdatePasswordInput = UpdateUserPasswordSchema & Uuid;
 type UpdateUrlNameInput = UpdateUserUrlNameSchema & Uuid;
 type UpdateVipInput = UpdateUserVIPSchema & Uuid;
@@ -97,11 +105,14 @@ export const getUsers = async (datasource: DataSource) => {
 };
 
 // NOTE: Update User Email
-export const updateUserEmail = async (datasource: DataSource, data: UpdateEmailInput) => {
+export const updateUserEmail = async (datasource: DataSource, data: UpdateUserEmailSchema, ctx: ContextWithPayload) => {
   try {
+    // Get payload Data
+    const { uuid } = ctx.payload;
+
     // If User exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) throw createError404("This User doesn't exist");
 
     // If this user has this email
