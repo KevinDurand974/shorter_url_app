@@ -67,8 +67,10 @@ export const logout = async (datasource: DataSource, ctx: Context) => {
   const refresh_token = ctx.cookies.refresh_token;
 
   // Remove it from database
-  const TokenRep = datasource.getRepository(Token);
-  await TokenRep.delete({ token: refresh_token });
+  if (refresh_token) {
+    const TokenRep = datasource.getRepository(Token);
+    await TokenRep.delete({ token: refresh_token });
+  }
 
   // Remove it from cookies
   ctx.res.clearCookie('refresh_token');
@@ -187,31 +189,5 @@ const createUser = async (datasource: DataSource, data: CreateUserSchema, ctx: C
     return { access_token };
   } catch (err) {
     throw err;
-  }
-};
-
-// TODO: Test User auth
-// TODO: Create the authMiddleware with this
-export const auth = async (datasource: DataSource, ctx: Context) => {
-  try {
-    const access_token = ctx.headers.authorization?.split(' ')[1];
-
-    if (!access_token) throw createError401('Unauthenticated');
-
-    const payload = verifyToken(access_token, 'access');
-
-    if (!payload) throw createError401('Unauthenticated');
-
-    const ProfileRep = datasource.getRepository(Profile);
-    const profile = await ProfileRep.findOne({
-      where: { uuid: payload.uuid },
-      relations: ['user'],
-    });
-
-    if (!profile) throw createError401('Unauthenticated');
-
-    return profile.uuid;
-  } catch (err) {
-    throw createError401('Unauthenticated');
   }
 };
