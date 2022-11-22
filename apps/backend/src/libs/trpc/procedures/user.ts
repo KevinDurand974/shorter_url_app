@@ -22,17 +22,19 @@ import {
 import { publicProcedure, authProcedure, router } from '../configuration';
 
 export const userRouter = router({
-  deleteUser: publicProcedure.input(deleteUserSchema).mutation(async ({ input, ctx }) => {
-    const datasource = await getDataSource();
-    return deleteUser(datasource, input);
-  }),
-  getUser: publicProcedure.input(getUserSchema).query(async ({ input, ctx }) => {
+  // NOTE: Public Procedures
+  getUser: publicProcedure.input(getUserSchema).query(async ({ input }) => {
     const datasource = await getDataSource();
     return getUser(datasource, input);
   }),
   getUsers: publicProcedure.query(async () => {
     const datasource = await getDataSource();
     return getUsers(datasource);
+  }),
+  // NOTE: Auth Procedures
+  deleteUser: authProcedure.input(deleteUserSchema).mutation(async ({ input, ctx }) => {
+    const datasource = await getDataSource();
+    return deleteUser(datasource, input, ctx);
   }),
   updateUserEmail: authProcedure.input(updateUserEmailSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();

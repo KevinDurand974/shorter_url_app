@@ -21,14 +21,16 @@ import { Context } from '@libs/trpc';
 
 type ContextWithPayload = Context & { payload: Payload };
 type Uuid = { uuid: string };
-type DeleteUserInput = DeleteUserSchema & Uuid;
 
 // NOTE: Delete User
-export const deleteUser = async (datasource: DataSource, data: DeleteUserInput) => {
+export const deleteUser = async (datasource: DataSource, data: DeleteUserSchema, ctx: ContextWithPayload) => {
   try {
+    // Get payload data
+    const { uuid } = ctx.payload;
+
     // If User exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) throw createError404("This User doesn't exist");
 
     // Vefify password
