@@ -8,26 +8,26 @@ import {
   updateUrlSchema,
 } from '@shorter/validators';
 
-import { authProcedure, router, verifiedEmailProcedure } from '../configuration';
+import { router, verifiedEmailProcedure } from '../configuration';
 
 export const urlRouter = router({
-  createUrl: authProcedure.input(createUrlSchema).mutation(async ({ input, ctx }) => {
+  createUrl: verifiedEmailProcedure.input(createUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return createUrl(datasource, input, ctx);
   }),
-  deleteUrl: authProcedure.input(deleteUrlSchema).mutation(async ({ input, ctx }) => {
+  deleteUrl: verifiedEmailProcedure.input(deleteUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return deleteUrl(datasource, input, ctx);
   }),
-  updateUrl: authProcedure.input(updateUrlSchema).mutation(async ({ input, ctx }) => {
+  updateUrl: verifiedEmailProcedure.input(updateUrlSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return updateUrl(datasource, input, ctx);
   }),
-  updateUrlActiveStatus: authProcedure.input(updateUrlActiveStatusSchema).mutation(async ({ input, ctx }) => {
+  updateUrlActiveStatus: verifiedEmailProcedure.input(updateUrlActiveStatusSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return updateUrlActiveStatus(datasource, input, ctx);
   }),
-  getUrl: authProcedure.input(getUrlSchema).query(async ({ input, ctx }) => {
+  getUrl: verifiedEmailProcedure.input(getUrlSchema).query(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return getUrl(datasource, input, ctx);
   }),
