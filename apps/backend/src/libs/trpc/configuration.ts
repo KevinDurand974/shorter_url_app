@@ -3,8 +3,8 @@ import { CreateExpressContextOptions, createExpressMiddleware } from '@trpc/serv
 import { ZodError } from 'zod';
 
 import { parseZodError } from '@shorter/validators';
-import { createError401 } from '@shorter/errors';
-import { verifyToken } from '@helpers';
+import { createError401, createError403 } from '@shorter/errors';
+import { Payload, verifyToken } from '@helpers';
 
 export const createContext = async ({ req, res }: CreateExpressContextOptions) => {
   return {
@@ -43,7 +43,7 @@ const t = initTRPC.context<Context>().create({
 });
 
 const isAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.headers.autorization) {
+  if (!ctx.headers.authorization) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       message: 'Unauthenticated',
@@ -61,17 +61,27 @@ const isAuthed = t.middleware(({ next, ctx }) => {
       ...ctx,
       headers: {
         ...ctx.headers,
-        authorization: ctx.headers.autorization as string,
+        authorization: ctx.headers.authorization as string,
       },
       payload,
     },
   });
 });
 
+const isVerifiedEmail = t.middleware(({ next, ...params }) => {
+  const ctx = params.ctx as Context & { payload: Payload };
+  const payload = ctx.payload;
+  if (!payload.emailVerified) {
+    throw createError403('Please verify your email before you can use this feature.');
+  }
+  return next({ ctx });
+});
+
 export const router = t.router;
 export const mergeRouters = t.mergeRouters;
 export const publicProcedure = t.procedure;
 export const authProcedure = t.procedure.use(isAuthed);
+export const verifiedEmailProcedure = t.procedure.use(isAuthed).use(isVerifiedEmail);
 
 /* TODO: Add Procedures:
   - Admin

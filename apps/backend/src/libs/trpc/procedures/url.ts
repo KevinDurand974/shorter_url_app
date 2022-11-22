@@ -8,7 +8,7 @@ import {
   updateUrlSchema,
 } from '@shorter/validators';
 
-import { authProcedure, router } from '../configuration';
+import { authProcedure, router, verifiedEmailProcedure } from '../configuration';
 
 export const urlRouter = router({
   createUrl: authProcedure.input(createUrlSchema).mutation(async ({ input, ctx }) => {
@@ -31,7 +31,7 @@ export const urlRouter = router({
     const datasource = await getDataSource();
     return getUrl(datasource, input, ctx);
   }),
-  getUrls: authProcedure.query(async ({ ctx }) => {
+  getUrls: verifiedEmailProcedure.query(async ({ ctx }) => {
     const datasource = await getDataSource();
     return getUrls(datasource, ctx);
   }),
