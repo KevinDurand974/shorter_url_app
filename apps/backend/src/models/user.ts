@@ -21,8 +21,6 @@ import { Context } from '@libs/trpc';
 
 type ContextWithPayload = Context & { payload: Payload };
 type Uuid = { uuid: string };
-type UpdateUrlNameInput = UpdateUserUrlNameSchema & Uuid;
-type UpdatePseudoInput = UpdateUserPseudoSchema & Uuid;
 type DeleteUserInput = DeleteUserSchema & Uuid;
 
 // NOTE: Delete User
@@ -170,11 +168,18 @@ export const updateUserPassword = async (
 };
 
 // NOTE: Update User Url Name
-export const updateUserUrlName = async (datasource: DataSource, data: UpdateUrlNameInput) => {
+export const updateUserUrlName = async (
+  datasource: DataSource,
+  data: UpdateUserUrlNameSchema,
+  ctx: ContextWithPayload
+) => {
   try {
+    // Get payload Data
+    const { uuid } = ctx.payload;
+
     // If User exist
     const ProfileRep = datasource.getRepository(Profile);
-    const profile = await findOneProfileByUuid(ProfileRep, data.uuid);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
     if (!profile) throw createError404("This User doesn't exist");
 
     // If same UrlName

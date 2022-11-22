@@ -50,9 +50,8 @@ export const userRouter = router({
     const datasource = await getDataSource();
     return updateUserPseudo(datasource, input, ctx);
   }),
-  // FIX: Use authProcedure to get UUID
-  updateUserUrlName: publicProcedure.input(updateUserUrlNameSchema).mutation(async ({ input, ctx }) => {
+  updateUserUrlName: authProcedure.input(updateUserUrlNameSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return updateUserUrlName(datasource, { ...input, uuid: process.env.UUID_TESTING! });
+    return updateUserUrlName(datasource, input, ctx);
   }),
 });
