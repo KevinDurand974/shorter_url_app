@@ -1,6 +1,4 @@
 import { DataSource } from 'typeorm';
-import { Profile, Url } from '@entities';
-import { findOneProfileByUuid, generateUUID, Payload } from '@helpers';
 import { createError400, createError404 } from '@shorter/errors';
 import type {
   CreateUrlSchema,
@@ -9,7 +7,10 @@ import type {
   GetUrlSchema,
   UpdateUrlActiveStatusSchema,
 } from '@shorter/validators';
-import { Context } from '@libs/trpc';
+
+import { Context } from '../libs/trpc';
+import { findOneProfileByUuid, generateUUID, Payload } from '../helpers';
+import { Profile, Url } from '../entities';
 
 type ContextWithPayload = Context & { payload: Payload };
 

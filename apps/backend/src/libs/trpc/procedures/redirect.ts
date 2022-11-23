@@ -1,7 +1,6 @@
-import { getDataSource } from '@libs/typeorm';
-import { getRedirectUrl } from '@models';
 import { getRedirectUrlSchema } from '@shorter/validators';
-
+import { getRedirectUrl } from '../../../models';
+import { getDataSource } from '../../typeorm';
 import { publicProcedure, router } from '../configuration';
 
 export const redirectRouter = router({

@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Profile, Token, Url, User } from '@entities';
+import { Profile, Token, Url, User } from '../../entities';
 
 let DataSourceInstance: DataSource;
 

@@ -1,8 +1,7 @@
 import { createUserSchema, loginSchema } from '@shorter/validators';
-import { getDataSource } from '@libs/typeorm';
-
+import { login, logout, refreshToken, register } from '../../../models';
+import { getDataSource } from '../../typeorm';
 import { publicProcedure, authProcedure, router } from '../configuration';
-import { register, login, logout, refreshToken } from '@models';
 
 export const authRouter = router({
   // NOTE: Public Procedures

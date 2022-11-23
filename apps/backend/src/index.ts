@@ -7,9 +7,11 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 
-import { getDataSource } from '@libs/typeorm';
-import { createContext, mergeRouters } from '@libs/trpc';
-import { urlRouter, userRouter, redirectRouter, authRouter } from '@libs/trpc/procedures';
+import { getDataSource } from './libs/typeorm';
+import { mergeRouters, createContext } from './libs/trpc';
+import { authRouter, redirectRouter, urlRouter, userRouter } from './libs/trpc/procedures';
+
+console.log(process.env);
 
 type JsonErrorResult = {
   status: number;

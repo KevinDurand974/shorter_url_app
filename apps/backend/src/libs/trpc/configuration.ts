@@ -4,7 +4,7 @@ import { ZodError } from 'zod';
 
 import { parseZodError } from '@shorter/validators';
 import { createError401, createError403 } from '@shorter/errors';
-import { Payload, verifyToken } from '@helpers';
+import { Payload, verifyToken } from '../../helpers';
 
 export const createContext = async ({ req, res }: CreateExpressContextOptions) => {
   return {

@@ -10,7 +10,7 @@ export type Payload = {
 export const createAccessToken = (payload: Payload) => {
   return sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
     // expiresIn: '5m', // FIX:
-    expiresIn: '5m',
+    expiresIn: '30s',
   });
 };
 export const createRefreshToken = (payload: Payload) => {

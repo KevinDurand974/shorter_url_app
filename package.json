@@ -15,6 +15,9 @@
 		"build:backend": "npx nx build @shorter/backend",
 		"build:validators": "npx nx build @shorter/validators",
 		"build:errors": "npx nx build @shorter/errors",
+		"prod:backend": "npx nx prod @shorter/backend",
+		"prod:validators": "npx nx prod @shorter/validators",
+		"prod:errors": "npx nx prod @shorter/errors",
 		"affected:dev": "npx nx affected --target=dev",
 		"graph": "npx nx graph",
 		"graph:affected": "npx nx affected:graph"

@@ -1,5 +1,3 @@
-import { getDataSource } from '@libs/typeorm';
-import { createUrl, deleteUrl, getUrl, getUrls, updateUrl, updateUrlActiveStatus } from '@models';
 import {
   createUrlSchema,
   deleteUrlSchema,
@@ -7,7 +5,8 @@ import {
   updateUrlActiveStatusSchema,
   updateUrlSchema,
 } from '@shorter/validators';
-
+import { createUrl, deleteUrl, getUrl, getUrls, updateUrl, updateUrlActiveStatus } from '../../../models';
+import { getDataSource } from '../../typeorm';
 import { router, verifiedEmailProcedure } from '../configuration';
 
 export const urlRouter = router({

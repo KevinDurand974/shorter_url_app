@@ -1,13 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Profile, Url, User } from '@entities';
-import {
-  comparePassword,
-  findOneProfileByUuid,
-  hashPassword,
-  Payload,
-  profileSelectors,
-  userSelectors,
-} from '@helpers';
+
 import { createError400, createError404 } from '@shorter/errors';
 import {
   DeleteUserSchema,
@@ -17,7 +9,17 @@ import {
   UpdateUserUrlNameSchema,
   UpdateUserVIPSchema,
 } from '@shorter/validators';
-import { Context } from '@libs/trpc';
+
+import { Context } from '../libs/trpc';
+import {
+  comparePassword,
+  findOneProfileByUuid,
+  hashPassword,
+  Payload,
+  profileSelectors,
+  userSelectors,
+} from '../helpers';
+import { Profile, Url, User } from '../entities';
 
 type ContextWithPayload = Context & { payload: Payload };
 type Uuid = { uuid: string };

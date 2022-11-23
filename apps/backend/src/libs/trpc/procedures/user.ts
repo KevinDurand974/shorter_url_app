@@ -1,14 +1,3 @@
-import { getDataSource } from '@libs/typeorm';
-import {
-  deleteUser,
-  getUser,
-  getUsers,
-  updateUserEmail,
-  updateUserPassword,
-  updateUserPseudo,
-  updateUserUrlName,
-  updateUserVip,
-} from '@models';
 import {
   deleteUserSchema,
   getUserSchema,
@@ -18,7 +7,17 @@ import {
   updateUserUrlNameSchema,
   updateUserVIPSchema,
 } from '@shorter/validators';
-
+import {
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUserEmail,
+  updateUserPassword,
+  updateUserPseudo,
+  updateUserUrlName,
+  updateUserVip,
+} from '../../../models';
+import { getDataSource } from '../../typeorm';
 import { publicProcedure, authProcedure, router } from '../configuration';
 
 export const userRouter = router({

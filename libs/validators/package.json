@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "dist/index.js",
 	"scripts": {
-		"build": "rm -rf dist && tsc"
+		"build": "rm -rf dist && tsc",
+		"prod": "rm -rf dist && tsc -p tsconfig.build.json"
 	},
 	"dependencies": {
 		"validator": "^13.7.0",

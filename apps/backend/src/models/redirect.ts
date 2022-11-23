@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 
 import { GetRedirectUrlSchema } from '@shorter/validators';
 import { createError400, createError404 } from '@shorter/errors';
-import { Url } from '@entities';
+import { Url } from '../entities';
 
 export const getRedirectUrl = async (datasource: DataSource, data: GetRedirectUrlSchema) => {
   try {
