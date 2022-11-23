@@ -11,8 +11,6 @@ import { getDataSource } from './libs/typeorm';
 import { mergeRouters, createContext } from './libs/trpc';
 import { authRouter, redirectRouter, urlRouter, userRouter } from './libs/trpc/procedures';
 
-console.log(process.env);
-
 type JsonErrorResult = {
   status: number;
   data: {

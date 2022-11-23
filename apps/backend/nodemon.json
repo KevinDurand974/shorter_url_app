@@ -1,8 +1,8 @@
 {
   "watch": ["src"],
   "execMap": {
-    "ts": "ts-node -r tsconfig-paths/register",
-    "js": "node -r tsconfig-paths/register"
+    "ts": "ts-node",
+    "js": "node"
   },
   "ext": "ts,js,json"
 }
