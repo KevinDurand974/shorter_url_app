@@ -6,7 +6,7 @@ const NotAvailablePage = () => {
 	return (
 		<>
 			<Head>
-				<title>Crap this doesn&apos;t work - Kurl</title>
+				<title>Oops, it doesn&apost work - Kurl</title>
 				<meta
 					name="description"
 					content="This redirect url isn't available at this moment."
@@ -19,7 +19,7 @@ const NotAvailablePage = () => {
 						<h1 className="text-3xl md:text-5xl lg:text-7xl text-center smallcase text-accent font-rubik tracking-wider transition-all duration-300">
 							This url is unavailable!
 						</h1>
-						<p className="text-accent text-xs text-center tracking-wide">
+						<p className="text-hover font-extrabold text-center tracking-wide">
 							Report this issue to its owner
 						</p>
 					</div>

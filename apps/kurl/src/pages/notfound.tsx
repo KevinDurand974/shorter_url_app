@@ -6,7 +6,7 @@ const NotFoundPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Why are your here? - Kurl</title>
+				<title>What are you doing here? - Kurl</title>
 				<meta name="description" content="This redirect url doesn't exist." />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
