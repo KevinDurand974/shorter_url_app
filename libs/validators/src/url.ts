@@ -7,8 +7,9 @@ export const createUrlSchema = z.object({
 		(url) =>
 			isURL(url, {
 				allow_fragments: false,
+				require_protocol: true,
 			}),
-		"Invalid URL, please check your url, fragments are not allowed"
+		"Invalid URL, please check your url, fragments are not allowed and protocol is required"
 	),
 	ephemeral: z.boolean(),
 	custom: z.string().min(5).max(60).optional(),

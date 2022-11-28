@@ -10,6 +10,7 @@
 	"scripts": {
 		"dev:client": "npx nx dev @shorter/client",
 		"dev:backend": "npx nx dev @shorter/backend",
+		"dev:kurl": "npx nx dev @shorter/kurl",
 		"dev": "npx nx run-many --target=dev --all",
 		"build:client": "npx nx build client",
 		"build:backend": "npx nx build @shorter/backend",
