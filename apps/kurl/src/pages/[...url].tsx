@@ -93,7 +93,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 			} = err.response?.data.error as ApiError;
 
 			return {
-				props: { httpStatus },
+				props: { httpStatus: httpStatus || 404 },
 			};
 		}
 
