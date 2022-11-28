@@ -1,7 +1,6 @@
-import { GetServerSideProps, GetStaticPaths } from "next";
 import axios, { AxiosError } from "axios";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import Head from "next/head";
 
 type ApiError = {
 	message: string;
@@ -13,15 +12,63 @@ type ApiError = {
 	};
 };
 
-const PageUrl = () => {
-	// Normaly you cant be here because of the getServerSideProps
-	// but if you are here, go back
-	const router = useRouter();
-	useEffect(() => {
-		router.back();
-	}, [router]);
+type Props = {
+	httpStatus: number;
+};
 
-	return null;
+const PageUrl = ({ httpStatus }: Props) => {
+	return (
+		<>
+			<Head>
+				{httpStatus === 404 ? (
+					<>
+						<title>What are you doing here? - Kurl</title>
+						<meta
+							name="description"
+							content="This redirect url doesn't exist."
+						/>
+					</>
+				) : (
+					<>
+						<title>Oops, it doesn&apos;t work - Kurl</title>
+						<meta
+							name="description"
+							content="This redirect url isn't available at this moment."
+						/>
+					</>
+				)}
+
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
+			<main className="bg-gradient-to-br from-bg-primary to-bg-secondary w-full h-screen flex justify-center items-center">
+				<div className="border-2 border-gray-600 border-opacity-20 p-4 md:p-8 rounded-2xl shadow-lg bg-gradient-to-tl from-transparent to-black/50 transition-all duration-300">
+					{httpStatus === 404 ? (
+						<>
+							<h1 className="text-3xl md:text-5xl lg:text-7xl text-center smallcase text-accent font-rubik tracking-wider transition-all duration-300">
+								This url doesn&apos;t exist!
+							</h1>
+						</>
+					) : (
+						<>
+							<div>
+								<h1 className="text-3xl md:text-5xl lg:text-7xl text-center smallcase text-accent font-rubik tracking-wider transition-all duration-300">
+									This url is unavailable!
+								</h1>
+								<p className="text-hover font-extrabold text-center tracking-wide">
+									Report this issue to its owner
+								</p>
+							</div>
+						</>
+					)}
+					<div className="mt-4 text-center">
+						<div className="text-text font-semibold">
+							You can close this page.
+						</div>
+					</div>
+				</div>
+			</main>
+		</>
+	);
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
@@ -42,37 +89,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	} catch (err: any) {
 		if (err instanceof AxiosError) {
 			const {
-				message,
 				data: { httpStatus },
 			} = err.response?.data.error as ApiError;
-			let destination = "/notfound";
-			switch (httpStatus) {
-				case 404:
-					destination = "/notfound";
-					break;
-				case 400:
-					destination = "/notavailable";
-					break;
-				default:
-					destination = "/notfound";
-					break;
-			}
 
 			return {
-				props: { message },
-				redirect: {
-					destination,
-					permanent: false,
-				},
+				props: { httpStatus },
 			};
 		}
 
 		return {
-			redirect: {
-				props: { message: err.message },
-				destination: "/notavailable",
-				permanent: false,
-			},
+			props: { httpStatus: 404 },
 		};
 	}
 };
