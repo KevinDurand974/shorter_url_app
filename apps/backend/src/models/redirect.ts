@@ -25,7 +25,11 @@ export const getRedirectUrl = async (datasource: DataSource, data: GetRedirectUr
       if (isAfter(now, maxDate)) throw createError400('This url has expired');
     }
 
-    // DEV: Add increment count to this url (websocket ?)
+    // Add increment count to this url
+    url.useCount = +url.useCount + 1;
+
+    // Save url
+    await UrlRep.save(url);
 
     // Return the redirect url
     return url.redirect;
