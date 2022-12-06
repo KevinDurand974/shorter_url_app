@@ -9,11 +9,11 @@ module.exports = {
 			colors: {
 				"bg-primary": "#2C345D",
 				"bg-secondary": "#141727",
-				text: "#7b9ff1",
+				primary: "#7b9ff1",
 				accent: "#be7bf1",
-				hover: "#7bcbf1",
+				secondary: "#7bcbf1",
 			},
 		},
 	},
 	plugins: [],
-};
+}

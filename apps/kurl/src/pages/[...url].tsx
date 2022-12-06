@@ -54,14 +54,14 @@ const PageUrl = ({ httpStatus }: Props) => {
 								<h1 className="text-3xl md:text-5xl lg:text-7xl text-center smallcase text-accent font-rubik tracking-wider transition-all duration-300">
 									This url is unavailable!
 								</h1>
-								<p className="text-hover font-extrabold text-center tracking-wide">
+								<p className="text-secondary font-extrabold text-center tracking-wide">
 									Report this issue to its owner
 								</p>
 							</div>
 						</>
 					)}
 					<div className="mt-4 text-center">
-						<div className="text-text font-semibold">
+						<div className="text-primary font-semibold">
 							You can close this page.
 						</div>
 					</div>

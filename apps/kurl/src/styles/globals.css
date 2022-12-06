@@ -15,16 +15,11 @@ html,
 body {
 	width: 100%;
 	min-height: 100vh;
+	color: #CCD5FF;
 }
 a {
 	color: inherit;
 	text-decoration: none;
-}
-li,
-ul,
-ol {
-	list-style: none;
-	display: inline-block;
 }
 
 .smallcase {
