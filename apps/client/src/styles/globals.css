@@ -1,6 +1,9 @@
-@use "variables" as v;
+/* Tailwind Config */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-// Reset Css
+/* Reset Css */
 *,
 *:before,
 *:after {
@@ -22,8 +25,4 @@ ul,
 ol {
 	list-style: none;
 	display: inline-block;
-}
-
-body {
-	background-color: v.$tertiary;
 }

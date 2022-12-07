@@ -7,9 +7,6 @@
 		"experimentalDecorators": true,
 		"baseUrl": "src",
 		"paths": {
-			"@ORM": ["orm"],
-			"@ORM/*": ["orm/*"],
-			"@styles/*": ["styles/*"],
 			"@components": ["components"],
 			"@components/*": ["components/*"],
 			"@hooks": ["hooks"],
