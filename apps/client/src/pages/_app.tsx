@@ -1,4 +1,5 @@
-import "@styles/globals.scss";
+import { Layout } from "@components";
+import "@styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Fragment } from "react";
@@ -12,13 +13,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 				{/* <link rel="icon" href="/favicon.ico" /> */}
 			</Head>
 
-			{/* HEADER */}
-
-			<main>
+			<Layout>
 				<Component {...pageProps} />
-			</main>
-
-			{/* FOOTER */}
+			</Layout>
 		</Fragment>
 	);
 }

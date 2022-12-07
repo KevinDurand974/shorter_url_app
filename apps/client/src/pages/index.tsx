@@ -3,15 +3,10 @@ import Head from "next/head";
 import { Fragment, useEffect } from "react";
 import { trpc } from "@libs/trpc";
 
-import style from "@styles/home.module.scss";
-
 const Home: NextPage = () => {
-	console.count("render");
-
 	useEffect(() => {
 		const run = async () => {
-			const test = await trpc.test.query();
-			console.log(test); // <- Works
+			// const test = await trpc...
 		};
 		run();
 	}, []);
@@ -24,7 +19,7 @@ const Home: NextPage = () => {
 				{/* <link rel="icon" href="/favicon.ico" /> */}
 			</Head>
 
-			<h1 className={style.title}>Testing !!</h1>
+			<h1 className="">Testing !!</h1>
 		</Fragment>
 	);
 };
