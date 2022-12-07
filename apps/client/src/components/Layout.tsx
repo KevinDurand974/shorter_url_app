@@ -1,16 +1,16 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react"
 import { Header, Footer } from "."
 
 const Layout = ({ children }: PropsWithChildren) => {
-  return (
-    <div className="flex flex-col h-screen p-4">
-      <Header />
+	return (
+		<div className="flex flex-col h-screen p-2 md:p-4">
+			<Header />
 
-      <main className="h-full">{children}</main>
+			<main className="h-full">{children}</main>
 
-      <Footer />
-    </div>
-  );
+			<Footer />
+		</div>
+	)
 }
 
-export default Layout;
+export default Layout
