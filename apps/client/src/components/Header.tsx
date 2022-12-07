@@ -4,7 +4,7 @@ import { LogoColors } from "./svg"
 
 const Header = () => {
 	return (
-		<header className="w-full flex items-center bg-gradient-to-b from-black/10 to-black/30 p-4 flex-shrink-0 rounded-xl shadow-md shadow-t-alt/40 justify-between flex-wrap mb-4">
+		<header className="w-full flex items-center p-4 flex-shrink-0 justify-between flex-wrap mb-4 box">
 			<Link href="/">
 				<a className="flex flex-wrap items-center gap-2">
 					<LogoColors className="h-10 w-10" />

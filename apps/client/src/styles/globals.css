@@ -20,3 +20,9 @@ a {
 	color: inherit;
 	text-decoration: none;
 }
+
+@layer components {
+	.box {
+		@apply bg-gradient-to-b from-black/10 to-black/30 rounded-xl shadow-md shadow-t-alt/40;
+	}
+}
