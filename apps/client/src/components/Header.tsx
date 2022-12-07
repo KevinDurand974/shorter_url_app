@@ -1,4 +1,8 @@
 import Link from "next/link"
+import { HiUserCircle } from "react-icons/hi2"
+import { TbListDetails } from "react-icons/tb"
+import { RiAddCircleLine } from "react-icons/ri"
+
 import { LogoColors } from "./svg"
 
 const Header = () => {
@@ -13,13 +17,23 @@ const Header = () => {
 
 			<nav className="flex flex-wrap items-center gap-4 font-fredoka tracking-wide">
 				<Link href="/">
-					<a className="custom-underline">Create Url</a>
+					<a className="custom-underline flex flex-wrap items-center gap-2 px-2">
+						<RiAddCircleLine className="h-7 w-7" />
+						Create Url
+					</a>
 				</Link>
+				<div className="h-8 w-[1px] bg-black/20" />
 				<Link href="/">
-					<a className="custom-underline">My Urls</a>
+					<a className="custom-underline flex flex-wrap items-center gap-2 px-2">
+						<TbListDetails className="h-7 w-7" />
+						My Urls
+					</a>
 				</Link>
+				<div className="h-8 w-[1px] bg-black/20" />
 				<Link href="/">
-					<a className="custom-underline">Account</a>
+					<a className="custom-underline flex flex-wrap items-center gap-2 px-2">
+						<HiUserCircle className="h-7 w-7" /> Account
+					</a>
 				</Link>
 			</nav>
 		</header>
