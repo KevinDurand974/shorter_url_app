@@ -12,10 +12,16 @@ const Header = () => {
 				</a>
 			</Link>
 
-			<nav>
-				<Link href="/">Create Url</Link>
-				<Link href="/">My Urls</Link>
-				<Link href="/">Account</Link>
+			<nav className="flex flex-wrap items-center gap-4 font-fredoka tracking-wide">
+				<Link href="/">
+					<a className="custom-underline">Create Url</a>
+				</Link>
+				<Link href="/">
+					<a className="custom-underline">My Urls</a>
+				</Link>
+				<Link href="/">
+					<a className="custom-underline">Account</a>
+				</Link>
 			</nav>
 		</header>
 	)

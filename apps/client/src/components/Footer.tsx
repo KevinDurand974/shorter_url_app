@@ -14,7 +14,7 @@ const Footer = () => {
 				<li>
 					Pour signaler des potentiels bugs, rendez-vous{" "}
 					<Link href="/">
-						<a className="underline tracking-widest font-fredoka underline-offset-4">
+						<a className="custom-underline before:right-0 hover:px-2 tracking-widest font-fredoka transition-all">
 							ici
 						</a>
 					</Link>
