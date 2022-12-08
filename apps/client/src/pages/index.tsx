@@ -1,6 +1,6 @@
 import type { NextPage } from "next"
 import Head from "next/head"
-import { Fragment, useEffect } from "react"
+import { Fragment, useEffect, useRef } from "react"
 import { trpc } from "@libs/trpc"
 import { TiCancel } from "react-icons/ti"
 import { Add, Close } from "@components/svg"
@@ -12,6 +12,18 @@ const Home: NextPage = () => {
 		}
 		run()
 	}, [])
+
+	const moreInfoRef = useRef<HTMLElement>(null)
+	const handleScrollToMoreInfo = () => {
+		let header = document.querySelector("header")
+		const el = moreInfoRef.current
+		if (!header || !el) return
+		const { bottom, top } = header.getBoundingClientRect()
+		window.scrollTo({
+			top: Math.max(el.offsetTop - bottom + top, 0),
+			behavior: "smooth",
+		})
+	}
 
 	return (
 		<Fragment>
