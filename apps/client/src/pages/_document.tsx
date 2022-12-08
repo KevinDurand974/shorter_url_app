@@ -5,7 +5,6 @@ const Document = () => {
 		<Html lang="en" className="scroll-smooth">
 			<Head>
 				<meta charSet="utf-8" />
-				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				{/* <base href="//cdn.example.com/" /> */}
 				{/* <meta name="application-name" content="Application Name" /> */}
 
