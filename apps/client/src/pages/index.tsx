@@ -36,27 +36,6 @@ const Home: NextPage = () => {
 			</Head>
 
 			<section className="p-2 md:p-4 box flex justify-evenly mb-2 md:mb-4 relative gap-2">
-				<div className="flex flex-col gap-2 items-center justify-evenly">
-					<h1 className="font-fredoka md:text-2xl text-center">
-						Stop with urls with 500 characters when you share a link!
-					</h1>
-
-					<div className="flex flex-col md:flex-row gap-2 items-center justify-center text-xs md:text-base">
-						<span>Want to create shorter one?</span>
-						<button
-							type="button"
-							className="tracking-wider font-fredoka px-3 py-1 cta"
-						>
-							Create an Account
-						</button>
-					</div>
-				</div>
-				<div className="flex justify-center items-center absolute md:static inset-0 md:inset-auto -z-10 opacity-20 md:opacity-100 overflow-hidden md:overflow-auto">
-					<Close className="h-48 w-48" />
-				</div>
-			</section>
-
-			<section className="p-2 md:p-4 box flex justify-evenly mb-2 md:mb-4 relative gap-2">
 				<div className="flex justify-center items-center absolute md:static inset-0 md:inset-auto -z-10 opacity-20 md:opacity-100 overflow-hidden md:overflow-auto">
 					<Add className="h-48 w-48" />
 				</div>
@@ -174,6 +153,27 @@ const Home: NextPage = () => {
 					</div>
 				</section>
 			</div>
+
+			<section className="p-2 md:p-4 box flex justify-evenly mb-2 md:mb-4 relative gap-2">
+				<div className="flex flex-col gap-2 items-center justify-evenly">
+					<h1 className="font-fredoka md:text-2xl text-center">
+						Stop urls with 500 characters when you share a link!
+					</h1>
+
+					<div className="flex flex-col md:flex-row gap-2 items-center justify-center text-xs md:text-base">
+						<span>Want to create shorter one?</span>
+						<button
+							type="button"
+							className="tracking-wider font-fredoka px-3 py-1 cta"
+						>
+							Create an Account
+						</button>
+					</div>
+				</div>
+				<div className="flex justify-center items-center absolute md:static inset-0 md:inset-auto -z-10 opacity-20 md:opacity-100 overflow-hidden md:overflow-auto">
+					<Close className="h-48 w-48" />
+				</div>
+			</section>
 		</Fragment>
 	)
 }
