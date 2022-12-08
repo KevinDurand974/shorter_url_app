@@ -5,8 +5,6 @@ type Props = {
 }
 
 const Logo = ({ className, background, fill }: Props) => {
-	console.log(className)
-
 	return (
 		<svg
 			width="100%"
