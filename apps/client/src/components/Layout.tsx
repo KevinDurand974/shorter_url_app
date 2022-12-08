@@ -3,10 +3,10 @@ import { Header, Footer } from "."
 
 const Layout = ({ children }: PropsWithChildren) => {
 	return (
-		<div className="flex flex-col h-screen p-2 md:p-4">
+		<div className="flex flex-col min-h-screen">
 			<Header />
 
-			<main className="h-full">{children}</main>
+			<main className="h-fit">{children}</main>
 
 			<Footer />
 		</div>

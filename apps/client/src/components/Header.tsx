@@ -2,14 +2,31 @@ import Link from "next/link"
 import { HiUserCircle } from "react-icons/hi2"
 import { TbListDetails } from "react-icons/tb"
 import { RiAddCircleLine } from "react-icons/ri"
-
 import { LogoColors } from "./svg"
+import { useEffect, useMemo, useState } from "react"
 
 const Header = () => {
+	const [scrollY, setScrollY] = useState(0)
+
+	useEffect(() => {
+		const onScroll = () => {
+			setScrollY(window.scrollY)
+		}
+		window.addEventListener("scroll", onScroll)
+		return () => window.removeEventListener("scroll", onScroll)
+	}, [])
+
+	const headerOpacity = useMemo(() => {
+		if (scrollY > 0) return "before:bg-black/80"
+		return "before:bg-black/0"
+	}, [scrollY])
+
 	return (
-		<header className="w-full flex items-center p-2 md:p-4 flex-shrink-0 justify-between flex-wrap mb-2 md:mb-4 box">
+		<header
+			className={`w-full flex items-center p-2 md:p-4 flex-shrink-0 justify-between flex-wrap mb-2 md:mb-4 box sticky top-2 md:top-4 z-20 overflow-hidden before:absolute before:inset-0 before:z-10 before:transition-all before:duration-[0.4s] ${headerOpacity}`}
+		>
 			<Link href="/">
-				<a className="flex flex-wrap items-center gap-1 md:gap-2">
+				<a className="flex flex-wrap items-center gap-1 md:gap-2 z-10">
 					<LogoColors className="h-5 w-5 md:h-10 md:w-10" />
 					<h4 className="font-fredoka caps-small md:text-3xl">Url Shorten</h4>
 				</a>
