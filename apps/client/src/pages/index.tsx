@@ -123,6 +123,7 @@ const Home: NextPage = () => {
 								<button
 									type="button"
 									className="text-[0.6rem] leading-4 align-top custom-underline before:bottom-0 px-1"
+									onClick={handleScrollToMoreInfo}
 								>
 									2
 								</button>
@@ -136,6 +137,7 @@ const Home: NextPage = () => {
 								<button
 									type="button"
 									className="text-[0.6rem] leading-4 align-top custom-underline before:bottom-0 px-1"
+									onClick={handleScrollToMoreInfo}
 								>
 									3
 								</button>
@@ -145,6 +147,7 @@ const Home: NextPage = () => {
 								<button
 									type="button"
 									className="text-[0.6rem] leading-4 align-top custom-underline before:bottom-0 px-1"
+									onClick={handleScrollToMoreInfo}
 								>
 									4
 								</button>
@@ -172,6 +175,47 @@ const Home: NextPage = () => {
 				</div>
 				<div className="flex justify-center items-center absolute md:static inset-0 md:inset-auto -z-10 opacity-20 md:opacity-100 overflow-hidden md:overflow-auto">
 					<Close className="h-48 w-48" />
+				</div>
+			</section>
+
+			<section
+				className="p-2 md:p-4 box grid grid-cols-1 md:grid-cols-2 relative gap-2"
+				ref={moreInfoRef}
+			>
+				<h1 className="font-fredoka md:text-2xl text-center md:col-span-2">
+					Explanatory notes
+				</h1>
+				<div className="flex gap-2 items-center">
+					<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+						1
+					</span>
+					<p className="text-xs md:text-base">
+						Doesn&apos;t count the personal url.
+					</p>
+				</div>
+				<div className="flex gap-2 items-center">
+					<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+						2
+					</span>
+					<p className="text-xs md:text-base">
+						Depend of each subscriber tier you choose.
+					</p>
+				</div>
+				<div className="flex gap-2 items-center">
+					<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+						3
+					</span>
+					<p className="text-xs md:text-base">
+						Work in progress, will be released at older time.
+					</p>
+				</div>
+				<div className="flex gap-2 items-center">
+					<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+						4
+					</span>
+					<p className="text-xs md:text-base">
+						Work in progress, will be released after extension.
+					</p>
 				</div>
 			</section>
 		</Fragment>
