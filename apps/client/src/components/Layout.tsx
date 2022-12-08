@@ -6,7 +6,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 		<div className="flex flex-col min-h-screen p-2 md:p-4">
 			<Header />
 
-			<main className="flex-1 last-section">{children}</main>
+			<main className="flex-1">{children}</main>
 
 			<Footer />
 		</div>

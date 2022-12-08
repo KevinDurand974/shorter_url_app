@@ -39,9 +39,6 @@ a {
 	.cta {
 		@apply text-accent border-2 border-accent rounded-full custom-underline hover:border-transparent hover:text-text transition duration-[0.4s];
 	}
-	.last-section section:last-child {
-		margin-bottom: 0;
-	}
 	.url {
 		@apply inline-block px-5 py-1 bg-t-alt/60 border-b-2 border-accent rounded-sm font-fredoka tracking-wider;
 	}
