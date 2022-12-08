@@ -42,4 +42,7 @@ a {
 	.last-section section:last-child {
 		margin-bottom: 0;
 	}
+	.url {
+		@apply inline-block px-5 py-1 bg-t-alt/60 border-b-2 border-accent rounded-sm font-fredoka tracking-wider;
+	}
 }
