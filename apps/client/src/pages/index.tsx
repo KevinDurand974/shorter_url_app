@@ -160,7 +160,7 @@ const Home: NextPage = () => {
 			<section className="p-2 md:p-4 box flex justify-evenly mb-2 md:mb-4 relative gap-2">
 				<div className="flex flex-col gap-2 items-center justify-evenly">
 					<h1 className="font-fredoka md:text-2xl text-center">
-						Stop urls with 500 characters when you share a link!
+						Stop making urls with 500 characters when you share a link!
 					</h1>
 
 					<div className="flex flex-col md:flex-row gap-2 items-center justify-center text-xs md:text-base">
