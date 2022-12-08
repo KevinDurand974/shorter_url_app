@@ -97,6 +97,71 @@ const Home: NextPage = () => {
 					<Add className="h-48 w-48" />
 				</div>
 			</section>
+
+			<div className="flex flex-col md:flex-row justify-evenly mb-2 md:mb-4 gap-2 md:gap-4">
+				<section className="p-2 md:p-4 md:w-1/2 box flex flex-col items-center gap-2 md:gap-4">
+					<h1 className="font-fredoka md:text-2xl text-center">Free Tier</h1>
+					<div className="my-auto md:w-3/4">
+						<ul className="list-disc list-inside flex flex-col gap-2 text-xs md:text-base">
+							<li>
+								250 urls
+								<button
+									type="button"
+									className="text-[0.6rem] leading-4 align-top custom-underline before:bottom-0 px-1"
+									onClick={handleScrollToMoreInfo}
+								>
+									1
+								</button>
+							</li>
+							<li>2 ways to create urls</li>
+							<li>A personal url</li>
+							<li>Limited analytics</li>
+						</ul>
+					</div>
+				</section>
+
+				<section className="p-2 md:p-4 md:w-1/2 box flex flex-col items-center gap-2 md:gap-4">
+					<h1 className="font-fredoka md:text-2xl text-center">
+						Subcriber Tier
+					</h1>
+					<div className="my-auto md:w-3/4">
+						<ul className="list-disc list-inside flex flex-col gap-2 my-auto text-xs md:text-base">
+							<li>Same as Free tier</li>
+							<li>
+								Up to 2000 urls
+								<button
+									type="button"
+									className="text-[0.6rem] leading-4 align-top custom-underline before:bottom-0 px-1"
+								>
+									2
+								</button>
+							</li>
+							<li>New ways to create urls</li>
+							<li>Custom urls when using personal</li>
+							<li>Shorter urls when using personal</li>
+							<li>Full analytics</li>
+							<li>
+								Access to navigator extension
+								<button
+									type="button"
+									className="text-[0.6rem] leading-4 align-top custom-underline before:bottom-0 px-1"
+								>
+									3
+								</button>
+							</li>
+							<li>
+								An access to API
+								<button
+									type="button"
+									className="text-[0.6rem] leading-4 align-top custom-underline before:bottom-0 px-1"
+								>
+									4
+								</button>
+							</li>
+						</ul>
+					</div>
+				</section>
+			</div>
 		</Fragment>
 	)
 }
