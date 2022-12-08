@@ -179,43 +179,45 @@ const Home: NextPage = () => {
 			</section>
 
 			<section
-				className="p-2 md:p-4 box grid grid-cols-1 md:grid-cols-2 relative gap-2"
+				className="p-2 md:p-4 box relative flex flex-col justify-center items-center gap-2 md:gap-4"
 				ref={moreInfoRef}
 			>
 				<h1 className="font-fredoka md:text-2xl text-center md:col-span-2">
 					Explanatory notes
 				</h1>
-				<div className="flex gap-2 items-center">
-					<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
-						1
-					</span>
-					<p className="text-xs md:text-base">
-						Doesn&apos;t count the personal url.
-					</p>
-				</div>
-				<div className="flex gap-2 items-center">
-					<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
-						2
-					</span>
-					<p className="text-xs md:text-base">
-						Depend of each subscriber tier you choose.
-					</p>
-				</div>
-				<div className="flex gap-2 items-center">
-					<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
-						3
-					</span>
-					<p className="text-xs md:text-base">
-						Work in progress, will be released at older time.
-					</p>
-				</div>
-				<div className="flex gap-2 items-center">
-					<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
-						4
-					</span>
-					<p className="text-xs md:text-base">
-						Work in progress, will be released after extension.
-					</p>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+					<div className="flex gap-2 items-center">
+						<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+							1
+						</span>
+						<p className="text-xs md:text-base">
+							Doesn&apos;t count the personal url.
+						</p>
+					</div>
+					<div className="flex gap-2 items-center">
+						<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+							2
+						</span>
+						<p className="text-xs md:text-base">
+							Depend of each subscriber tier you choose.
+						</p>
+					</div>
+					<div className="flex gap-2 items-center">
+						<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+							3
+						</span>
+						<p className="text-xs md:text-base">
+							Work in progress, will be released at older time.
+						</p>
+					</div>
+					<div className="flex gap-2 items-center">
+						<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+							4
+						</span>
+						<p className="text-xs md:text-base">
+							Work in progress, will be released after extension.
+						</p>
+					</div>
 				</div>
 			</section>
 		</Fragment>
