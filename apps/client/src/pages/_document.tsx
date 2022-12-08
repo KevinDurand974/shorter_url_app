@@ -43,7 +43,7 @@ const Document = () => {
 					rel="stylesheet"
 				/>
 			</Head>
-			<body className="bg-fixed bg-gradient-bottom text-text font-poppins bg-gradient-to-br from-gradient-top to-gradient-bottom p-2 md:p-4">
+			<body className="bg-fixed bg-gradient-bottom text-text font-poppins bg-gradient-to-br from-gradient-top to-gradient-bottom">
 				<Main />
 				<NextScript />
 			</body>
