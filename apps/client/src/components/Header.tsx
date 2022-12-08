@@ -16,9 +16,13 @@ const Header = () => {
 		return () => window.removeEventListener("scroll", onScroll)
 	}, [])
 
-	const headerOpacity = useMemo(() => {
-		if (scrollY > 0) return "before:bg-black/80"
-		return "before:bg-black/0"
+	const { headerOpacity, separatorColor } = useMemo(() => {
+		if (scrollY > 0)
+			return {
+				headerOpacity: "before:bg-black/80",
+				separatorColor: "bg-text/10",
+			}
+		return { headerOpacity: "before:bg-black/0", separatorColor: "bg-black/20" }
 	}, [scrollY])
 
 	return (
@@ -39,14 +43,18 @@ const Header = () => {
 						<span className="hidden md:block">Create Url</span>
 					</a>
 				</Link>
-				<div className="h-5 md:h-8 w-[1px] bg-black/20" />
+				<div
+					className={`h-5 md:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
+				/>
 				<Link href="/">
 					<a className="custom-underline flex flex-wrap items-center md:gap-2 md:px-2">
 						<TbListDetails className="h-5 w-5 md:h-7 md:w-7" />
 						<span className="hidden md:block">My Urls</span>
 					</a>
 				</Link>
-				<div className="h-5 md:h-8 w-[1px] bg-black/20" />
+				<div
+					className={`h-5 md:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
+				/>
 				<Link href="/">
 					<a className="custom-underline flex flex-wrap items-center md:gap-2 md:px-2">
 						<HiUserCircle className="h-5 w-5 md:h-7 md:w-7" />
