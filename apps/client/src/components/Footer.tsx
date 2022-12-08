@@ -3,7 +3,7 @@ import { Logo } from "./svg"
 
 const Footer = () => {
 	return (
-		<footer className="w-full flex items-center p-2 md:p-4 flex-shrink-0 justify-evenly flex-wrap box">
+		<footer className="w-full flex items-center p-2 md:p-4 flex-shrink-0 justify-evenly flex-wrap box mt-2 md:mt-4">
 			<div className="hidden md:flex gap-2 items-center">
 				<Logo className="w-10 h-10" background="rgba(0,0,0,0.4)" />
 				<h4 className="font-fredoka caps-small md:text-3xl">Url Shorten</h4>

@@ -39,4 +39,7 @@ a {
 	.cta {
 		@apply text-accent border-2 border-accent rounded-full custom-underline hover:border-transparent hover:text-text transition duration-[0.4s];
 	}
+	.last-section section:last-child {
+		margin-bottom: 0;
+	}
 }
