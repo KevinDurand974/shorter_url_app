@@ -19,7 +19,10 @@ const Footer = () => {
 				<li className="hidden sm:list-item">
 					Pour signaler des potentiels bugs, rendez-vous{" "}
 					<Link href="/">
-						<a className="custom-underline before:right-0 hover:px-2 tracking-widest font-fredoka transition-all">
+						<a
+							className="custom-underline before:right-0 hover:px-2 tracking-widest font-fredoka transition-all"
+							tabIndex={0}
+						>
 							ici
 						</a>
 					</Link>

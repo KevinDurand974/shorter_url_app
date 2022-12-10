@@ -31,7 +31,10 @@ const Header = () => {
 			className={`w-full flex items-center p-2 sm:p-4 flex-shrink-0 justify-between flex-wrap mb-2 sm:mb-4 box sticky top-2 sm:top-4 z-20 overflow-hidden before:absolute before:inset-0 before:z-10 before:transition-all before:duration-[0.4s] ${headerOpacity}`}
 		>
 			<Link href="/">
-				<a className="flex flex-wrap items-center gap-1 sm:gap-2 z-10">
+				<a
+					className="flex flex-wrap items-center gap-1 sm:gap-2 z-10"
+					tabIndex={0}
+				>
 					<LogoColors className="h-5 w-5 sm:h-10 sm:w-10" />
 					<h4 className="font-fredoka caps-small sm:text-3xl">Url Shorten</h4>
 				</a>
@@ -39,7 +42,10 @@ const Header = () => {
 
 			<nav className="flex flex-wrap items-center gap-2 sm:gap-4 font-fredoka tracking-wide">
 				<Link href="/">
-					<a className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2">
+					<a
+						className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+						tabIndex={0}
+					>
 						<RiAddCircleLine className="h-5 w-5 sm:h-7 sm:w-7" />
 						<span className="hidden sm:block">Create Url</span>
 					</a>
@@ -48,7 +54,10 @@ const Header = () => {
 					className={`h-5 sm:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
 				/>
 				<Link href="/">
-					<a className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2">
+					<a
+						className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+						tabIndex={0}
+					>
 						<TbListDetails className="h-5 w-5 sm:h-7 sm:w-7" />
 						<span className="hidden sm:block">My Urls</span>
 					</a>
@@ -57,7 +66,10 @@ const Header = () => {
 					className={`h-5 sm:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
 				/>
 				<Link href="/">
-					<a className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2">
+					<a
+						className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+						tabIndex={0}
+					>
 						<HiUserCircle className="h-5 w-5 sm:h-7 sm:w-7" />
 						<span className="hidden sm:block">Account</span>
 					</a>

@@ -2,7 +2,6 @@ import type { NextPage } from "next"
 import Head from "next/head"
 import { Fragment, useEffect, useRef } from "react"
 import { trpc } from "@libs/trpc"
-import { TiCancel } from "react-icons/ti"
 import { Add, Close } from "@components/svg"
 
 const Home: NextPage = () => {
@@ -34,6 +33,8 @@ const Home: NextPage = () => {
 					content="Create shorten url and share it to any one freely. Create an account and begin your adventure throught the world of urls!"
 				/>
 			</Head>
+
+			<span id="main" className="fixed translate-y-[-99999999]" tabIndex={-1} />
 
 			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2">
 				<div className="flex justify-center items-center absolute sm:static inset-0 sm:inset-auto -z-10 opacity-20 sm:opacity-100 overflow-hidden sm:overflow-auto">
