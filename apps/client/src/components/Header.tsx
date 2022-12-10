@@ -6,24 +6,25 @@ import { LogoColors } from "./svg"
 import { useEffect, useMemo, useState } from "react"
 
 const Header = () => {
-	const [scrollY, setScrollY] = useState(0)
+	const [{ headerOpacity, separatorColor }, setScrollY] = useState({
+		headerOpacity: "before:bg-black/0",
+		separatorColor: "bg-black/20",
+	})
 
 	useEffect(() => {
-		const onScroll = () => {
-			setScrollY(window.scrollY)
-		}
+		const onScroll = () => setScrollY(UpdateOnScroll(window.scrollY))
 		window.addEventListener("scroll", onScroll)
 		return () => window.removeEventListener("scroll", onScroll)
 	}, [])
 
-	const { headerOpacity, separatorColor } = useMemo(() => {
+	const UpdateOnScroll = (scrollY: number) => {
 		if (scrollY > 0)
 			return {
 				headerOpacity: "before:bg-black/80",
 				separatorColor: "bg-text/10",
 			}
 		return { headerOpacity: "before:bg-black/0", separatorColor: "bg-black/20" }
-	}, [scrollY])
+	}
 
 	return (
 		<header
