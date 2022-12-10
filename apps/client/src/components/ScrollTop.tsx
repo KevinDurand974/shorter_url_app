@@ -27,7 +27,7 @@ const ScrollTop = () => {
 		<button
 			type="button"
 			onClick={handleClick}
-			className={`fixed z-50 right-4 bottom-4 w-10 h-10 sm:w-16 sm:h-16 ${hidden} transition-all duration-500`}
+			className={`fixed z-50 right-4 bottom-4 w-10 h-10 sm:w-16 sm:h-16 ${hidden} transition-all duration-500 hidden sm:block`}
 		>
 			<Image src="/rocket.svg" alt="Scroll to top" layout="fill" />
 		</button>

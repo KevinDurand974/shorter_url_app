@@ -191,7 +191,7 @@ const Home: NextPage = () => {
 							</h4>
 							<p className="text-xs sm:text-base">
 								It is much easier to do with another, moreover, the domain used
-								to create these urls is shorter than the current domain.
+								for these urls is shorter than the current domain.
 							</p>
 						</div>
 
