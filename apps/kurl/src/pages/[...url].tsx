@@ -1,20 +1,20 @@
-import axios, { AxiosError } from "axios";
-import { GetServerSideProps } from "next";
-import Head from "next/head";
+import axios, { AxiosError } from "axios"
+import { GetServerSideProps } from "next"
+import Head from "next/head"
 
 type ApiError = {
-	message: string;
+	message: string
 	data: {
-		code: string;
-		httpStatus: number;
-		stack: string;
-		path: string;
-	};
-};
+		code: string
+		httpStatus: number
+		stack: string
+		path: string
+	}
+}
 
 type Props = {
-	httpStatus: number;
-};
+	httpStatus: number
+}
 
 const PageUrl = ({ httpStatus }: Props) => {
 	return (
@@ -41,17 +41,17 @@ const PageUrl = ({ httpStatus }: Props) => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className="bg-gradient-to-br from-bg-primary to-bg-secondary w-full h-screen flex justify-center items-center">
-				<div className="border-2 border-gray-600 border-opacity-20 p-4 md:p-8 rounded-2xl shadow-lg bg-gradient-to-tl from-transparent to-black/50 transition-all duration-300">
+				<div className="border-2 border-gray-600 border-opacity-20 p-4 sm:p-8 rounded-2xl shadow-lg bg-gradient-to-tl from-transparent to-black/50 transition-all duration-300">
 					{httpStatus === 404 ? (
 						<>
-							<h1 className="text-3xl md:text-5xl lg:text-7xl text-center smallcase text-accent font-rubik tracking-wider transition-all duration-300">
+							<h1 className="text-3xl sm:text-5xl lg:text-7xl text-center smallcase text-accent font-rubik tracking-wider transition-all duration-300">
 								This url doesn&apos;t exist!
 							</h1>
 						</>
 					) : (
 						<>
 							<div>
-								<h1 className="text-3xl md:text-5xl lg:text-7xl text-center smallcase text-accent font-rubik tracking-wider transition-all duration-300">
+								<h1 className="text-3xl sm:text-5xl lg:text-7xl text-center smallcase text-accent font-rubik tracking-wider transition-all duration-300">
 									This url is unavailable!
 								</h1>
 								<p className="text-secondary font-extrabold text-center tracking-wide">
@@ -68,39 +68,39 @@ const PageUrl = ({ httpStatus }: Props) => {
 				</div>
 			</main>
 		</>
-	);
-};
+	)
+}
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	try {
-		const url = params?.url as string[] | undefined;
-		if (!url) throw new Error("No url provided");
-		let paramUrl = url.join("/");
+		const url = params?.url as string[] | undefined
+		if (!url) throw new Error("No url provided")
+		let paramUrl = url.join("/")
 		const { data } = await axios.post(`${process.env.API_URL}/trpc/redirect`, {
 			path: paramUrl,
-		});
+		})
 
 		return {
 			redirect: {
 				destination: data.result.data,
 				permanent: false,
 			},
-		};
+		}
 	} catch (err: any) {
 		if (err instanceof AxiosError) {
 			const {
 				data: { httpStatus },
-			} = err.response?.data.error as ApiError;
+			} = err.response?.data.error as ApiError
 
 			return {
 				props: { httpStatus: httpStatus || 404 },
-			};
+			}
 		}
 
 		return {
 			props: { httpStatus: 404 },
-		};
+		}
 	}
-};
+}
 
-export default PageUrl;
+export default PageUrl

@@ -35,25 +35,25 @@ const Home: NextPage = () => {
 				/>
 			</Head>
 
-			<section className="p-2 md:p-4 box flex justify-evenly mb-2 md:mb-4 relative gap-2">
-				<div className="flex justify-center items-center absolute md:static inset-0 md:inset-auto -z-10 opacity-20 md:opacity-100 overflow-hidden md:overflow-auto">
+			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2">
+				<div className="flex justify-center items-center absolute sm:static inset-0 sm:inset-auto -z-10 opacity-20 sm:opacity-100 overflow-hidden sm:overflow-auto">
 					<Add className="h-48 w-48" />
 				</div>
 				<div className="flex flex-col items-center justify-center gap-2">
-					<h1 className="font-fredoka md:text-2xl text-center">
+					<h1 className="font-fredoka sm:text-2xl text-center">
 						Create simple url like:
 					</h1>
-					<div className="flex flex-col gap-4 md:gap-2 justify-center items-center">
-						<div className="flex flex-col gap-1 md:gap-2">
-							<p className="flex flex-col items-center justify-center md:block text-xs md:text-base">
+					<div className="flex flex-col gap-4 sm:gap-2 justify-center items-center">
+						<div className="flex flex-col gap-1 sm:gap-2">
+							<p className="flex flex-col items-center justify-center sm:block text-xs sm:text-base">
 								<span className="url">kurl.app/############</span> will redirect
 								to a certain url.
 							</p>
-							<p className="flex flex-col items-center justify-center md:block text-xs md:text-base">
+							<p className="flex flex-col items-center justify-center sm:block text-xs sm:text-base">
 								<span className="url">kurl.app/############</span> will redirect
 								you to another.
 							</p>
-							<p className="flex flex-col items-center justify-center md:block text-xs md:text-base">
+							<p className="flex flex-col items-center justify-center sm:block text-xs sm:text-base">
 								<span className="url">kurl.app/...</span> and again and again...
 							</p>
 						</div>
@@ -61,39 +61,39 @@ const Home: NextPage = () => {
 				</div>
 			</section>
 
-			<section className="p-2 md:p-4 box flex justify-evenly mb-2 md:mb-4 relative gap-2">
-				<div className="flex flex-col gap-1 md:gap-2 justify-center items-center">
-					<h1 className="font-fredoka md:text-2xl text-center">
+			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2">
+				<div className="flex flex-col gap-1 sm:gap-2 justify-center items-center">
+					<h1 className="font-fredoka sm:text-2xl text-center">
 						Create personal url:
 					</h1>
-					<div className="flex flex-col gap-4 md:gap-2 justify-center items-center mb-2">
-						<p className="flex flex-col items-center justify-center md:block text-xs md:text-base">
+					<div className="flex flex-col gap-4 sm:gap-2 justify-center items-center mb-2">
+						<p className="flex flex-col items-center justify-center sm:block text-xs sm:text-base">
 							<span className="url">kurl.app/pseudo</span> will redirect to your
 							assigned url.
 						</p>
 					</div>
 
-					<h1 className="font-fredoka md:text-2xl text-center">
+					<h1 className="font-fredoka sm:text-2xl text-center">
 						Or better, personal and safe:
 					</h1>
-					<div className="flex flex-col gap-4 md:gap-2 justify-center items-center">
-						<p className="flex flex-col items-center justify-center md:block text-xs md:text-base">
+					<div className="flex flex-col gap-4 sm:gap-2 justify-center items-center">
+						<p className="flex flex-col items-center justify-center sm:block text-xs sm:text-base">
 							<span className="url">kurl.app/pseudo/########</span> will
 							redirect to a certain url.
 						</p>
 					</div>
 				</div>
 
-				<div className="flex justify-center items-center absolute md:static inset-0 md:inset-auto -z-10 opacity-20 md:opacity-100 overflow-hidden md:overflow-auto">
+				<div className="flex justify-center items-center absolute sm:static inset-0 sm:inset-auto -z-10 opacity-20 sm:opacity-100 overflow-hidden sm:overflow-auto">
 					<Add className="h-48 w-48" />
 				</div>
 			</section>
 
-			<div className="flex flex-col md:flex-row justify-evenly mb-2 md:mb-4 gap-2 md:gap-4">
-				<section className="p-2 md:p-4 md:w-1/2 box flex flex-col items-center gap-2 md:gap-4">
-					<h1 className="font-fredoka md:text-2xl text-center">Free Tier</h1>
-					<div className="my-auto md:w-3/4">
-						<ul className="list-disc list-inside flex flex-col gap-2 text-xs md:text-base">
+			<div className="flex flex-col sm:flex-row justify-evenly mb-2 sm:mb-4 gap-2 sm:gap-4">
+				<section className="p-2 sm:p-4 sm:w-1/2 box flex flex-col items-center gap-2 sm:gap-4">
+					<h1 className="font-fredoka sm:text-2xl text-center">Free Tier</h1>
+					<div className="my-auto sm:w-3/4">
+						<ul className="list-disc list-inside flex flex-col gap-2 text-xs sm:text-base">
 							<li>
 								250 urls
 								<button
@@ -111,12 +111,12 @@ const Home: NextPage = () => {
 					</div>
 				</section>
 
-				<section className="p-2 md:p-4 md:w-1/2 box flex flex-col items-center gap-2 md:gap-4">
-					<h1 className="font-fredoka md:text-2xl text-center">
+				<section className="p-2 sm:p-4 sm:w-1/2 box flex flex-col items-center gap-2 sm:gap-4">
+					<h1 className="font-fredoka sm:text-2xl text-center">
 						Subcriber Tier
 					</h1>
-					<div className="my-auto md:w-3/4">
-						<ul className="list-disc list-inside flex flex-col gap-2 my-auto text-xs md:text-base">
+					<div className="my-auto sm:w-3/4">
+						<ul className="list-disc list-inside flex flex-col gap-2 my-auto text-xs sm:text-base">
 							<li>Same as Free tier</li>
 							<li>
 								Up to 2000 urls
@@ -157,13 +157,13 @@ const Home: NextPage = () => {
 				</section>
 			</div>
 
-			<section className="p-2 md:p-4 box flex justify-evenly mb-2 md:mb-4 relative gap-2">
+			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2">
 				<div className="flex flex-col gap-2 items-center justify-evenly">
-					<h1 className="font-fredoka md:text-2xl text-center">
+					<h1 className="font-fredoka sm:text-2xl text-center">
 						Stop making urls with 500 characters when you share a link!
 					</h1>
 
-					<div className="flex flex-col md:flex-row gap-2 items-center justify-center text-xs md:text-base">
+					<div className="flex flex-col sm:flex-row gap-2 items-center justify-center text-xs sm:text-base">
 						<span>Want to create shorter one?</span>
 						<button
 							type="button"
@@ -173,48 +173,48 @@ const Home: NextPage = () => {
 						</button>
 					</div>
 				</div>
-				<div className="flex justify-center items-center absolute md:static inset-0 md:inset-auto -z-10 opacity-20 md:opacity-100 overflow-hidden md:overflow-auto">
+				<div className="flex justify-center items-center absolute sm:static inset-0 sm:inset-auto -z-10 opacity-20 sm:opacity-100 overflow-hidden sm:overflow-auto">
 					<Close className="h-48 w-48" />
 				</div>
 			</section>
 
 			<section
-				className="p-2 md:p-4 box relative flex flex-col justify-center items-center gap-2 md:gap-4"
+				className="p-2 sm:p-4 box relative flex flex-col justify-center items-center gap-2 sm:gap-4"
 				ref={moreInfoRef}
 			>
-				<h1 className="font-fredoka md:text-2xl text-center md:col-span-2">
+				<h1 className="font-fredoka sm:text-2xl text-center sm:col-span-2">
 					Explanatory notes
 				</h1>
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
 					<div className="flex gap-2 items-center">
-						<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+						<span className="url w-4 sm:w-8 px-0 text-center text-[0.5rem] sm:text-base">
 							1
 						</span>
-						<p className="text-xs md:text-base">
+						<p className="text-xs sm:text-base">
 							Doesn&apos;t count the personal url.
 						</p>
 					</div>
 					<div className="flex gap-2 items-center">
-						<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+						<span className="url w-4 sm:w-8 px-0 text-center text-[0.5rem] sm:text-base">
 							2
 						</span>
-						<p className="text-xs md:text-base">
+						<p className="text-xs sm:text-base">
 							Depend of each subscriber tier you choose.
 						</p>
 					</div>
 					<div className="flex gap-2 items-center">
-						<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+						<span className="url w-4 sm:w-8 px-0 text-center text-[0.5rem] sm:text-base">
 							3
 						</span>
-						<p className="text-xs md:text-base">
+						<p className="text-xs sm:text-base">
 							Work in progress, will be released at older time.
 						</p>
 					</div>
 					<div className="flex gap-2 items-center">
-						<span className="url w-4 md:w-8 px-0 text-center text-[0.5rem] md:text-base">
+						<span className="url w-4 sm:w-8 px-0 text-center text-[0.5rem] sm:text-base">
 							4
 						</span>
-						<p className="text-xs md:text-base">
+						<p className="text-xs sm:text-base">
 							Work in progress, will be released after extension.
 						</p>
 					</div>
