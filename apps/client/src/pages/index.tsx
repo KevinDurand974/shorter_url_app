@@ -179,6 +179,73 @@ const Home: NextPage = () => {
 				</div>
 			</section>
 
+			<section className="p-2 sm:p-4 box relative flex flex-col justify-center items-center gap-2 sm:gap-4 mb-2 sm:mb-4">
+				<h1 className="font-fredoka sm:text-2xl text-center sm:col-span-2">
+					[Q/A] Questions / Answers
+				</h1>
+				<div className="flex items-center justify-center">
+					<div className="flex flex-col gap-2 sm:gap-4">
+						<div>
+							<h4 className="font-bold tracking-wide sm:text-lg custom-underline before:right-0 before:bottom-0 w-fit mb-1 text-sm">
+								Why urls aren&apos;t from the same domain?
+							</h4>
+							<p className="text-xs sm:text-base">
+								It is much easier to do with another, moreover, the domain used
+								to create these urls is shorter than the current domain.
+							</p>
+						</div>
+
+						<div>
+							<h4 className="font-bold tracking-wide sm:text-lg custom-underline before:right-0 before:bottom-0 w-fit mb-1 text-sm">
+								Why creating this app when apps like cutt.ly or bit.ly exist?
+							</h4>
+							<p className="text-xs sm:text-base">
+								I will say, at the begining that&apos;s was only for me. But
+								after thinking about it, I decided to share it. And why? Because
+								I don&apos;t want to use these apps...
+							</p>
+						</div>
+
+						<div>
+							<h4 className="font-bold tracking-wide sm:text-lg custom-underline before:right-0 before:bottom-0 w-fit mb-1 text-sm">
+								Why such colors?
+							</h4>
+							<p className="text-xs sm:text-base">Because...</p>
+						</div>
+
+						<div>
+							<h4 className="font-bold tracking-wide sm:text-lg custom-underline before:right-0 before:bottom-0 w-fit mb-1 text-sm">
+								Why do cookies need to know about our country?
+							</h4>
+							<p className="text-xs sm:text-base">
+								Just to do some analytics for anyone who wanted it. Refusing the
+								cookie will save your country as undefined.
+							</p>
+						</div>
+
+						<div>
+							<h4 className="font-bold tracking-wide sm:text-lg custom-underline before:right-0 before:bottom-0 w-fit mb-1 text-sm">
+								Why did you not have a company tier?
+							</h4>
+							<p className="text-xs sm:text-base">
+								This is not a worldwide service, if this app really work, why
+								not try to create one...
+							</p>
+						</div>
+
+						<div>
+							<h4 className="font-bold tracking-wide sm:text-lg custom-underline before:right-0 before:bottom-0 w-fit mb-1 text-sm">
+								How Subcriber tier work?
+							</h4>
+							<p className="text-xs sm:text-base">
+								It&apos;s monthly paid, each tier will unlock more urls.
+								It&apos;s relatively cheap.
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<section
 				className="p-2 sm:p-4 box relative flex flex-col justify-center items-center gap-2 sm:gap-4"
 				ref={moreInfoRef}
