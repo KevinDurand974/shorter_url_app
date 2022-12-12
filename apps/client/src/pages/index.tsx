@@ -3,6 +3,7 @@ import Head from "next/head"
 import { Fragment, useEffect, useRef } from "react"
 import { trpc } from "@libs/trpc"
 import { Add, Close } from "@components/svg"
+import Link from "next/link"
 
 const Home: NextPage = () => {
 	useEffect(() => {
@@ -166,12 +167,14 @@ const Home: NextPage = () => {
 
 					<div className="flex flex-col sm:flex-row gap-2 items-center justify-center text-xs sm:text-base">
 						<span>Want to create shorter one?</span>
-						<button
-							type="button"
-							className="tracking-wider font-fredoka px-3 py-1 cta"
-						>
-							Create an Account
-						</button>
+						<Link href="/">
+							<a
+								className="tracking-wider font-fredoka px-3 py-1 cta"
+								tabIndex={0}
+							>
+								Create an Account
+							</a>
+						</Link>
 					</div>
 				</div>
 				<div className="flex justify-center items-center absolute sm:static inset-0 sm:inset-auto -z-10 opacity-20 sm:opacity-100 overflow-hidden sm:overflow-auto">
