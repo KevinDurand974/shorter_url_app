@@ -6,12 +6,11 @@ const ScrollTop = () => {
 		window.scrollTo({ top: 0, behavior: "smooth" })
 	}
 
-	const [hidden, setHidden] = useState("hidden")
+	const [hidden, setHidden] = useState("scale-0")
 
 	useEffect(() => {
 		const onScroll = () => {
 			if (window.scrollY > 0) {
-				console.log("??")
 				setHidden("scale-100")
 			} else {
 				setHidden("scale-0")
