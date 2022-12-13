@@ -61,5 +61,145 @@ module.exports = {
 				{ variants }
 			)
 		}),
+		plugin(({ addUtilities, e, theme }) => {
+			const colors = theme("colors")
+
+			const texteColors = Object.keys(colors).reduce((acc, key) => {
+				// If only text colors
+				if (typeof colors[key] === "string") {
+					return {
+						...acc,
+						[`.texting-${e(key)}`]: {
+							color: colors[key],
+						},
+					}
+				}
+
+				// Others
+				const shades = Object.keys(colors[key])
+				return {
+					...acc,
+					...shades.reduce(
+						(a, shade) => ({
+							...a,
+							[`.texting-${e(key)}-${shade}`]: {
+								color: colors[key][shade],
+							},
+						}),
+						{}
+					),
+				}
+			})
+
+			addUtilities(texteColors, { variants: ["responsive"] })
+		}),
+		plugin(({ theme, addBase, e }) => {
+			const colors = theme("colors")
+
+			const varName = "--sfx-border-gradient"
+			const className = ".border-gradient"
+
+			let colorVars = {}
+
+			const hex2rgba = (hex, alpha = 100) => {
+				if (["currentColor", "transparent", "inherit"].includes(hex)) return hex
+				const rHex = hex.substring(1)
+				let split = []
+				if (/^([A-Z0-9]{2}){3}$/gi.test(rHex)) {
+					split = rHex.match(/[A-Z0-9]{2}/gi).map((c) => parseInt(c, 16))
+				} else if (/^([A-Z0-9]{1}){3}$/gi.test(rHex)) {
+					split = rHex.match(/[A-Z0-9]{1}/gi).map((c) => parseInt(c + c, 16))
+				}
+				const [r, g, b] = split
+				if (alpha === 100) return `rgb(${r} ${g} ${b})`
+				return `rgb(${r} ${g} ${b} / ${alpha / 100})`
+			}
+
+			const createColorObj = (color, name) => {
+				const obj = {}
+				// With /opacity
+				for (let i = 0; i <= 100; i += 10) {
+					obj[`${className}-from-${name}${e("/")}${i}`] = {
+						[`${varName}-from`]: hex2rgba(color, i),
+						[`${varName}-stops`]: `var(${varName}-from), var(${varName}-to)`,
+					}
+					obj[`${className}-to-${name}${e("/")}${i}`] = {
+						[`${varName}-to`]: hex2rgba(color, i),
+					}
+				}
+				// With border-opacity
+				obj[`${className}-from-${name}`] = {
+					[`${varName}-from`]: hex2rgba(color, 100),
+					[`${varName}-stops`]: `var(${varName}-from), var(${varName}-to)`,
+				}
+				obj[`${className}-to-${name}`] = {
+					[`${varName}-to`]: hex2rgba(color, 100),
+				}
+				return obj
+			}
+
+			Object.keys(colors).forEach((name) => {
+				if (typeof colors[name] === "string") {
+					if (["currentColor", "transparent", "inherit"].includes(name)) {
+						colorVars[`${className}-to-${name}`] = {
+							[`${varName}-to`]: colors[name],
+						}
+					} else {
+						colorVars = { ...colorVars, ...createColorObj(colors[name], name) }
+					}
+				} else {
+					Object.keys(colors[name]).forEach((shade) => {
+						colorVars = {
+							...colorVars,
+							...createColorObj(colors[name][shade], `${name}-${shade}`),
+						}
+					})
+				}
+			})
+
+			// All treated colors
+			addBase(
+				{
+					"*, ::before, ::after": {
+						[`${varName}-from`]: "",
+						[`${varName}-to`]: "",
+						[`${varName}-stops`]: `var(${varName}-from), var(${varName}-to)`,
+					},
+					...colorVars,
+				},
+				{ variants: ["responsive"] }
+			)
+
+			// All linear gradient type
+			addBase(
+				{
+					[`${className}-to-t`]: {
+						"border-image": `linear-gradient(to top, var(${varName}-stops)) 1`,
+					},
+					[`${className}-to-tr`]: {
+						"border-image": `linear-gradient(to top right, var(${varName}-stops)) 1`,
+					},
+					[`${className}-to-tl`]: {
+						"border-image": `linear-gradient(to top left, var(${varName}-stops)) 1`,
+					},
+					[`${className}-to-r`]: {
+						"border-image": `linear-gradient(to right, var(${varName}-stops)) 1`,
+					},
+					[`${className}-to-b`]: {
+						"border-image": `linear-gradient(to bottom, var(${varName}-stops)) 1`,
+					},
+					[`${className}-to-br`]: {
+						"border-image": `linear-gradient(to bottom right, var(${varName}-stops)) 1`,
+					},
+					[`${className}-to-bl`]: {
+						"border-image": `linear-gradient(to bottom left, var(${varName}-stops)) 1`,
+					},
+					[`${className}-to-l`]: {
+						"border-image": `linear-gradient(to left, var(${varName}-stops)) 1`,
+					},
+				},
+				{ variants: ["responsive"] }
+			)
+		}),
 	],
 }
