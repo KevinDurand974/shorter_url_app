@@ -25,6 +25,7 @@ a {
 	.box {
 		@apply bg-gradient-to-b from-black/10 to-black/30 rounded-xl shadow-md shadow-t-alt/40;
 	}
+	/* via-black */
 	.custom-underline {
 		@apply z-10 relative before:absolute before:left-0 before:right-full before:-bottom-2 before:h-1 before:bg-gradient-to-r before:from-gradient-top before:to-accent before:rounded-full hover:before:right-0 before:transition-all before:duration-[0.4s] before:-z-10;
 	}
@@ -41,5 +42,11 @@ a {
 	}
 	.url {
 		@apply inline-block px-5 py-1 bg-t-alt/60 border-b-2 border-accent rounded-sm font-fredoka tracking-wider;
+	}
+	.border-image {
+		@apply border-gradient-to-r border-gradient-from-gradient-top border-gradient-to-accent;
+	}
+	.border-image:focus {
+		@apply border-gradient-to-gradient-bottom;
 	}
 }
