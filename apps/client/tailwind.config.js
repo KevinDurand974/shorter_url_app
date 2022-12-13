@@ -61,38 +61,6 @@ module.exports = {
 				{ variants }
 			)
 		}),
-		plugin(({ addUtilities, e, theme }) => {
-			const colors = theme("colors")
-
-			const texteColors = Object.keys(colors).reduce((acc, key) => {
-				// If only text colors
-				if (typeof colors[key] === "string") {
-					return {
-						...acc,
-						[`.texting-${e(key)}`]: {
-							color: colors[key],
-						},
-					}
-				}
-
-				// Others
-				const shades = Object.keys(colors[key])
-				return {
-					...acc,
-					...shades.reduce(
-						(a, shade) => ({
-							...a,
-							[`.texting-${e(key)}-${shade}`]: {
-								color: colors[key][shade],
-							},
-						}),
-						{}
-					),
-				}
-			})
-
-			addUtilities(texteColors, { variants: ["responsive"] })
-		}),
 		plugin(({ theme, addBase, e }) => {
 			const colors = theme("colors")
 
