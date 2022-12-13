@@ -112,6 +112,7 @@ importers:
       postcss: ^8.4.19
       react: 18.2.0
       react-dom: 18.2.0
+      react-hook-form: ^7.40.0
       react-icons: ^4.7.1
       sass: ^1.55.0
       tailwindcss: ^3.2.4
@@ -125,6 +126,7 @@ importers:
       next: 12.3.1_m5sxuueb27gk6ddc5gums6vtgq
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.40.0_react@18.2.0
       react-icons: 4.7.1_react@18.2.0
       sass: 1.56.1
     devDependencies:
@@ -3810,6 +3812,15 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-hook-form/7.40.0_react@18.2.0:
+    resolution: {integrity: sha512-0rokdxMPJs0k9bvFtY6dbcSydyNhnZNXCR49jgDr/aR03FDHFOK6gfh8ccqB3fl696Mk7lqh04xdm+agqWXKSw==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-icons/4.7.1_react@18.2.0:
