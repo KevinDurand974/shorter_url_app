@@ -41,7 +41,7 @@ const Header = () => {
 			</Link>
 
 			<nav className="flex flex-wrap items-center gap-2 sm:gap-4 font-fredoka tracking-wide">
-				<Link href="/">
+				<Link href="/create">
 					<a
 						className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
 						tabIndex={0}
@@ -53,7 +53,7 @@ const Header = () => {
 				<div
 					className={`h-5 sm:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
 				/>
-				<Link href="/">
+				<Link href="/explorer">
 					<a
 						className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
 						tabIndex={0}
@@ -65,15 +65,13 @@ const Header = () => {
 				<div
 					className={`h-5 sm:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
 				/>
-				<Link href="/">
-					<a
-						className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
-						tabIndex={0}
-					>
-						<HiUserCircle className="h-5 w-5 sm:h-7 sm:w-7" />
-						<span className="hidden sm:block">Account</span>
-					</a>
-				</Link>
+				<button
+					type="button"
+					className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+				>
+					<HiUserCircle className="h-5 w-5 sm:h-7 sm:w-7" />
+					<span className="hidden sm:block">Account</span>
+				</button>
 			</nav>
 		</header>
 	)
