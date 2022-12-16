@@ -1,10 +1,13 @@
 import Head from "next/head"
-import { Fragment } from "react"
+import { Fragment, useContext } from "react"
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik"
-import { trpc } from "@libs/trpc"
+import { setAuthToken, trpc } from "@libs/trpc"
 import { loginSchema } from "@shorter/validators"
 import { useFormikZodAdapter } from "@libs/useFormikZodAdapter"
-import useLocalStorage from "@hooks/useLocalStorage"
+import { useRouter } from "next/router"
+import useSessionStorage from "@hooks/useSessionStorage"
+import AuthContext, { AuthUser } from "@components/contexts/AuthContext"
+import { decode } from "jsonwebtoken"
 
 type Props = {}
 
@@ -14,16 +17,38 @@ type FormValues = {
 }
 
 const LoginPage = (props: Props) => {
-	const { setStorageValue } = useLocalStorage()
+	const router = useRouter()
+	const { setUser, getUser, isLogged } = useContext(AuthContext)
+	const { setSessionValue, getSessionValue, isSessionAvailable } =
+		useSessionStorage()
+
+	if (isLogged) {
+		router.push("/")
+	}
 
 	const onSubmit = async (
 		values: FormValues,
 		{ setSubmitting, resetForm }: FormikHelpers<FormValues>
 	) => {
 		setSubmitting(false)
-		const { access_token } = await trpc.login.mutate(values)
-		setStorageValue("us_at", access_token)
-		resetForm()
+		try {
+			const ac = new AbortController()
+			const { access_token } = await trpc.login.mutate(values, {
+				signal: ac.signal,
+			})
+			setAuthToken(access_token)
+
+			const user = decode(access_token) as AuthUser
+			setUser(user)
+
+			if (isSessionAvailable()) setSessionValue("us_at", access_token)
+			else {
+			} // FIX: Use a toast to show no access
+			resetForm()
+			await router.push("/")
+		} catch (err) {
+			// FIX: Use a toast to show the error
+		}
 	}
 
 	return (
