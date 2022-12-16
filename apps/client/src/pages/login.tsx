@@ -4,6 +4,7 @@ import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik"
 import { trpc } from "@libs/trpc"
 import { loginSchema } from "@shorter/validators"
 import { useFormikZodAdapter } from "@libs/useFormikZodAdapter"
+import useLocalStorage from "@hooks/useLocalStorage"
 
 type Props = {}
 
@@ -13,14 +14,16 @@ type FormValues = {
 }
 
 const LoginPage = (props: Props) => {
+	const { setStorageValue } = useLocalStorage()
+
 	const onSubmit = async (
 		values: FormValues,
-		{ setSubmitting }: FormikHelpers<FormValues>
+		{ setSubmitting, resetForm }: FormikHelpers<FormValues>
 	) => {
 		setSubmitting(false)
-		const data = await trpc.login.mutate(values)
-
-		console.log(data)
+		const { access_token } = await trpc.login.mutate(values)
+		setStorageValue("us_at", access_token)
+		resetForm()
 	}
 
 	return (
