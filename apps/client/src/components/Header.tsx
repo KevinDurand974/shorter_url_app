@@ -34,6 +34,7 @@ const Header = () => {
 				<a
 					className="flex flex-wrap items-center gap-1 sm:gap-2 z-10"
 					tabIndex={0}
+					aria-label="Home"
 				>
 					<LogoColors className="h-5 w-5 sm:h-10 sm:w-10" />
 					<h4 className="font-fredoka caps-small sm:text-3xl">Url Shorten</h4>
@@ -45,6 +46,7 @@ const Header = () => {
 					<a
 						className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
 						tabIndex={0}
+						aria-label="Create Url"
 					>
 						<RiAddCircleLine className="h-5 w-5 sm:h-7 sm:w-7" />
 						<span className="hidden sm:block">Create Url</span>
@@ -57,6 +59,7 @@ const Header = () => {
 					<a
 						className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
 						tabIndex={0}
+						aria-label="My Urls"
 					>
 						<TbListDetails className="h-5 w-5 sm:h-7 sm:w-7" />
 						<span className="hidden sm:block">My Urls</span>
@@ -68,6 +71,7 @@ const Header = () => {
 				<button
 					type="button"
 					className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+					aria-label="Account"
 				>
 					<HiUserCircle className="h-5 w-5 sm:h-7 sm:w-7" />
 					<span className="hidden sm:block">Account</span>
