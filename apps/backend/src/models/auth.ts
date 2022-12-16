@@ -33,7 +33,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     });
 
     // Create cookie for refresh_token
-    ctx.res.cookie('refresh_token', refresh_token, {
+    ctx.res.cookie('us_rt', refresh_token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
@@ -73,7 +73,7 @@ export const logout = async (datasource: DataSource, ctx: ContextWithPayload) =>
   }
 
   // Remove it from cookies
-  ctx.res.clearCookie('refresh_token');
+  ctx.res.clearCookie('us_rt');
 };
 
 // NOTE: Refresh Token
@@ -153,7 +153,7 @@ export const register = async (datasource: DataSource, data: CreateUserSchema, c
     });
 
     // Create cookie for refresh_token
-    ctx.res.cookie('refresh_token', refresh_token, {
+    ctx.res.cookie('us_rt', refresh_token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
