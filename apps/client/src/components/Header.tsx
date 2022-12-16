@@ -4,6 +4,7 @@ import { TbListDetails } from "react-icons/tb"
 import { RiAddCircleLine } from "react-icons/ri"
 import { LogoColors } from "./svg"
 import { useEffect, useMemo, useState } from "react"
+import Account from "./Account"
 
 const Header = () => {
 	const [{ headerOpacity, separatorColor }, setScrollY] = useState({
@@ -68,14 +69,7 @@ const Header = () => {
 				<div
 					className={`h-5 sm:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
 				/>
-				<button
-					type="button"
-					className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
-					aria-label="Account"
-				>
-					<HiUserCircle className="h-5 w-5 sm:h-7 sm:w-7" />
-					<span className="hidden sm:block">Account</span>
-				</button>
+				<Account />
 			</nav>
 		</header>
 	)
