@@ -103,6 +103,7 @@ importers:
       '@trpc/client': 10.0.0-proxy-beta.26
       '@trpc/react-query': 10.0.0-proxy-beta.26
       '@trpc/server': 10.0.0-proxy-beta.26
+      '@types/jsonwebtoken': ^8.5.9
       '@types/node': 18.8.3
       '@types/react': 18.0.21
       '@types/react-dom': 18.0.6
@@ -110,6 +111,7 @@ importers:
       eslint: 8.25.0
       eslint-config-next: 12.3.1
       formik: ^2.2.9
+      jsonwebtoken: ^8.5.1
       next: 12.3.1
       postcss: ^8.4.19
       react: 18.2.0
@@ -128,6 +130,7 @@ importers:
       '@trpc/react-query': 10.0.0-proxy-beta.26_pkh5zed2ivenmdoejakumyi44i
       '@trpc/server': 10.0.0-proxy-beta.26
       formik: 2.2.9_react@18.2.0
+      jsonwebtoken: 8.5.1
       next: 12.3.1_m5sxuueb27gk6ddc5gums6vtgq
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -136,6 +139,7 @@ importers:
       sass: 1.56.1
       zod: 3.19.1
     devDependencies:
+      '@types/jsonwebtoken': 8.5.9
       '@types/node': 18.8.3
       '@types/react': 18.0.21
       '@types/react-dom': 18.0.6
