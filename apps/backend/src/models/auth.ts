@@ -146,10 +146,10 @@ export const register = async (datasource: DataSource, data: CreateUserSchema, c
 
     // Create refresh_token
     const refresh_token = createRefreshToken({
-      uuid: user.profile.uuid,
-      vip: user.profile.vip,
+      uuid: profile.uuid,
+      vip: profile.vip,
       pseudo: user.pseudo,
-      emailVerified: user.profile.verified,
+      emailVerified: profile.verified,
     });
 
     // Create cookie for refresh_token
@@ -161,17 +161,17 @@ export const register = async (datasource: DataSource, data: CreateUserSchema, c
     // Create a token bind to the user in the database
     const TokenRep = datasource.getRepository(Token);
     const token = new Token();
-    token.uuid = user.profile.uuid;
+    token.uuid = profile.uuid;
     token.token = refresh_token;
     token.expiredAt = add(new Date(), { days: 7 });
     await TokenRep.save(token);
 
     // Create access_token
     const access_token = createAccessToken({
-      uuid: user.profile.uuid,
-      vip: user.profile.vip,
+      uuid: profile.uuid,
+      vip: profile.vip,
       pseudo: user.pseudo,
-      emailVerified: user.profile.verified,
+      emailVerified: profile.verified,
     });
 
     // Return access_token
