@@ -1,26 +1,23 @@
 import Head from "next/head"
+import { useRouter } from "next/router"
 import { Fragment, useContext } from "react"
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik"
-import { setAuthToken, trpc } from "@libs/trpc"
+import { decode } from "jsonwebtoken"
 import { loginSchema } from "@shorter/validators"
+import { setAuthToken, trpc } from "@libs/trpc"
 import { useFormikZodAdapter } from "@libs/useFormikZodAdapter"
-import { useRouter } from "next/router"
 import useSessionStorage from "@hooks/useSessionStorage"
 import AuthContext, { AuthUser } from "@components/contexts/AuthContext"
-import { decode } from "jsonwebtoken"
-
-type Props = {}
 
 type FormValues = {
 	email: string
 	password: string
 }
 
-const LoginPage = (props: Props) => {
+const LoginPage = () => {
 	const router = useRouter()
-	const { setUser, getUser, isLogged } = useContext(AuthContext)
-	const { setSessionValue, getSessionValue, isSessionAvailable } =
-		useSessionStorage()
+	const { setUser, isLogged } = useContext(AuthContext)
+	const { setSessionValue, isSessionAvailable } = useSessionStorage()
 
 	if (isLogged) {
 		router.push("/")
