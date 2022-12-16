@@ -29,7 +29,7 @@ const Header = () => {
 
 	return (
 		<header
-			className={`w-full flex items-center p-2 sm:p-4 flex-shrink-0 justify-between flex-wrap mb-2 sm:mb-4 box sticky top-2 sm:top-4 z-20 overflow-hidden before:absolute before:inset-0 before:z-10 before:transition-all before:duration-[0.4s] ${headerOpacity}`}
+			className={`w-full flex items-center p-2 sm:p-4 flex-shrink-0 justify-between flex-wrap mb-2 sm:mb-4 box sticky top-2 sm:top-4 z-20 before:absolute before:inset-0 before:z-10 before:rounded-xl before:transition-all before:duration-[0.4s] ${headerOpacity}`}
 		>
 			<Link href="/">
 				<a
