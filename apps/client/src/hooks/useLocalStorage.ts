@@ -24,14 +24,12 @@ const removeStorageValue = (name: string) => {
 }
 
 const useLocalStorage = () => {
-	if (storageAvailable()) {
-		return {
-			getStorageValue,
-			setStorageValue,
-			removeStorageValue,
-		}
+	return {
+		isStorageAvailable: storageAvailable,
+		getStorageValue,
+		setStorageValue,
+		removeStorageValue,
 	}
-	throw new Error("Cannot use Local Storage.")
 }
 
 export default useLocalStorage

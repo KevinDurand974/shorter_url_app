@@ -1,4 +1,4 @@
-function storageAvailable() {
+function sessionAvailable() {
 	try {
 		const storage = window["sessionStorage"]
 		const x = "__storage_test__"
@@ -24,14 +24,12 @@ const removeSessionValue = (name: string) => {
 }
 
 const useSessionStorage = () => {
-	if (storageAvailable()) {
-		return {
-			getSessionValue,
-			setSessionValue,
-			removeSessionValue,
-		}
+	return {
+		isSessionAvailable: sessionAvailable,
+		getSessionValue,
+		setSessionValue,
+		removeSessionValue,
 	}
-	throw new Error("Cannot use Session Storage.")
 }
 
 export default useSessionStorage
