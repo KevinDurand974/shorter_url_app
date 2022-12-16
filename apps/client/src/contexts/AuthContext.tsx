@@ -13,11 +13,11 @@ export type AuthUser = {
 
 const AuthContext = createContext<{
 	isLogged: boolean
-	getUser: () => AuthUser | null
+	user: AuthUser | null
 	setUser: (u: AuthUser) => void
 }>({
 	isLogged: false,
-	getUser: () => null,
+	user: null,
 	setUser: (u: AuthUser) => {},
 })
 
@@ -41,13 +41,10 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 	const updateUserInfo = (user: AuthUser) => {
 		setUser(user)
 	}
-	const getUserInfo = () => {
-		return user
-	}
 
 	const values = {
 		isLogged,
-		getUser: getUserInfo,
+		user,
 		setUser: updateUserInfo,
 	}
 
