@@ -15,10 +15,12 @@ const AuthContext = createContext<{
 	isLogged: boolean
 	user: AuthUser | null
 	setUser: (u: AuthUser) => void
+	logout: () => void
 }>({
 	isLogged: false,
 	user: null,
 	setUser: (u: AuthUser) => {},
+	logout: () => {},
 })
 
 export const AuthProvider = ({ children }: ProviderProps) => {
@@ -43,10 +45,16 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 		setLogged(true)
 	}
 
+	const logout = () => {
+		setUser(null)
+		setLogged(false)
+	}
+
 	const values = {
 		isLogged,
 		user,
 		setUser: updateUserInfo,
+		logout,
 	}
 
 	return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
