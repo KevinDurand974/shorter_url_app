@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 
 	const updateUserInfo = (user: AuthUser) => {
 		setUser(user)
+		setLogged(true)
 	}
 
 	const values = {
