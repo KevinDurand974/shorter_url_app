@@ -1,13 +1,19 @@
 import Link from "next/link"
+import { useContext, useEffect, useState } from "react"
 import { HiUserCircle } from "react-icons/hi2"
 import { TbListDetails } from "react-icons/tb"
-import { RiAddCircleLine, RiLoginBoxLine } from "react-icons/ri"
-import { LogoColors } from "./svg"
-import { useContext, useEffect, useMemo, useState } from "react"
+import {
+	RiAddCircleLine,
+	RiLoginBoxLine,
+	RiLogoutBoxLine,
+} from "react-icons/ri"
 import { AuthContext } from "@contexts"
+import useHasMounted from "@hooks/useHasMounted"
+import { LogoColors } from "./svg"
 
 const Header = () => {
 	const { isLogged } = useContext(AuthContext)
+	const hasMounted = useHasMounted()
 
 	const [{ headerOpacity, separatorColor }, setScrollY] = useState({
 		headerOpacity: "before:bg-black/0",
@@ -71,17 +77,32 @@ const Header = () => {
 				<div
 					className={`h-5 sm:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
 				/>
-				{isLogged ? (
-					<Link href="/account">
-						<a
-							className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
-							tabIndex={0}
-							aria-label="Account"
-						>
-							<HiUserCircle className="h-5 w-5 sm:h-7 sm:w-7" />
-							<span className="hidden sm:block">Account</span>
-						</a>
-					</Link>
+				{isLogged && hasMounted ? (
+					<>
+						<Link href="/account">
+							<a
+								className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+								tabIndex={0}
+								aria-label="Account"
+							>
+								<HiUserCircle className="h-5 w-5 sm:h-7 sm:w-7" />
+								<span className="hidden sm:block">Account</span>
+							</a>
+						</Link>
+						<div
+							className={`h-5 sm:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
+						/>
+						<Link href="/logout">
+							<a
+								className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+								tabIndex={0}
+								aria-label="Logout"
+							>
+								<RiLogoutBoxLine className="h-5 w-5 sm:h-7 sm:w-7" />
+								<span className="hidden sm:block">Logout</span>
+							</a>
+						</Link>
+					</>
 				) : (
 					<Link href="/login">
 						<a
