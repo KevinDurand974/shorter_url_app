@@ -7,7 +7,8 @@ import { loginSchema } from "@shorter/validators"
 import { setAuthToken, trpc } from "@libs/trpc"
 import { useFormikZodAdapter } from "@libs/useFormikZodAdapter"
 import useSessionStorage from "@hooks/useSessionStorage"
-import AuthContext, { AuthUser } from "contexts/AuthContext"
+import { AuthContext } from "@contexts"
+import type { AuthUser } from "@contexts/AuthContext"
 
 type FormValues = {
 	email: string

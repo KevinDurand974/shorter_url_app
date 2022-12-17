@@ -12,6 +12,8 @@
 			"@components/*": ["components/*"],
 			"@hooks": ["hooks"],
 			"@hooks/*": ["hooks/*"],
+			"@contexts": ["contexts"],
+			"@contexts/*": ["contexts/*"],
 			"@libs/*": ["libs/*"]
 		}
 	},

@@ -1,8 +1,8 @@
-import { Layout, ScrollTop } from "@components"
-import { AuthProvider } from "contexts/AuthContext"
-import "@styles/globals.css"
-import type { AppProps } from "next/app"
 import Head from "next/head"
+import type { AppProps } from "next/app"
+import { Layout, ScrollTop } from "@components"
+import { AuthProvider } from "@contexts"
+import "@styles/globals.css"
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
