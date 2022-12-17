@@ -1,12 +1,14 @@
 import Link from "next/link"
 import { HiUserCircle } from "react-icons/hi2"
 import { TbListDetails } from "react-icons/tb"
-import { RiAddCircleLine } from "react-icons/ri"
+import { RiAddCircleLine, RiLoginBoxLine } from "react-icons/ri"
 import { LogoColors } from "./svg"
-import { useEffect, useMemo, useState } from "react"
-import Account from "./Account"
+import { useContext, useEffect, useMemo, useState } from "react"
+import { AuthContext } from "@contexts"
 
 const Header = () => {
+	const { isLogged } = useContext(AuthContext)
+
 	const [{ headerOpacity, separatorColor }, setScrollY] = useState({
 		headerOpacity: "before:bg-black/0",
 		separatorColor: "bg-black/20",
@@ -69,7 +71,29 @@ const Header = () => {
 				<div
 					className={`h-5 sm:h-8 w-[1px] z-10 ${separatorColor} transition-all duration-[0.4s]`}
 				/>
-				<Account />
+				{isLogged ? (
+					<Link href="/account">
+						<a
+							className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+							tabIndex={0}
+							aria-label="Account"
+						>
+							<HiUserCircle className="h-5 w-5 sm:h-7 sm:w-7" />
+							<span className="hidden sm:block">Account</span>
+						</a>
+					</Link>
+				) : (
+					<Link href="/login">
+						<a
+							className="custom-underline flex flex-wrap items-center sm:gap-2 sm:px-2"
+							tabIndex={0}
+							aria-label="Login"
+						>
+							<RiLoginBoxLine className="h-5 w-5 sm:h-7 sm:w-7" />
+							<span className="hidden sm:block">Login / Register</span>
+						</a>
+					</Link>
+				)}
 			</nav>
 		</header>
 	)
