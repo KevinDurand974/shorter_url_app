@@ -11,7 +11,7 @@ export const authRouter = router({
   }),
   register: publicProcedure.input(createUserSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
-    return register(datasource, input, ctx);
+    await register(datasource, input, ctx);
   }),
   // NOTE: Auth Procedures
   logout: authProcedure.mutation(async ({ ctx }) => {

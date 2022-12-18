@@ -25,7 +25,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     if (!valid) throw createError400('Cannot login, please check your credentials');
 
     // Create refresh_token
-    const refresh_token = createRefreshToken({
+    const refreshToken = createRefreshToken({
       uuid: user.profile.uuid,
       vip: user.profile.vip,
       pseudo: user.pseudo,
@@ -33,21 +33,23 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     });
 
     // Create cookie for refresh_token
-    ctx.res.cookie('us_rt', refresh_token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    });
+    if (data.rememberme) {
+      ctx.res.cookie('us_rt', refreshToken, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      });
+    }
 
     // Create a token bind to the user in the database
     const TokenRep = datasource.getRepository(Token);
     const token = new Token();
     token.uuid = user.profile.uuid;
-    token.token = refresh_token;
+    token.token = refreshToken;
     token.expiredAt = add(new Date(), { days: 7 });
     await TokenRep.save(token);
 
     // Create access_token
-    const access_token = createAccessToken({
+    const accessToken = createAccessToken({
       uuid: user.profile.uuid,
       vip: user.profile.vip,
       pseudo: user.pseudo,
@@ -55,7 +57,13 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     });
 
     // Return access_token
-    return { access_token };
+    if (data.rememberme) {
+      return {
+        accessToken,
+        sessionToken: refreshToken,
+      };
+    }
+    return { accessToken };
   } catch (err) {
     throw err;
   }
@@ -64,12 +72,12 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
 // NOTE: Logout
 export const logout = async (datasource: DataSource, ctx: ContextWithPayload) => {
   // Get refresh_token from cookies
-  const refresh_token = ctx.cookies.refresh_token;
+  const refreshToken = ctx.cookies.us_rt;
 
   // Remove it from database
-  if (refresh_token) {
+  if (refreshToken) {
     const TokenRep = datasource.getRepository(Token);
-    await TokenRep.delete({ token: refresh_token });
+    await TokenRep.delete({ token: refreshToken });
   }
 
   // Remove it from cookies
@@ -94,8 +102,8 @@ export const refreshToken = async (datasource: DataSource, ctx: ContextWithPaylo
     // If token bind to an user
     if (!token) throw createError401('Unauthenticated');
 
-    // Recreate access_token
-    const access_token = createAccessToken({
+    // Recreate accessToken
+    const accessToken = createAccessToken({
       uuid: payload.uuid,
       vip: payload.vip,
       pseudo: payload.pseudo,
@@ -103,7 +111,7 @@ export const refreshToken = async (datasource: DataSource, ctx: ContextWithPaylo
     });
 
     // Return access_token
-    return { access_token };
+    return { accessToken };
   } catch (err) {
     // Global Error
     throw createError401('Unauthenticated');
@@ -143,39 +151,6 @@ export const register = async (datasource: DataSource, data: CreateUserSchema, c
 
     // Save Profile
     await ProfileRep.save(profile);
-
-    // Create refresh_token
-    const refresh_token = createRefreshToken({
-      uuid: profile.uuid,
-      vip: profile.vip,
-      pseudo: user.pseudo,
-      emailVerified: profile.verified,
-    });
-
-    // Create cookie for refresh_token
-    ctx.res.cookie('us_rt', refresh_token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    });
-
-    // Create a token bind to the user in the database
-    const TokenRep = datasource.getRepository(Token);
-    const token = new Token();
-    token.uuid = profile.uuid;
-    token.token = refresh_token;
-    token.expiredAt = add(new Date(), { days: 7 });
-    await TokenRep.save(token);
-
-    // Create access_token
-    const access_token = createAccessToken({
-      uuid: profile.uuid,
-      vip: profile.vip,
-      pseudo: user.pseudo,
-      emailVerified: profile.verified,
-    });
-
-    // Return access_token
-    return { access_token };
   } catch (err) {
     throw err;
   }
