@@ -9,10 +9,12 @@ import { useFormikZodAdapter } from "@libs/useFormikZodAdapter"
 import useSessionStorage from "@hooks/useSessionStorage"
 import { AuthContext } from "@contexts"
 import type { AuthUser } from "@contexts/AuthContext"
+import Link from "next/link"
 
 type FormValues = {
 	email: string
 	password: string
+	rememberme: boolean
 }
 
 const LoginPage = () => {
@@ -68,7 +70,11 @@ const LoginPage = () => {
 					</h1>
 
 					<Formik
-						initialValues={{ email: "", password: "" }}
+						initialValues={{
+							email: "test1@test.fr",
+							password: "Azerty&1",
+							rememberme: false,
+						}}
 						validationSchema={useFormikZodAdapter(loginSchema)}
 						onSubmit={onSubmit}
 					>
@@ -117,6 +123,16 @@ const LoginPage = () => {
 										/>
 									</div>
 
+									<div className="flex gap-2">
+										<Field
+											id="rememberme"
+											type="checkbox"
+											name="rememberme"
+											className="cursor-pointer"
+										/>
+										<label htmlFor="rememberme">Keep me logged</label>
+									</div>
+
 									<button
 										type="submit"
 										className="px-5 py-3 font-fredoka tracking-wider bg-gradient-to-r from-gradient-top to-accent mt-4 uppercase transition-all duration-[0.4s] text-sm sm:text-lg disabled:grayscale disabled:opacity-20"
@@ -128,6 +144,15 @@ const LoginPage = () => {
 							</Form>
 						)}
 					</Formik>
+
+					<div className="flex items-center gap-2 justify-end">
+						<div>Doesn&apos;t have an account?</div>
+						<Link href="/register">
+							<a aria-label="Register an account" className="cta px-3 py-1">
+								Signup here
+							</a>
+						</Link>
+					</div>
 				</div>
 			</section>
 		</Fragment>
