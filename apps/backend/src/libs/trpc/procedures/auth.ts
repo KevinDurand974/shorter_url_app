@@ -1,7 +1,7 @@
 import { createUserSchema, loginSchema } from '@shorter/validators';
 import { login, logout, refreshToken, register } from '../../../models';
 import { getDataSource } from '../../typeorm';
-import { publicProcedure, authProcedure, router } from '../configuration';
+import { publicProcedure, refreshProcedure, router } from '../configuration';
 
 export const authRouter = router({
   // NOTE: Public Procedures
@@ -13,15 +13,16 @@ export const authRouter = router({
     const datasource = await getDataSource();
     await register(datasource, input, ctx);
   }),
-  // NOTE: Auth Procedures
-  logout: authProcedure.mutation(async ({ ctx }) => {
+  logout: publicProcedure.query(async ({ ctx }) => {
     const datasource = await getDataSource();
     await logout(datasource, ctx);
   }),
-  refresh: authProcedure.mutation(async ({ ctx }) => {
+  refresh: publicProcedure.query(async ({ ctx }) => {
     const datasource = await getDataSource();
     return refreshToken(datasource, ctx);
   }),
+  // NOTE: Refresh Procedures
+  verifyToken: refreshProcedure.query(({ ctx }) => ctx.tokenValid),
 
   // TODO: Forgot Password ?
 });
