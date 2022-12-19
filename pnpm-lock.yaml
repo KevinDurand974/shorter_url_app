@@ -99,9 +99,7 @@ importers:
     specifiers:
       '@shorter/backend': workspace:^1.0.0
       '@shorter/validators': workspace:^1.0.0
-      '@tanstack/react-query': ^4.13.5
       '@trpc/client': 10.0.0-proxy-beta.26
-      '@trpc/react-query': 10.0.0-proxy-beta.26
       '@trpc/server': 10.0.0-proxy-beta.26
       '@types/jsonwebtoken': ^8.5.9
       '@types/node': 18.8.3
@@ -125,9 +123,7 @@ importers:
     dependencies:
       '@shorter/backend': link:../backend
       '@shorter/validators': link:../../libs/validators
-      '@tanstack/react-query': 4.19.1_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4
-      '@trpc/react-query': 10.0.0-proxy-beta.26_pkh5zed2ivenmdoejakumyi44i
       '@trpc/server': 10.0.0-proxy-beta.26
       formik: 2.2.9_react@18.2.0
       jsonwebtoken: 8.5.1
@@ -494,50 +490,12 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@tanstack/query-core/4.19.1:
-    resolution: {integrity: sha512-Zp0aIose5C8skBzqbVFGk9HJsPtUhRVDVNWIqVzFbGQQgYSeLZMd3Sdb4+EnA5wl1J7X+bre2PJGnQg9x/zHOA==}
-    dev: false
-
-  /@tanstack/react-query/4.19.1_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-5dvHvmc0vrWI03AJugzvKfirxCyCLe+qawrWFCXdu8t7dklIhJ7D5ZhgTypv7mMtIpdHPcECtCiT/+V74wCn2A==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      '@tanstack/query-core': 4.19.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
-    dev: false
-
   /@trpc/client/10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4:
     resolution: {integrity: sha512-NTAqTtMCsB5DneoseK/oFYA9YkcIXHuYp1zojnhNpNA+HFzFvkDUHsKNmaPwd5c/KxLr7nP/jQvRzvVuZbgBng==}
     peerDependencies:
       '@trpc/server': 10.0.0-proxy-beta.26
     dependencies:
       '@trpc/server': 10.0.0-proxy-beta.26
-    dev: false
-
-  /@trpc/react-query/10.0.0-proxy-beta.26_pkh5zed2ivenmdoejakumyi44i:
-    resolution: {integrity: sha512-8/wDnNTNsn9ULXldegpqoNCgMMepVTU66t7ynyNFuSHE9eSd8J2sWKyEzK7lxVHa1kU+NjWhYoG+iDoXrKE6Cg==}
-    peerDependencies:
-      '@tanstack/react-query': ^4.3.8
-      '@trpc/client': 10.0.0-proxy-beta.26
-      '@trpc/server': 10.0.0-proxy-beta.26
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      '@tanstack/react-query': 4.19.1_biqbaboplfbrettd7655fr4n2y
-      '@trpc/client': 10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4
-      '@trpc/server': 10.0.0-proxy-beta.26
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /@trpc/server/10.0.0-proxy-beta.26:
