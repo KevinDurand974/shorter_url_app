@@ -34,9 +34,11 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     if (data.rememberme) {
       ctx.res.cookie('us_rt', refreshToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        maxAge: 604800000, // 7 days
       });
     }
+
+    ctx.res.cookie('logged_in', 1, { maxAge: 604800000 });
 
     // Create a token bind to the user in the database
     const TokenRep = datasource.getRepository(Token);
@@ -80,6 +82,7 @@ export const logout = async (datasource: DataSource, ctx: Context) => {
 
   // Remove it from cookies
   ctx.res.clearCookie('us_rt');
+  ctx.res.clearCookie('logged_in');
 };
 
 // NOTE: Refresh Token
