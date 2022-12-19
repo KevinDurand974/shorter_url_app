@@ -33,16 +33,18 @@ const LoginPage = () => {
 		setSubmitting(false)
 		try {
 			const ac = new AbortController()
-			const { access_token } = await trpc.login.mutate(values, {
+			const { accessToken, sessionToken } = await trpc.login.mutate(values, {
 				signal: ac.signal,
 			})
-			setAuthToken(access_token)
+			setAuthToken(accessToken)
 
-			const user = decode(access_token) as AuthUser
+			const user = decode(accessToken) as AuthUser
 			setUser(user)
 
-			if (isSessionAvailable()) setSessionValue("us_at", access_token)
-			else {
+			if (isSessionAvailable()) {
+				setSessionValue("us_at", accessToken)
+				if (!values.rememberme) setSessionValue("us_rt", sessionToken)
+			} else {
 			} // FIX: Use a toast to show no access
 			resetForm()
 			await router.push("/")
@@ -73,7 +75,7 @@ const LoginPage = () => {
 						initialValues={{
 							email: "test1@test.fr",
 							password: "Azerty&1",
-							rememberme: false,
+							rememberme: true,
 						}}
 						validationSchema={useFormikZodAdapter(loginSchema)}
 						onSubmit={onSubmit}
