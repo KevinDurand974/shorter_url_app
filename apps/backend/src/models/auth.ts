@@ -4,10 +4,8 @@ import { add } from 'date-fns';
 import { createError400, createError401 } from '@shorter/errors';
 import { CreateUserSchema, LoginSchema } from '@shorter/validators';
 import { Context } from '../libs/trpc';
-import { comparePassword, createAccessToken, createRefreshToken, hashPassword, Payload } from '../helpers';
+import { comparePassword, createAccessToken, createRefreshToken, hashPassword, verifyToken } from '../helpers';
 import { Profile, Token, User } from '../entities';
-
-type ContextWithPayload = Context & { payload: Payload };
 
 // NOTE: Login
 export const login = async (datasource: DataSource, data: LoginSchema, ctx: Context) => {
@@ -57,7 +55,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     });
 
     // Return access_token
-    if (data.rememberme) {
+    if (!data.rememberme) {
       return {
         accessToken,
         sessionToken: refreshToken,
@@ -70,7 +68,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
 };
 
 // NOTE: Logout
-export const logout = async (datasource: DataSource, ctx: ContextWithPayload) => {
+export const logout = async (datasource: DataSource, ctx: Context) => {
   // Get refresh_token from cookies
   const refreshToken = ctx.cookies.us_rt;
 
@@ -85,17 +83,18 @@ export const logout = async (datasource: DataSource, ctx: ContextWithPayload) =>
 };
 
 // NOTE: Refresh Token
-export const refreshToken = async (datasource: DataSource, ctx: ContextWithPayload) => {
+export const refreshToken = async (datasource: DataSource, ctx: Context) => {
   try {
-    // Get Payload from context
-    const payload = ctx.payload;
+    // Get token from context
+    const currentRefreshToken = ctx.cookies['us_rt'];
+    const payload = verifyToken(currentRefreshToken, 'refresh');
 
     // Check token in database
     const TokenRep = datasource.getRepository(Token);
     const token = await TokenRep.findOne({
       where: {
         expiredAt: MoreThanOrEqual(new Date()),
-        uuid: payload.uuid,
+        token: currentRefreshToken,
       },
     });
 
