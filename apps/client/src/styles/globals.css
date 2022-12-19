@@ -29,6 +29,9 @@ a {
 	.custom-underline {
 		@apply z-10 relative before:absolute before:left-0 before:right-full before:-bottom-2 before:h-1 before:bg-gradient-to-r before:from-gradient-top before:to-accent before:rounded-full hover:before:right-0 before:transition-all before:duration-[0.4s] before:-z-10;
 	}
+	.underline-fix {
+		@apply z-10 relative before:absolute before:left-0 before:right-0 before:bottom-0 before:h-1 before:bg-gradient-to-r before:from-gradient-top before:to-accent before:rounded-full before:-z-10;
+	}
 	.border-gradient::before {
 		content: "";
 		position: absolute;
@@ -48,5 +51,14 @@ a {
 	}
 	.border-image:focus {
 		@apply border-gradient-to-gradient-bottom;
+	}
+	.grid-profil-account {
+		grid-template-columns: 25% 1fr auto;
+	}
+	.grid-stats-account {
+		grid-template-columns: 40% auto;
+	}
+	.simple-url {
+		@apply underline underline-offset-2 text-text transition-all hover:text-secondary;
 	}
 }
