@@ -13,7 +13,9 @@ const Layout = ({ children }: PropsWithChildren) => {
 
 			<Header />
 
-			<main className="flex-1 relative">{children}</main>
+			<main className="flex-1 relative max-w-screen-2xl w-full mx-auto">
+				{children}
+			</main>
 
 			<Footer />
 		</div>
