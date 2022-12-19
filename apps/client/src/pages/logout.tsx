@@ -15,7 +15,7 @@ const LogoutPage = () => {
 		;(async () => {
 			try {
 				const ac = new AbortController()
-				await trpc.logout.mutate(undefined, { signal: ac.signal })
+				await trpc.logout.query(undefined, { signal: ac.signal })
 			} catch (err: any) {
 				console.error(err.message)
 			} finally {
