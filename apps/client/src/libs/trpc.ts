@@ -1,8 +1,7 @@
-import { httpBatchLink, createTRPCProxyClient, loggerLink } from "@trpc/client"
-
+import { createTRPCProxyClient, httpLink } from "@trpc/client"
 import { AppRouter } from "@shorter/backend"
 
-let authToken: string
+export let authToken: string
 
 const setAuthToken = (token: string) => {
 	authToken = token
@@ -10,7 +9,7 @@ const setAuthToken = (token: string) => {
 
 const trpc = createTRPCProxyClient<AppRouter>({
 	links: [
-		httpBatchLink({
+		httpLink({
 			url: "http://localhost:8080/trpc",
 			fetch: async (url, options) => {
 				return fetch(url, { ...options, credentials: "include" })
