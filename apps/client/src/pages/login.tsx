@@ -72,6 +72,7 @@ const LoginPage = () => {
 					</h1>
 
 					<Formik
+						// FIX: Leave only rememberme to true
 						initialValues={{
 							email: "test1@test.fr",
 							password: "Azerty&1",
