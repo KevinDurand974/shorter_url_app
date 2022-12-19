@@ -1,10 +1,11 @@
-import { inferAsyncReturnType, initTRPC, TRPCError } from '@trpc/server';
+import { DefaultErrorShape, inferAsyncReturnType, initTRPC, TRPCError } from '@trpc/server';
 import { CreateExpressContextOptions, createExpressMiddleware } from '@trpc/server/adapters/express';
 import { ZodError } from 'zod';
 
 import { parseZodError } from '@shorter/validators';
 import { createError401, createError403 } from '@shorter/errors';
 import { Payload, verifyToken } from '../../helpers';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 export const createContext = async ({ req, res }: CreateExpressContextOptions) => {
   return {
@@ -15,19 +16,37 @@ export const createContext = async ({ req, res }: CreateExpressContextOptions) =
 };
 export type Context = inferAsyncReturnType<typeof createContext>;
 
+type ParseZodError = {
+  key: any;
+  message: any;
+}[];
+
+type CustomError = {
+  data: {
+    zodError?: ParseZodError;
+  };
+} & DefaultErrorShape;
+
 const t = initTRPC.context<Context>().create({
   errorFormatter: ({ shape, error }) => {
-    const errorFormat = {
+    const errorFormat: CustomError = {
       ...shape,
-      code: undefined,
       data: {
         ...shape.data,
+        code: 'INTERNAL_SERVER_ERROR',
         zodError:
           error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
             ? parseZodError(error.cause.issues)
             : undefined,
       },
     };
+
+    if (error.cause instanceof TokenExpiredError) {
+      errorFormat.message = 'Token has expired!';
+      errorFormat.code = -32001;
+      errorFormat.data.code = 'TOKEN_EXPIRED' as any;
+      errorFormat.data.httpStatus = 401;
+    }
 
     if (error.cause instanceof ZodError) {
       const issues = error.cause.issues;
@@ -77,11 +96,41 @@ const isVerifiedEmail = t.middleware(({ next, ...params }) => {
   return next({ ctx });
 });
 
+const prepareRefresh = t.middleware(({ next, ctx }) => {
+  try {
+    const access_token = ctx.headers.authorization?.split(' ')[1];
+    verifyToken(access_token, 'access');
+
+    return next({
+      ctx: {
+        ...ctx,
+        headers: {
+          ...ctx.headers,
+          authorization: ctx.headers.authorization as string,
+        },
+        tokenValid: true,
+      },
+    });
+  } catch (err: any) {
+    return next({
+      ctx: {
+        ...ctx,
+        headers: {
+          ...ctx.headers,
+          authorization: ctx.headers.authorization as string,
+        },
+        tokenValid: false,
+      },
+    });
+  }
+});
+
 export const router = t.router;
 export const mergeRouters = t.mergeRouters;
 export const publicProcedure = t.procedure;
 export const authProcedure = t.procedure.use(isAuthed);
 export const verifiedEmailProcedure = t.procedure.use(isAuthed).use(isVerifiedEmail);
+export const refreshProcedure = t.procedure.use(prepareRefresh);
 
 /* TODO: Add Procedures:
   - Admin
