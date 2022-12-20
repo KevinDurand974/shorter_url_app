@@ -279,3 +279,33 @@ export const updateUserVip = async (datasource: DataSource, data: UpdateUserVIPS
     throw err;
   }
 };
+
+// NOTE: Get User
+export const getMe = async (datasource: DataSource, ctx: ContextWithPayload) => {
+  try {
+    // Get uuid from payload
+    const uuid = ctx.payload.uuid;
+
+    // If User exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await ProfileRep.findOne({
+      where: { uuid },
+      relations: ['user'],
+      select: {
+        id: true,
+        ...profileSelectors,
+        user: {
+          ...userSelectors,
+        },
+      },
+    });
+
+    // Remove Id from Profile if exist
+    delete (profile as any)?.id;
+
+    // Return
+    return profile;
+  } catch (err) {
+    throw err;
+  }
+};
