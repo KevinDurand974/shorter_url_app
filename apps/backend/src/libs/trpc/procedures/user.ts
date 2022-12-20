@@ -9,6 +9,7 @@ import {
 } from '@shorter/validators';
 import {
   deleteUser,
+  getMe,
   getUser,
   getUsers,
   updateUserEmail,
@@ -31,6 +32,10 @@ export const userRouter = router({
     return getUsers(datasource);
   }),
   // NOTE: Auth Procedures
+  getMe: authProcedure.query(async ({ ctx }) => {
+    const datasource = await getDataSource();
+    return getMe(datasource, ctx);
+  }),
   deleteUser: authProcedure.input(deleteUserSchema).mutation(async ({ input, ctx }) => {
     const datasource = await getDataSource();
     return deleteUser(datasource, input, ctx);
