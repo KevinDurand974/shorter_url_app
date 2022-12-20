@@ -3,9 +3,11 @@ import { CreateExpressContextOptions, createExpressMiddleware } from '@trpc/serv
 import { ZodError } from 'zod';
 
 import { parseZodError } from '@shorter/validators';
-import { createError401, createError403 } from '@shorter/errors';
+import { createError401, createError403, createEmailVerifiedError, createBadTokenError } from '@shorter/errors';
 import { Payload, verifyToken } from '../../helpers';
 import { TokenExpiredError } from 'jsonwebtoken';
+import { getDataSource } from '../typeorm';
+import { refreshToken } from '../../models';
 
 export const createContext = async ({ req, res }: CreateExpressContextOptions) => {
   return {
@@ -61,68 +63,43 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
-const isAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.headers.authorization) {
+const isAuthed = t.middleware(async ({ next, ctx }) => {
+  let accessToken = ctx.cookies.usat;
+
+  // if refresh is not defined throw unauth
+  if (!ctx.cookies.usrt) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       message: 'Unauthenticated',
     });
   }
 
-  const access_token = ctx.headers.authorization?.split(' ')[1];
-  if (!access_token) throw createError401('Unauthenticated');
+  // Check if cookie exist
+  if (!accessToken) {
+    // Try to get a new one with refresh
+    const datasource = await getDataSource();
+    const result = await refreshToken(datasource, ctx);
+    accessToken = result.accessToken;
+  }
 
-  const payload = verifyToken(access_token, 'access');
-  if (!payload) throw createError401('Unauthenticated');
-
-  return next({
-    ctx: {
-      ...ctx,
-      headers: {
-        ...ctx.headers,
-        authorization: ctx.headers.authorization as string,
+  // Add payload to context if token pass the validation, otherwise throw an error
+  try {
+    const payload = verifyToken(accessToken, 'access');
+    return next({
+      ctx: {
+        ...ctx,
+        payload,
       },
-      payload,
-    },
-  });
+    });
+  } catch (err) {
+    throw createBadTokenError();
+  }
 });
 
 const isVerifiedEmail = t.middleware(({ next, ...params }) => {
   const ctx = params.ctx as Context & { payload: Payload };
-  const payload = ctx.payload;
-  if (!payload.emailVerified) {
-    throw createError403('Please verify your email before you can use this feature.');
-  }
+  if (!ctx.payload.emailVerified) throw createEmailVerifiedError();
   return next({ ctx });
-});
-
-const prepareRefresh = t.middleware(({ next, ctx }) => {
-  try {
-    const access_token = ctx.headers.authorization?.split(' ')[1];
-    verifyToken(access_token, 'access');
-
-    return next({
-      ctx: {
-        ...ctx,
-        headers: {
-          ...ctx.headers,
-          authorization: ctx.headers.authorization as string,
-        },
-        tokenValid: true,
-      },
-    });
-  } catch (err: any) {
-    return next({
-      ctx: {
-        ...ctx,
-        headers: {
-          ...ctx.headers,
-          authorization: ctx.headers.authorization as string,
-        },
-        tokenValid: false,
-      },
-    });
-  }
 });
 
 export const router = t.router;
@@ -130,7 +107,6 @@ export const mergeRouters = t.mergeRouters;
 export const publicProcedure = t.procedure;
 export const authProcedure = t.procedure.use(isAuthed);
 export const verifiedEmailProcedure = t.procedure.use(isAuthed).use(isVerifiedEmail);
-export const refreshProcedure = t.procedure.use(prepareRefresh);
 
 /* TODO: Add Procedures:
   - Admin
