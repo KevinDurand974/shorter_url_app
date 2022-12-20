@@ -1,0 +1,4 @@
+- [ ] Fix all "FIX:" comments
+- [ ] Make auth work with no cookie (navigator)
+- [ ] Reorganize DB and backend, after this fix client
+- [ ] Implement Tier subscription
