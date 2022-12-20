@@ -7,7 +7,14 @@ import { Context } from '../libs/trpc';
 import { comparePassword, createAccessToken, createRefreshToken, hashPassword, verifyToken } from '../helpers';
 import { Profile, Token, User } from '../entities';
 
+const fromNowToDate = (toDate: Date, ms = true) => {
+  const start = new Date().getTime();
+  const end = toDate.getTime();
+  return ms ? end - start : Math.round((end - start) / 1000);
+};
+
 // NOTE: Login
+// FIX: Implement No Cookie / Remember Me as false
 export const login = async (datasource: DataSource, data: LoginSchema, ctx: Context) => {
   try {
     // If email exist
@@ -22,48 +29,39 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     const valid = await comparePassword(user.password, data.password);
     if (!valid) throw createError400('Cannot login, please check your credentials');
 
-    // Create refresh_token
-    const refreshToken = createRefreshToken({
+    const cookieDatas = {
       uuid: user.profile.uuid,
       vip: user.profile.vip,
       pseudo: user.pseudo,
       emailVerified: user.profile.verified,
-    });
+    };
 
-    // Create cookie for refresh_token
-    if (data.rememberme) {
-      ctx.res.cookie('us_rt', refreshToken, {
-        httpOnly: true,
-        maxAge: 604800000, // 7 days
-      });
-    }
+    // Create refresh_token
+    const refreshToken = createRefreshToken(cookieDatas);
 
-    ctx.res.cookie('logged_in', 1, { maxAge: 604800000 });
+    // Create access_token
+    const accessToken = createAccessToken(cookieDatas);
+
+    // Create duration in ms
+    const day30 = fromNowToDate(add(new Date(), { days: 30 }));
+    const sec30 = fromNowToDate(add(new Date(), { seconds: 30 }));
+
+    // Create cookie for refresh token
+    ctx.res.cookie('usrt', refreshToken, { httpOnly: true, maxAge: day30 });
+
+    // Create cookie for access token
+    ctx.res.cookie('usat', accessToken, { httpOnly: true, maxAge: sec30 });
+
+    // Create cookie for logged in (same duration as access token)
+    ctx.res.cookie('usli', 1, { maxAge: sec30 });
 
     // Create a token bind to the user in the database
     const TokenRep = datasource.getRepository(Token);
     const token = new Token();
     token.uuid = user.profile.uuid;
     token.token = refreshToken;
-    token.expiredAt = add(new Date(), { days: 7 });
+    token.expiredAt = add(new Date(), { days: 30 });
     await TokenRep.save(token);
-
-    // Create access_token
-    const accessToken = createAccessToken({
-      uuid: user.profile.uuid,
-      vip: user.profile.vip,
-      pseudo: user.pseudo,
-      emailVerified: user.profile.verified,
-    });
-
-    // Return access_token
-    if (!data.rememberme) {
-      return {
-        accessToken,
-        sessionToken: refreshToken,
-      };
-    }
-    return { accessToken };
   } catch (err) {
     throw err;
   }
@@ -72,7 +70,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
 // NOTE: Logout
 export const logout = async (datasource: DataSource, ctx: Context) => {
   // Get refresh_token from cookies
-  const refreshToken = ctx.cookies.us_rt;
+  const refreshToken = ctx.cookies.usrt;
 
   // Remove it from database
   if (refreshToken) {
@@ -81,15 +79,16 @@ export const logout = async (datasource: DataSource, ctx: Context) => {
   }
 
   // Remove it from cookies
-  ctx.res.clearCookie('us_rt');
-  ctx.res.clearCookie('logged_in');
+  ctx.res.clearCookie('usrt');
+  ctx.res.clearCookie('usat');
+  ctx.res.clearCookie('usli');
 };
 
 // NOTE: Refresh Token
 export const refreshToken = async (datasource: DataSource, ctx: Context) => {
   try {
     // Get token from context
-    const currentRefreshToken = ctx.cookies['us_rt'];
+    const currentRefreshToken = ctx.cookies.usrt;
     const payload = verifyToken(currentRefreshToken, 'refresh');
 
     // Check token in database
@@ -101,7 +100,7 @@ export const refreshToken = async (datasource: DataSource, ctx: Context) => {
       },
     });
 
-    // If token bind to an user
+    // If token not bind to an user
     if (!token) throw createError401('Unauthenticated');
 
     // Recreate accessToken
@@ -111,6 +110,15 @@ export const refreshToken = async (datasource: DataSource, ctx: Context) => {
       pseudo: payload.pseudo,
       emailVerified: payload.emailVerified,
     });
+
+    // Create duration in ms
+    const sec30 = fromNowToDate(add(new Date(), { seconds: 30 }));
+
+    // Create cookie for access token
+    ctx.res.cookie('usat', accessToken, { httpOnly: true, maxAge: sec30 });
+
+    // Create cookie for logged in (same duration as access token)
+    ctx.res.cookie('usli', 1, { maxAge: sec30 });
 
     // Return access_token
     return { accessToken };
