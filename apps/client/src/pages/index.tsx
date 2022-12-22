@@ -37,7 +37,7 @@ const Home: NextPage = () => {
 
 			<span id="main" className="fixed translate-y-[-99999999]" tabIndex={-1} />
 
-			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2">
+			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2 w-full">
 				<div className="flex justify-center items-center absolute sm:static inset-0 sm:inset-auto -z-10 opacity-20 sm:opacity-100 overflow-hidden sm:overflow-auto">
 					<Add className="h-48 w-48" />
 				</div>
@@ -63,7 +63,7 @@ const Home: NextPage = () => {
 				</div>
 			</section>
 
-			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2">
+			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2 w-full">
 				<div className="flex flex-col gap-1 sm:gap-2 justify-center items-center">
 					<h1 className="font-fredoka sm:text-2xl text-center">
 						Create personal url:
@@ -91,7 +91,7 @@ const Home: NextPage = () => {
 				</div>
 			</section>
 
-			<div className="flex flex-col sm:flex-row justify-evenly mb-2 sm:mb-4 gap-2 sm:gap-4">
+			<div className="flex flex-col sm:flex-row justify-evenly mb-2 sm:mb-4 gap-2 sm:gap-4 w-full">
 				<section className="p-2 sm:p-4 sm:w-1/2 box flex flex-col items-center gap-2 sm:gap-4">
 					<h1 className="font-fredoka sm:text-2xl text-center">Free Tier</h1>
 					<div className="my-auto sm:w-3/4">
@@ -159,7 +159,7 @@ const Home: NextPage = () => {
 				</section>
 			</div>
 
-			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2">
+			<section className="p-2 sm:p-4 box flex justify-evenly mb-2 sm:mb-4 relative gap-2 w-full">
 				<div className="flex flex-col gap-2 items-center justify-evenly">
 					<h1 className="font-fredoka sm:text-2xl text-center">
 						Stop making urls with 500 characters when you share a link!
@@ -182,7 +182,7 @@ const Home: NextPage = () => {
 				</div>
 			</section>
 
-			<section className="p-2 sm:p-4 box relative flex flex-col justify-center items-center gap-2 sm:gap-4 mb-2 sm:mb-4">
+			<section className="p-2 sm:p-4 box relative flex flex-col justify-center items-center gap-2 sm:gap-4 mb-2 sm:mb-4 w-full">
 				<h1 className="font-fredoka sm:text-2xl text-center sm:col-span-2">
 					[Q/A] Questions / Answers
 				</h1>
@@ -250,7 +250,7 @@ const Home: NextPage = () => {
 			</section>
 
 			<section
-				className="p-2 sm:p-4 box relative flex flex-col justify-center items-center gap-2 sm:gap-4"
+				className="p-2 sm:p-4 box relative flex flex-col justify-center items-center gap-2 sm:gap-4 w-full"
 				ref={moreInfoRef}
 			>
 				<h1 className="font-fredoka sm:text-2xl text-center sm:col-span-2">

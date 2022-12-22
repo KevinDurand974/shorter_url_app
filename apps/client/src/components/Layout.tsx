@@ -8,7 +8,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 
 			<Header />
 
-			<main className="flex-1 relative max-w-screen-2xl w-full mx-auto">
+			<main className="flex-1 relative max-w-screen-2xl w-full mx-auto flex flex-wrap">
 				{children}
 			</main>
 

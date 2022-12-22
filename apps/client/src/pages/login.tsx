@@ -61,7 +61,7 @@ const LoginPage = () => {
 
 			<span id="main" className="fixed translate-y-[-99999999]" tabIndex={-1} />
 
-			<section className="p-2 sm:p-4 box flex justify-center absolute inset-0">
+			<section className="p-2 sm:p-4 box flex justify-center w-full">
 				<div className="flex flex-col gap-2 sm:gap-4 my-auto w-full sm:w-2/3">
 					<h1 className="font-fredoka text-lg sm:text-3xl text-center">
 						Log in to your account
