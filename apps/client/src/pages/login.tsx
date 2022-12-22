@@ -1,15 +1,15 @@
-import Head from "next/head"
-import { useRouter } from "next/router"
-import { Fragment, useContext } from "react"
-import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik"
-import { decode } from "jsonwebtoken"
-import { loginSchema } from "@shorter/validators"
-import { setAuthToken, trpc } from "@libs/trpc"
-import { useFormikZodAdapter } from "@libs/useFormikZodAdapter"
-import useSessionStorage from "@hooks/useSessionStorage"
 import { AuthContext } from "@contexts"
-import type { AuthUser } from "@contexts/AuthContext"
+import useLocalStorage from "@hooks/useLocalStorage"
+import { trpc } from "@libs/trpc"
+import { isAuthServer } from "@libs/trpcSsr"
+import { useFormikZodAdapter } from "@libs/useFormikZodAdapter"
+import { loginSchema } from "@shorter/validators"
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik"
+import { GetServerSideProps } from "next"
+import Head from "next/head"
 import Link from "next/link"
+import { useRouter } from "next/router"
+import { Fragment, useContext, useEffect, useState } from "react"
 
 type FormValues = {
 	email: string
@@ -19,12 +19,13 @@ type FormValues = {
 
 const LoginPage = () => {
 	const router = useRouter()
-	const { setUser, isLogged } = useContext(AuthContext)
-	const { setSessionValue, isSessionAvailable } = useSessionStorage()
+	const { setUser } = useContext(AuthContext)
+	const { isStorageAvailable, setStorageValue } = useLocalStorage()
 
-	if (isLogged) {
-		router.push("/")
-	}
+	const [enabledCookie, setEnabledCookie] = useState(false)
+	useEffect(() => {
+		setEnabledCookie(navigator.cookieEnabled)
+	}, [])
 
 	const onSubmit = async (
 		values: FormValues,
@@ -33,23 +34,18 @@ const LoginPage = () => {
 		setSubmitting(false)
 		try {
 			const ac = new AbortController()
-			const { accessToken, sessionToken } = await trpc.login.mutate(values, {
-				signal: ac.signal,
-			})
-			setAuthToken(accessToken)
-
-			const user = decode(accessToken) as AuthUser
-			setUser(user)
-
-			if (isSessionAvailable()) {
-				setSessionValue("us_at", accessToken)
-				if (!values.rememberme) setSessionValue("us_rt", sessionToken)
-			} else {
-			} // FIX: Use a toast to show no access
+			const data = await trpc.login.mutate(
+				{ ...values, enabledCookie },
+				{ signal: ac.signal }
+			)
+			if (isStorageAvailable()) setStorageValue("logged_in", 1)
+			setUser(data.user)
+			// FIX: Implement no cookie here
 			resetForm()
 			await router.push("/")
-		} catch (err) {
+		} catch (err: any) {
 			// FIX: Use a toast to show the error
+			console.log(err.message)
 		}
 	}
 
@@ -160,6 +156,29 @@ const LoginPage = () => {
 			</section>
 		</Fragment>
 	)
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+	try {
+		const isAuth = await isAuthServer(req.headers.cookie)
+
+		if (isAuth) {
+			return {
+				redirect: {
+					destination: "/",
+					permanent: false,
+				},
+			}
+		}
+
+		return {
+			props: {},
+		}
+	} catch (err: any) {
+		return {
+			props: {},
+		}
+	}
 }
 
 export default LoginPage
