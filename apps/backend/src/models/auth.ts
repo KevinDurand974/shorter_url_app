@@ -62,6 +62,8 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     token.token = refreshToken;
     token.expiredAt = add(new Date(), { days: 30 });
     await TokenRep.save(token);
+
+    return { user: cookieDatas };
   } catch (err) {
     throw err;
   }
