@@ -1,22 +1,20 @@
-import { AuthContext } from "@contexts"
-import { trpc } from "@libs/trpc"
+import { getUserDataServer } from "@libs/trpcSsr"
 import { Profile } from "@shorter/backend/dist/entities"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
-import { Fragment, useContext, useEffect, useState } from "react"
+import { Fragment } from "react"
 import { BiEdit } from "react-icons/bi"
-import { TiUser } from "react-icons/ti"
-import { TbChevronsRight } from "react-icons/tb"
 import { BsFillQuestionCircleFill } from "react-icons/bs"
 import {
-	MdSecurity,
 	MdAlternateEmail,
-	MdExtension,
 	MdDelete,
-	MdRestore,
+	MdExtension,
 	MdLoop,
+	MdRestore,
+	MdSecurity,
 } from "react-icons/md"
-import { decode } from "jsonwebtoken"
+import { TbChevronsRight } from "react-icons/tb"
+import { TiUser } from "react-icons/ti"
 
 type Props = {
 	userData: Profile
@@ -38,11 +36,11 @@ const AccountSettingsPage = ({ userData }: Props) => {
 				</h1>
 
 				<div className="box flex flex-col gap-4 p-4">
-					<h2 className="font-fredoka text-2xl border-image border-4 w-fit px-4 py-1 uppercase tracking-widest">
+					<h2 className="font-fredoka text-sm sm:text-2xl border-image border-2 sm:border-4 w-fit px-4 py-1 uppercase tracking-widest">
 						Profil
 					</h2>
 
-					<div className="grid grid-profil-account items-center bg-gradient-to-l from-black/20 rounded-full px-2 py-2">
+					<div className="grid sm:grid-profil-account items-center bg-gradient-to-l from-black/20 rounded-full px-2 py-2">
 						<h3 className="font-bold text-xl tracking-wider w-fit px-1 flex gap-2 items-center">
 							<MdAlternateEmail />
 							Email
@@ -257,33 +255,16 @@ const AccountSettingsPage = ({ userData }: Props) => {
 	)
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 	try {
-		const isLogged = !!req.cookies.logged_in
-		const token = req.cookies.us_rt
-
-		if (!isLogged) throw new Error("Not logged")
-
-		if (token) {
-			const payload = decode(token) as any
-			const ac = new AbortController()
-			const data = await trpc.getUser.query(
-				{ uuid: payload.uuid },
-				{ signal: ac.signal }
-			)
-			if (data) {
-				return {
-					props: {
-						userData: data,
-					},
-				}
-			}
-		}
-
+		const userData = await getUserDataServer(req.headers.cookie)
+		if (!userData) throw new Error("User not exist!")
 		return {
-			props: {},
+			props: {
+				userData,
+			},
 		}
-	} catch (err) {
+	} catch (err: any) {
 		return {
 			redirect: {
 				destination: "/login",
