@@ -1,36 +1,46 @@
 import { AuthContext } from "@contexts"
-import useHasMounted from "@hooks/useHasMounted"
-import useSessionStorage from "@hooks/useSessionStorage"
+import useLocalStorage from "@hooks/useLocalStorage"
 import { trpc } from "@libs/trpc"
+import { isAuthServer } from "@libs/trpcSsr"
+import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 
 const LogoutPage = () => {
-	const { logout, isLogged } = useContext(AuthContext)
+	const { isStorageAvailable, removeStorageValue } = useLocalStorage()
+	const { logout } = useContext(AuthContext)
 	const { push } = useRouter()
-	const hasMounted = useHasMounted()
-	const { isSessionAvailable, removeSessionValue } = useSessionStorage()
 
-	if (hasMounted && isLogged) {
-		;(async () => {
-			try {
-				const ac = new AbortController()
-				await trpc.logout.query(undefined, { signal: ac.signal })
-			} catch (err: any) {
-				console.error(err.message)
-			} finally {
-				if (isSessionAvailable()) removeSessionValue("us_at")
-				logout()
-				push("/")
-			}
-		})()
-	}
-
-	if (hasMounted && !isLogged) {
-		push("/")
-	}
+	useEffect(() => {
+		trpc.logout
+			.query(undefined, { signal: new AbortController().signal })
+			.then(() => {
+				if (isStorageAvailable()) {
+					logout()
+					removeStorageValue("logged_in")
+					push("/")
+				}
+			})
+	}, [isStorageAvailable, logout, push, removeStorageValue])
 
 	return null
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+	try {
+		const isAuth = await isAuthServer(req.headers.cookie)
+		if (!isAuth) throw new Error("User not connected!")
+		return {
+			props: {},
+		}
+	} catch (err: any) {
+		return {
+			redirect: {
+				destination: "/",
+				permanent: false,
+			},
+		}
+	}
 }
 
 export default LogoutPage
