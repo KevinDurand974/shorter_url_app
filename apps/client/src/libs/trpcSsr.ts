@@ -1,3 +1,4 @@
+import { Profile } from "@shorter/backend/dist/entities"
 import axios from "axios"
 
 const sTrpc = axios.create({
@@ -20,7 +21,7 @@ export const getUserDataServer = async (cookies?: string) => {
 		headers: { cookie: cookies || "" },
 		signal,
 	})
-	return res.data.result.data
+	return res.data.result.data as Profile
 }
 
 export default sTrpc
