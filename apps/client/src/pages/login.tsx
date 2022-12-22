@@ -161,22 +161,16 @@ const LoginPage = () => {
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 	try {
 		const isAuth = await isAuthServer(req.headers.cookie)
-
-		if (isAuth) {
-			return {
-				redirect: {
-					destination: "/",
-					permanent: false,
-				},
-			}
-		}
-
+		if (isAuth) throw new Error("User already connected!")
 		return {
 			props: {},
 		}
 	} catch (err: any) {
 		return {
-			props: {},
+			redirect: {
+				destination: "/",
+				permanent: false,
+			},
 		}
 	}
 }
