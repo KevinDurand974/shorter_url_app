@@ -106,6 +106,7 @@ importers:
       '@types/react': 18.0.21
       '@types/react-dom': 18.0.6
       autoprefixer: ^10.4.13
+      axios: ^1.2.0
       eslint: 8.25.0
       eslint-config-next: 12.3.1
       formik: ^2.2.9
@@ -125,6 +126,7 @@ importers:
       '@shorter/validators': link:../../libs/validators
       '@trpc/client': 10.0.0-proxy-beta.26_vu5ifdrqz65hq4g32lr3d5gbm4
       '@trpc/server': 10.0.0-proxy-beta.26
+      axios: 1.2.0
       formik: 2.2.9_react@18.2.0
       jsonwebtoken: 8.5.1
       next: 12.3.1_m5sxuueb27gk6ddc5gums6vtgq
