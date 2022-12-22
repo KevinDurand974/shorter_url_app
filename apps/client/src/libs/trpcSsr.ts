@@ -7,12 +7,16 @@ const sTrpc = axios.create({
 })
 
 export const isAuthServer = async (cookies?: string) => {
-	const { signal } = new AbortController()
-	const res = await sTrpc.get("/testAuth", {
-		headers: { cookie: cookies || "" },
-		signal,
-	})
-	return res.data.result.data.valid
+	try {
+		const { signal } = new AbortController()
+		await sTrpc.get("/testAuth", {
+			headers: { cookie: cookies || "" },
+			signal,
+		})
+		return true
+	} catch (err) {
+		return false
+	}
 }
 
 export const getUserDataServer = async (cookies?: string) => {
