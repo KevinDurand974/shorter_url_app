@@ -46,6 +46,7 @@ export const login = async (datasource: DataSource, data: LoginSchema, ctx: Cont
     const day30 = fromNowToDate(add(new Date(), { days: 30 }));
     const sec30 = fromNowToDate(add(new Date(), { seconds: 30 }));
 
+    // FIX: Make cookie secure on Prod
     // Create cookie for refresh token
     ctx.res.cookie('usrt', refreshToken, { httpOnly: true, maxAge: day30 });
 
