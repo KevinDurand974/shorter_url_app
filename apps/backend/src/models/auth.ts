@@ -144,7 +144,7 @@ export const register = async (datasource: DataSource, data: CreateUserSchema, c
     // If UrlName exist
     const ProfileRep = datasource.getRepository(Profile);
     const profileExist = !!(await ProfileRep.count({
-      where: { urlName: data.urlName },
+      where: { urlName: data.urlname },
     }));
     if (profileExist) throw createError400('UrlName already assigned to an account');
 
@@ -157,7 +157,7 @@ export const register = async (datasource: DataSource, data: CreateUserSchema, c
     // Create Profile
     const profile = new Profile();
     profile.user = user;
-    profile.urlName = data.urlName;
+    profile.urlName = data.urlname;
 
     // Save User
     await UserRep.save(user);
