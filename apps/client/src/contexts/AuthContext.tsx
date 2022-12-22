@@ -1,6 +1,7 @@
+import useLocalStorage from "@hooks/useLocalStorage"
 import useSessionStorage from "@hooks/useSessionStorage"
 import { decode } from "jsonwebtoken"
-import { createContext, PropsWithChildren, useState } from "react"
+import { createContext, PropsWithChildren, useEffect, useState } from "react"
 
 type ProviderProps = PropsWithChildren<{}>
 
@@ -27,18 +28,18 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 	const [isLogged, setLogged] = useState(false)
 	const [user, setUser] = useState<AuthUser | null>(null)
 
-	const { isSessionAvailable, getSessionValue } = useSessionStorage()
+	const { isStorageAvailable, getStorageValue } = useLocalStorage()
 
-	if (isSessionAvailable()) {
-		if (!user) {
-			const token = getSessionValue("us_at")
-			if (token) {
-				const userInfo = decode(token) as AuthUser
-				setUser(userInfo)
+	useEffect(() => {
+		if (isStorageAvailable()) {
+			const loggedIn = !!getStorageValue("logged_in")
+			if (loggedIn) {
 				setLogged(true)
+			} else {
+				setLogged(false)
 			}
 		}
-	}
+	}, [getStorageValue, isStorageAvailable])
 
 	const updateUserInfo = (user: AuthUser) => {
 		setUser(user)
