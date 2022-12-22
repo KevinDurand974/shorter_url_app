@@ -1,6 +1,4 @@
 import useLocalStorage from "@hooks/useLocalStorage"
-import useSessionStorage from "@hooks/useSessionStorage"
-import { decode } from "jsonwebtoken"
 import { createContext, PropsWithChildren, useEffect, useState } from "react"
 
 type ProviderProps = PropsWithChildren<{}>
