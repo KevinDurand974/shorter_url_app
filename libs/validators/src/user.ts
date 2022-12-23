@@ -37,10 +37,21 @@ export const createUserSchema = z
 			})
 		}
 	})
-export const updateUserEmailSchema = z.object({
+export const updateUserEmailDefaultSchema = z.object({
 	currentEmail: z.string().max(254).email(),
 	newEmail: z.string().max(254).email(),
 })
+export const updateUserEmailSchema = updateUserEmailDefaultSchema.superRefine(
+	({ currentEmail, newEmail }, ctx) => {
+		if (currentEmail === newEmail) {
+			ctx.addIssue({
+				code: "custom",
+				message: "Cannot be the same email.",
+				path: ["newEmail"],
+			})
+		}
+	}
+)
 export const updateUserPasswordSchema = z.object({
 	currentPassword: z.string().min(8).max(60).refine(isStrongPassword),
 	newPassword: z.string().min(8).max(60).refine(isStrongPassword),
@@ -67,7 +78,7 @@ export const getUserSchema = z.object({
 
 // Types
 export type CreateUserSchema = z.infer<typeof createUserSchema>
-export type UpdateUserEmailSchema = z.infer<typeof updateUserEmailSchema>
+export type UpdateUserEmailSchema = z.infer<typeof updateUserEmailDefaultSchema>
 export type UpdateUserPasswordSchema = z.infer<typeof updateUserPasswordSchema>
 export type UpdateUserUrlNameSchema = z.infer<typeof updateUserUrlNameSchema>
 export type UpdateUserVIPSchema = z.infer<typeof updateUserVIPSchema>
