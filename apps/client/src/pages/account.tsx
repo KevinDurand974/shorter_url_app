@@ -1,8 +1,10 @@
+import { Modal } from "@components"
+import ChangeEmail from "@components/form/ChangeEmail"
 import { getUserDataServer } from "@libs/trpcSsr"
 import { Profile } from "@shorter/backend/dist/entities"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import { BiEdit } from "react-icons/bi"
 import { BsFillQuestionCircleFill } from "react-icons/bs"
 import {
@@ -21,6 +23,8 @@ type Props = {
 }
 
 const AccountSettingsPage = ({ userData }: Props) => {
+	const [openEmailModal, setOpenEmailModal] = useState(false)
+
 	return (
 		<Fragment>
 			<Head>
@@ -50,6 +54,7 @@ const AccountSettingsPage = ({ userData }: Props) => {
 							type="button"
 							aria-label="Change email"
 							className="text-3xl cta flex items-center w-fit p-2 before:bottom-0 relative group hover:mr-2 transition-all duration-[0.4s]"
+							onClick={() => setOpenEmailModal(true)}
 						>
 							<BiEdit />
 
@@ -57,6 +62,13 @@ const AccountSettingsPage = ({ userData }: Props) => {
 								Change
 							</span>
 						</button>
+						<Modal
+							isOpen={openEmailModal}
+							close={() => setOpenEmailModal(false)}
+							title="Change your email"
+						>
+							<ChangeEmail currentEmail={userData.user.email} />
+						</Modal>
 					</div>
 
 					<div className="grid grid-profil-account items-center bg-gradient-to-l from-black/20 rounded-full px-2 py-2">
