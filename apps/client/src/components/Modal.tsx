@@ -18,9 +18,27 @@ const Modal = ({ children, close, isOpen, title }: Props) => {
 		: "opacity-0 pointer-events-none"
 
 	const handleClose = () => {
-		console.log("Close!")
 		close()
 	}
+
+	const insideModalHTML = (
+		<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+			<div className="flex flex-col gap-4 box p-16 from-gradient-top/90 to-gradient-bottom/90 relative w-screen max-w-screen-lg">
+				<button
+					className="absolute top-4 right-4 transition-all duration-[0.4s] ease-in-out hover:rotate-90 hover:scale-110"
+					onClick={() => handleClose()}
+				>
+					<Close className="h-9 w-9" />
+				</button>
+				{title ? (
+					<h1 className="text-3xl font-fredoka tracking-wider text-center">
+						{title}
+					</h1>
+				) : null}
+				{children}
+			</div>
+		</div>
+	)
 
 	const modalHTML = (
 		<div
@@ -31,22 +49,7 @@ const Modal = ({ children, close, isOpen, title }: Props) => {
 				role="button"
 				onClick={() => handleClose()}
 			/>
-			<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-				<div className="flex flex-col gap-4 box p-16 from-gradient-top/90 to-gradient-bottom/90 relative min-w-[50vw] max-w-screen-lg">
-					<button
-						className="absolute top-4 right-4 transition-all duration-[0.4s] ease-in-out hover:rotate-90 hover:scale-110"
-						onClick={() => handleClose()}
-					>
-						<Close className="h-9 w-9" />
-					</button>
-					{title ? (
-						<h1 className="text-3xl font-fredoka tracking-wider text-center">
-							{title}
-						</h1>
-					) : null}
-					{children}
-				</div>
-			</div>
+			{!isOpen ? null : insideModalHTML}
 		</div>
 	)
 
