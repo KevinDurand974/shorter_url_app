@@ -1,11 +1,11 @@
 export type AddValidation = {
-	value: string
+	value: unknown
 	onSuccess: () => void
 	onFail: (message: string) => void
 }
 
 export type FormValues = {
-	[key: string]: string | null
+	[key: string]: unknown | null
 }
 
 export type ErrorValues = {

@@ -1,5 +1,6 @@
 import { parseZodError } from "@shorter/validators"
 import {
+	ChangeEvent,
 	createContext,
 	FormEvent,
 	PropsWithChildren,
@@ -12,20 +13,20 @@ import { ErrorValues, FormValues } from "./types"
 type ContextValues = {
 	fields: FormValues
 	errors: ErrorValues
-	addInputValue: (name: string, value: string | null) => void
-	getInputValue: (name: string) => string | null
+	addInputValue: (name: string, value: unknown | null) => void
+	getInputValue: (name: string) => unknown
 	addError: (name: string, message: string) => void
 	removeError: (name: string) => void
 	getError: (name: string) => string
 	isValid: boolean
 }
 
-type FormProps = JSX.IntrinsicElements["form"] &
+type FormProps = Omit<JSX.IntrinsicElements["form"], "onSubmit" | "onChange"> &
 	PropsWithChildren<{
 		initialValues: FormValues
 		schema: ZodSchema
-		onSubmit?: (values: FormValues) => void
-		onChange?: (values: FormValues) => void
+		onSubmit?: (values: FormValues) => Promise<void> | void
+		onChange?: (values: FormValues) => Promise<void> | void
 	}>
 
 // NOTE - Create Form Context
@@ -45,7 +46,7 @@ export const FormController = ({
 	const [errors, setErrors] = useState<ErrorValues>({})
 	const [isValid, setIsValid] = useState(false)
 
-	const setValue = (name: string, value: string | null) => {
+	const setValue = (name: string, value: unknown | null) => {
 		setFormValues((pre: any) => ({ ...pre, [name]: value }))
 	}
 
@@ -68,7 +69,7 @@ export const FormController = ({
 	useEffect(() => {
 		if (
 			Object.values(formValues).length > 0 &&
-			Object.values(formValues).every(Boolean) &&
+			Object.values(formValues).every((v) => v !== null) &&
 			Object.values(errors).length === 0
 		) {
 			setIsValid(true)
@@ -76,6 +77,14 @@ export const FormController = ({
 			setIsValid(false)
 		}
 	}, [errors, formValues])
+
+	useEffect(() => {
+		console.log("Error", errors)
+	}, [errors])
+
+	useEffect(() => {
+		console.log("Form", formValues)
+	}, [formValues])
 
 	const values = {
 		fields: formValues,
@@ -92,8 +101,9 @@ export const FormController = ({
 	// SECTION - Component
 	const handleOnSubmit = (v: FormValues) => onSubmit && onSubmit(v)
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
 		e.preventDefault()
+
 		let validatedData = formValues
 
 		// NOTE - Cancel submit if there are any errors before starting
@@ -101,7 +111,7 @@ export const FormController = ({
 
 		// NOTE - If schema
 		try {
-			validatedData = schema.parse(formValues)
+			validatedData = schema.parse(validatedData)
 		} catch (e: any) {
 			parseZodError(e.issues).forEach((error) =>
 				addError(error.key, error.message)

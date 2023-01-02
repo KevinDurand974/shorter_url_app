@@ -4,26 +4,37 @@ import { ZodError, ZodSchema } from "zod"
 import { AddValidation } from "./types"
 import useForm from "./useForm"
 
-type Props = JSX.IntrinsicElements["input"] & {
+type Props = Omit<JSX.IntrinsicElements["input"], "onInput"> & {
 	name: string
 	schema?: ZodSchema
 	addValidation?: (v: AddValidation) => Promise<void>
-	onInput?: (v: string | null) => void
+	onInput?: (v: unknown | null) => void
 }
 
 const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
-	const { getInputValue, addError, removeError, getError } = useForm()
+	const { getInputValue, addError, removeError, getError, addInputValue } =
+		useForm()
 
 	const inputRef = useRef<HTMLInputElement>(null)
 
+	const convertToRealType = (value: unknown) => {
+		if (Boolean(value)) return Boolean(value)
+		if (value === "true") return true
+		if (value === "false") return false
+		if (Number(value)) return Number(value)
+		return value
+	}
+
 	const handleOnInput = useCallback(
-		async (data: string) => {
+		async (data: unknown) => {
 			let hasError = false
+
+			let d = convertToRealType(data)
 
 			// NOTE - Validate Schema, if there is one
 			if (!!schema) {
 				try {
-					schema.parse(data)
+					schema.parse(d)
 					if (!!getError(props.name)) removeError(props.name)
 				} catch (err: any) {
 					hasError = true
@@ -39,7 +50,7 @@ const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
 			// NOTE - Do validation, if there is one
 			if (!!addValidation && !hasError) {
 				await addValidation({
-					value: data,
+					value: d,
 					onSuccess: () => {
 						if (!!getError(props.name)) removeError(props.name)
 					},
@@ -49,11 +60,14 @@ const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
 				})
 			}
 
+			addInputValue(props.name, d)
+
 			// NOTE - Call onInput method, if used
-			if (!!onInput) onInput(data)
+			if (!!onInput) onInput(d)
 		},
 		[
 			addError,
+			addInputValue,
 			addValidation,
 			getError,
 			onInput,
@@ -72,19 +86,24 @@ const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
 		)
 			.pipe(
 				debounceTime(400),
-				map((e) => e.target.value)
+				map((e) => {
+					if (props.type && ["checkbox", "radio"].includes(props.type)) {
+						return e.target.checked
+					}
+					return e.target.value
+				})
 			)
 			.subscribe(handleOnInput)
 
 		return () => {
 			sub$.unsubscribe()
 		}
-	}, [addError, handleOnInput])
+	}, [addError, handleOnInput, props.type])
 
 	return (
 		<input
 			ref={inputRef}
-			defaultValue={getInputValue(props.name) || undefined}
+			defaultValue={(getInputValue(props.name) as any) || undefined}
 			{...props}
 		/>
 	)
