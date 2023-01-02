@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 
 import { createError400, createError404 } from '@shorter/errors';
 import {
+  CheckEmailSchema,
   DeleteUserSchema,
   UpdateUserEmailSchema,
   UpdateUserPasswordSchema,
@@ -305,6 +306,19 @@ export const getMe = async (datasource: DataSource, ctx: ContextWithPayload) => 
 
     // Return
     return profile;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const checkIfEmailAlreadyUsed = async (datasource: DataSource, input: CheckEmailSchema) => {
+  try {
+    // Get new email from input
+    const email = input.email;
+
+    // Check if email already exist in DB
+    const UserRep = datasource.getRepository(User);
+    return UserRep.exist({ where: { email } });
   } catch (err) {
     throw err;
   }

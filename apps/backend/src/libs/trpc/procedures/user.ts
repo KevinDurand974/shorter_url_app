@@ -1,4 +1,5 @@
 import {
+  checkEmailSchema,
   deleteUserSchema,
   getUserSchema,
   updateUserEmailSchema,
@@ -8,6 +9,7 @@ import {
   updateUserVIPSchema,
 } from '@shorter/validators';
 import {
+  checkIfEmailAlreadyUsed,
   deleteUser,
   getMe,
   getUser,
@@ -30,6 +32,10 @@ export const userRouter = router({
   getUsers: publicProcedure.query(async () => {
     const datasource = await getDataSource();
     return getUsers(datasource);
+  }),
+  alreadyUsedEmail: publicProcedure.input(checkEmailSchema).mutation(async ({ input }) => {
+    const datasource = await getDataSource();
+    return checkIfEmailAlreadyUsed(datasource, input);
   }),
   // NOTE: Auth Procedures
   getMe: authProcedure.query(async ({ ctx }) => {
