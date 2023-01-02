@@ -18,10 +18,13 @@ const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	const convertToRealType = (value: unknown) => {
-		if (Boolean(value)) return Boolean(value)
+		console.log(typeof value, value)
 		if (value === "true") return true
 		if (value === "false") return false
+		if (value === true) return true
+		if (value === false) return false
 		if (Number(value)) return Number(value)
+		if (String(value)) return String(value)
 		return value
 	}
 
@@ -59,6 +62,8 @@ const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
 					},
 				})
 			}
+
+			console.log(typeof d, d)
 
 			addInputValue(props.name, d)
 
