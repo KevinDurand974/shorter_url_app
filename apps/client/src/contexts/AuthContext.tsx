@@ -1,4 +1,6 @@
 import useLocalStorage from "@hooks/useLocalStorage"
+import { trpc } from "@libs/trpc"
+import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useEffect, useState } from "react"
 
 type ProviderProps = PropsWithChildren<{}>
@@ -23,10 +25,13 @@ const AuthContext = createContext<{
 })
 
 export const AuthProvider = ({ children }: ProviderProps) => {
+	const { push } = useRouter()
+
 	const [isLogged, setLogged] = useState(false)
 	const [user, setUser] = useState<AuthUser | null>(null)
 
-	const { isStorageAvailable, getStorageValue } = useLocalStorage()
+	const { isStorageAvailable, getStorageValue, removeStorageValue } =
+		useLocalStorage()
 
 	useEffect(() => {
 		if (isStorageAvailable()) {
@@ -47,6 +52,11 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 	const logout = () => {
 		setUser(null)
 		setLogged(false)
+
+		if (isStorageAvailable()) removeStorageValue("logged_in")
+		trpc.logout.query().then(() => {
+			push("/login")
+		})
 	}
 
 	const values = {
