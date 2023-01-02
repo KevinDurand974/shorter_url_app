@@ -4,7 +4,8 @@ import { getUserDataServer } from "@libs/trpcSsr"
 import { Profile } from "@shorter/backend/dist/entities"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
-import { Fragment, useState } from "react"
+import { useRouter } from "next/router"
+import { Fragment, useEffect, useState } from "react"
 import { BiEdit } from "react-icons/bi"
 import { BsFillQuestionCircleFill } from "react-icons/bs"
 import {
@@ -24,6 +25,13 @@ type Props = {
 
 const AccountSettingsPage = ({ userData }: Props) => {
 	const [openEmailModal, setOpenEmailModal] = useState(false)
+	const { push } = useRouter()
+
+	useEffect(() => {
+		if (!userData) push("/login")
+	}, [push, userData])
+
+	if (!userData) return <div>Redirect to login page...</div>
 
 	return (
 		<Fragment>
@@ -278,9 +286,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 		}
 	} catch (err: any) {
 		return {
-			redirect: {
-				destination: "/login",
-				permanent: false,
+			props: {
+				userData: null,
 			},
 		}
 	}
