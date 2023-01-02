@@ -12,7 +12,7 @@ import { GetServerSideProps } from "next"
 import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 
 type FormatedValues = {
 	email: string
@@ -22,8 +22,16 @@ type FormatedValues = {
 	urlname: string
 }
 
-const RegisterPage = () => {
+type Props = {
+	redirect: string | false
+}
+
+const RegisterPage = (props: Props) => {
 	const router = useRouter()
+
+	useEffect(() => {
+		if (props.redirect) router.push(props.redirect)
+	}, [props.redirect, router])
 
 	const onSubmit = async (values: FormValues) => {
 		try {
@@ -47,6 +55,8 @@ const RegisterPage = () => {
 		pseudo: "Test2",
 		urlname: "test2",
 	}
+
+	if (props.redirect) return null
 
 	return (
 		<Fragment>
@@ -204,13 +214,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 		const isAuth = await isAuthServer(req.headers.cookie)
 		if (isAuth) throw new Error("User already connected!")
 		return {
-			props: {},
+			props: {
+				redirect: false,
+			},
 		}
 	} catch (err: any) {
 		return {
-			redirect: {
-				destination: "/",
-				permanent: false,
+			props: {
+				redirect: "/",
 			},
 		}
 	}

@@ -23,7 +23,11 @@ type FormatedValues = {
 	enabledCookie: boolean
 }
 
-const LoginPage = () => {
+type Props = {
+	redirect: string | false
+}
+
+const LoginPage = (props: Props) => {
 	const router = useRouter()
 	const { setUser } = useContext(AuthContext)
 	const { isStorageAvailable, setStorageValue } = useLocalStorage()
@@ -32,6 +36,10 @@ const LoginPage = () => {
 	useEffect(() => {
 		setEnabledCookie(navigator.cookieEnabled)
 	}, [])
+
+	useEffect(() => {
+		if (props.redirect) router.push(props.redirect)
+	}, [props.redirect, router])
 
 	const onSubmit = async (values: FormValues) => {
 		try {
@@ -49,6 +57,8 @@ const LoginPage = () => {
 			console.log(err.message)
 		}
 	}
+
+	if (props.redirect) return null
 
 	return (
 		<Fragment>
@@ -156,13 +166,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 		const isAuth = await isAuthServer(req.headers.cookie)
 		if (isAuth) throw new Error("User already connected!")
 		return {
-			props: {},
+			props: {
+				redirect: false,
+			},
 		}
 	} catch (err: any) {
 		return {
-			redirect: {
-				destination: "/",
-				permanent: false,
+			props: {
+				redirect: "/",
 			},
 		}
 	}
