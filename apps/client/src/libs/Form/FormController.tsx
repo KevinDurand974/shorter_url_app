@@ -141,20 +141,24 @@ export const FormController = ({
 	useEffect(() => {
 		// NOTE - Cancel on mount
 		if (!validateOnMount && isSameValueFromInitial(initialValues, formValues))
-			return // NOTE - Check schema and trigger onChange
-		;(async () => {
-			try {
-				const data = await schema.parseAsync(formValues)
-				setErrors({})
-				if (onChange) onChange(data)
-			} catch (err: any) {
-				const errors = getFirstZodErrors(err)
-				if (!errors) return
-				Object.entries(errors).forEach(([name, message]) => {
-					addError(name, message)
-				})
-			}
-		})()
+			return
+
+		// NOTE - Parse schema and trigger onChange if enabled
+		if (onChange) {
+			;(async () => {
+				try {
+					const data = await schema.parseAsync(formValues)
+					setErrors({})
+					onChange(data)
+				} catch (err: any) {
+					const errors = getFirstZodErrors(err)
+					if (!errors) return
+					Object.entries(errors).forEach(([name, message]) => {
+						addError(name, message)
+					})
+				}
+			})()
+		}
 	}, [formValues, initialValues, onChange, schema, validateOnMount])
 
 	// !SECTION - End Component
