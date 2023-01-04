@@ -1,8 +1,7 @@
 import useDisabledScroll from "@hooks/useDisabledScroll"
 import useHasMounted from "@hooks/useHasMounted"
-import { PropsWithChildren, useEffect, useState } from "react"
+import { PropsWithChildren } from "react"
 import { createPortal } from "react-dom"
-import { RiCloseCircleFill } from "react-icons/ri"
 import { Close } from "./svg"
 
 type Props = PropsWithChildren<{
