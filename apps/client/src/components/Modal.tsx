@@ -1,3 +1,4 @@
+import useDisabledScroll from "@hooks/useDisabledScroll"
 import useHasMounted from "@hooks/useHasMounted"
 import { PropsWithChildren, useEffect, useState } from "react"
 import { createPortal } from "react-dom"
@@ -11,7 +12,13 @@ type Props = PropsWithChildren<{
 }>
 
 const Modal = ({ children, close, isOpen, title }: Props) => {
+	const [disableScroll] = useDisabledScroll()
+
 	if (!useHasMounted()) return null
+
+	if (isOpen) {
+		disableScroll(true)
+	}
 
 	const openModalStyle = isOpen
 		? "opacity-100 pointer-events-auto"
@@ -19,6 +26,7 @@ const Modal = ({ children, close, isOpen, title }: Props) => {
 
 	const handleClose = () => {
 		close()
+		disableScroll(false)
 	}
 
 	const insideModalHTML = (
