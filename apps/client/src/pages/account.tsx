@@ -1,5 +1,5 @@
 import { Modal } from "@components"
-import ChangeEmail from "@components/form/ChangeEmail"
+import { ChangeEmail } from "@components/form"
 import { getUserDataServer } from "@libs/trpcSsr"
 import { Profile } from "@shorter/backend/dist/entities"
 import { GetServerSideProps } from "next"
