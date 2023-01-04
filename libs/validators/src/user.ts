@@ -62,8 +62,22 @@ export const updateUserEmailSchema = updateUserEmailDefaultSchema.superRefine(
 	}
 )
 export const updateUserPasswordDefaultSchema = z.object({
-	currentPassword: z.string().min(8).max(60).refine(isStrongPassword),
-	newPassword: z.string().min(8).max(60).refine(isStrongPassword),
+	currentPassword: z
+		.string()
+		.min(8, "Minimum 8 characters.")
+		.max(60, "Maximum 60 characters.")
+		.refine(
+			isStrongPassword,
+			"Must have minimum 8 characters, 1 uppercase, 1 number and 1 symbol."
+		),
+	newPassword: z
+		.string()
+		.min(8, "Minimum 8 characters.")
+		.max(60, "Maximum 60 characters.")
+		.refine(
+			isStrongPassword,
+			"Must have minimum 8 characters, 1 uppercase, 1 number and 1 symbol."
+		),
 })
 export const updateUserPasswordSchema =
 	updateUserPasswordDefaultSchema.superRefine(
