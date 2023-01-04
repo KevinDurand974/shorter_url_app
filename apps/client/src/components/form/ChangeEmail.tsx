@@ -114,7 +114,7 @@ const ChangeEmail = ({ currentEmail }: Props) => {
 			</Button>
 
 			<div className="text-center text-xs text-muted">
-				You will be disconnect after changing your email
+				You will need to reconnect after changing your email
 				<br />
 				Don&apos;t forget to validate this new email address in order to
 				continue using this service.
