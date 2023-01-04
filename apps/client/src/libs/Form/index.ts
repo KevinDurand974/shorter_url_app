@@ -3,5 +3,6 @@ export { default as FormContext, FormController } from "./FormController"
 export { default as Field } from "./Field"
 export { default as ErrorMessage } from "./ErrorMessage"
 export { default as useForm } from "./useForm"
+export * from "./utils"
 
 export * from "./types"

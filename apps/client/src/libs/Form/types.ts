@@ -1,5 +1,6 @@
 export type AddValidation = {
 	value: unknown
+	fields: FormValues
 	onSuccess: () => void
 	onFail: (message: string) => void
 }

@@ -4,11 +4,23 @@ import {
 	createContext,
 	FormEvent,
 	PropsWithChildren,
+	useCallback,
 	useEffect,
+	useRef,
 	useState,
 } from "react"
-import { ZodSchema } from "zod"
+import {
+	BehaviorSubject,
+	concat,
+	debounceTime,
+	forkJoin,
+	fromEvent,
+	map,
+	merge,
+} from "rxjs"
+import { object, ZodError, ZodIssue, ZodSchema } from "zod"
 import { ErrorValues, FormValues } from "./types"
+import { getFirstZodErrors, isSameValueFromInitial } from "./utils"
 
 type ContextValues = {
 	fields: FormValues
@@ -21,10 +33,11 @@ type ContextValues = {
 	isValid: boolean
 }
 
-type FormProps = Omit<JSX.IntrinsicElements["form"], "onSubmit" | "onChange"> &
+type FormProps = Omit<JSX.IntrinsicElements["form"], "onSubmit" | "onInput"> &
 	PropsWithChildren<{
 		initialValues: FormValues
 		schema: ZodSchema
+		validateOnMount?: boolean
 		onSubmit?: (values: FormValues) => Promise<void> | void
 		onChange?: (values: FormValues) => Promise<void> | void
 	}>
@@ -38,6 +51,7 @@ export const FormController = ({
 	onChange,
 	children,
 	schema,
+	validateOnMount,
 	initialValues,
 	...props
 }: FormProps) => {
@@ -68,6 +82,7 @@ export const FormController = ({
 
 	useEffect(() => {
 		if (
+			isSameValueFromInitial(initialValues, formValues) &&
 			Object.values(formValues).length > 0 &&
 			Object.values(formValues).every((v) => v !== null) &&
 			Object.values(errors).length === 0
@@ -76,7 +91,7 @@ export const FormController = ({
 		} else {
 			setIsValid(false)
 		}
-	}, [errors, formValues])
+	}, [errors, formValues, initialValues])
 
 	useEffect(() => {
 		console.log("Error", errors)
@@ -122,6 +137,26 @@ export const FormController = ({
 		// NOTE - Trigger onSubmit method
 		handleOnSubmit(validatedData)
 	}
+
+	useEffect(() => {
+		// NOTE - Cancel on mount
+		if (!validateOnMount && isSameValueFromInitial(initialValues, formValues))
+			return // NOTE - Check schema and trigger onChange
+		;(async () => {
+			try {
+				const data = await schema.parseAsync(formValues)
+				setErrors({})
+				if (onChange) onChange(data)
+			} catch (err: any) {
+				const errors = getFirstZodErrors(err)
+				if (!errors) return
+				Object.entries(errors).forEach(([name, message]) => {
+					addError(name, message)
+				})
+			}
+		})()
+	}, [formValues, initialValues, onChange, schema, validateOnMount])
+
 	// !SECTION - End Component
 
 	return (

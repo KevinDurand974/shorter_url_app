@@ -12,13 +12,18 @@ type Props = Omit<JSX.IntrinsicElements["input"], "onInput"> & {
 }
 
 const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
-	const { getInputValue, addError, removeError, getError, addInputValue } =
-		useForm()
+	const {
+		getInputValue,
+		addError,
+		removeError,
+		getError,
+		addInputValue,
+		fields,
+	} = useForm()
 
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	const convertToRealType = (value: unknown) => {
-		console.log(typeof value, value)
 		if (value === "true") return true
 		if (value === "false") return false
 		if (value === true) return true
@@ -54,26 +59,27 @@ const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
 			if (!!addValidation && !hasError) {
 				await addValidation({
 					value: d,
+					fields,
 					onSuccess: () => {
 						if (!!getError(props.name)) removeError(props.name)
 					},
 					onFail: (message: string) => {
+						hasError = true
 						addError(props.name, message)
 					},
 				})
 			}
 
-			console.log(typeof d, d)
-
 			addInputValue(props.name, d)
 
 			// NOTE - Call onInput method, if used
-			if (!!onInput) onInput(d)
+			if (!hasError && !!onInput) onInput(d)
 		},
 		[
 			addError,
 			addInputValue,
 			addValidation,
+			fields,
 			getError,
 			onInput,
 			props.name,
