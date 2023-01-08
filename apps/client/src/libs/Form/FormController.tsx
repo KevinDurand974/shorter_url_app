@@ -82,7 +82,7 @@ export const FormController = ({
 
 	useEffect(() => {
 		if (
-			isSameValueFromInitial(initialValues, formValues) &&
+			!isSameValueFromInitial(initialValues, formValues) &&
 			Object.values(formValues).length > 0 &&
 			Object.values(formValues).every((v) => v !== null) &&
 			Object.values(errors).length === 0
