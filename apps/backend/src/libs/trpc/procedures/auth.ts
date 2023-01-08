@@ -1,5 +1,5 @@
 import { createUserSchema, loginSchema } from '@shorter/validators';
-import { login, logout, register } from '../../../models';
+import { login, logout, refreshToken, register } from '../../../models';
 import { getDataSource } from '../../typeorm';
 import { authProcedure, publicProcedure, router } from '../configuration';
 
@@ -18,6 +18,10 @@ export const authRouter = router({
     await logout(datasource, ctx);
   }),
   testAuth: authProcedure.query(() => true),
+  refresh: authProcedure.mutation(async ({ ctx }) => {
+    const datasource = await getDataSource();
+    return refreshToken(datasource, ctx);
+  }),
 
   // TODO: Forgot Password ?
 });
