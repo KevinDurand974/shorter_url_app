@@ -1,5 +1,5 @@
 import { Modal } from "@components"
-import { ChangeEmail } from "@components/form"
+import { ChangeEmail, ChangePassword } from "@components/form"
 import { getUserDataServer } from "@libs/trpcSsr"
 import { Profile } from "@shorter/backend/dist/entities"
 import { GetServerSideProps } from "next"
@@ -25,6 +25,7 @@ type Props = {
 
 const AccountSettingsPage = ({ userData }: Props) => {
 	const [openEmailModal, setOpenEmailModal] = useState(false)
+	const [openPasswordModal, setOpenPasswordModal] = useState(false)
 	const { push } = useRouter()
 
 	useEffect(() => {
@@ -84,11 +85,12 @@ const AccountSettingsPage = ({ userData }: Props) => {
 							<MdSecurity />
 							Password
 						</h3>
-						<p className="url w-fit">The one you put when you signup</p>
+						<p className="url w-fit">The one you put when you registered</p>
 						<button
 							type="button"
 							aria-label="Change email"
 							className="text-3xl cta flex items-center w-fit p-2 before:bottom-0 relative group hover:mr-2 transition-all duration-[0.4s]"
+							onClick={() => setOpenPasswordModal(true)}
 						>
 							<BiEdit />
 
@@ -96,6 +98,13 @@ const AccountSettingsPage = ({ userData }: Props) => {
 								Change
 							</span>
 						</button>
+						<Modal
+							isOpen={openPasswordModal}
+							close={() => setOpenPasswordModal(false)}
+							title="Change your password"
+						>
+							<ChangePassword />
+						</Modal>
 					</div>
 
 					<div className="grid grid-profil-account items-center bg-gradient-to-l from-black/20 rounded-full px-2 py-2">
