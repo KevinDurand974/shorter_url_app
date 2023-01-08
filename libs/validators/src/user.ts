@@ -1,6 +1,7 @@
 import { z } from "zod"
 import isStrongPassword from "validator/lib/isStrongPassword"
 import isSlug from "validator/lib/isSlug"
+import isEmpty from "validator/lib/isEmpty"
 
 // Schemas
 export const createUserDefaultSchema = z.object({
@@ -95,13 +96,19 @@ export const updateUserPasswordSchema =
 export const updateUserUrlNameSchema = z.object({
 	urlName: z
 		.string()
-		.min(0)
-		.max(20)
+		.min(4, "Minimum 4 characters.")
+		.max(26, "Maximum 26 characters.")
 		.regex(
 			/^[a-z0-9-]+$/,
-			"Only lowercase letters, numbers and hyphens are allowed"
+			"Only lowercase letters, numbers and hyphens are allowed."
 		)
-		.refine(isSlug, "Can only have a single hyphen between string"),
+		.refine((t) => !isEmpty(t), "Cannot be empty.")
+		.refine((txt) => {
+			if (txt.length > 3 && txt.length < 27) {
+				return isSlug(txt)
+			}
+			return true
+		}, "Can only have a single hyphen between string."),
 })
 export const updateUserVIPSchema = z.object({
 	vip: z.boolean(),
