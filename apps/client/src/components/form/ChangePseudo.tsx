@@ -7,11 +7,7 @@ import {
 	FormValues,
 } from "@libs/Form"
 import { trpc } from "@libs/trpc"
-import {
-	updateUserEmailSchema,
-	updateUserEmailDefaultSchema,
-	updateUserPseudoSchema,
-} from "@shorter/validators"
+import { updateUserPseudoSchema } from "@shorter/validators"
 
 type Props = {
 	pseudo: string
