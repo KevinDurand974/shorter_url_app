@@ -323,3 +323,16 @@ export const checkIfEmailAlreadyUsed = async (datasource: DataSource, input: Che
     throw err;
   }
 };
+
+export const checkIfUrlNameAlreadyUsed = async (datasource: DataSource, input: UpdateUserUrlNameSchema) => {
+  try {
+    // Get url name from input
+    const urlName = input.urlName;
+
+    // Check if email already exist in DB
+    const ProfileRep = datasource.getRepository(Profile);
+    return ProfileRep.exist({ where: { urlName } });
+  } catch (err) {
+    throw err;
+  }
+};
