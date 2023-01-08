@@ -1,5 +1,5 @@
 import { Modal } from "@components"
-import { ChangeEmail, ChangePassword } from "@components/form"
+import { ChangeEmail, ChangePassword, ChangePseudo } from "@components/form"
 import { getUserDataServer } from "@libs/trpcSsr"
 import { Profile } from "@shorter/backend/dist/entities"
 import { GetServerSideProps } from "next"
@@ -23,14 +23,28 @@ type Props = {
 	userData: Profile
 }
 
-const AccountSettingsPage = ({ userData }: Props) => {
+const AccountSettingsPage = (props: Props) => {
+	const [userData, setUserData] = useState(props.userData)
+
 	const [openEmailModal, setOpenEmailModal] = useState(false)
 	const [openPasswordModal, setOpenPasswordModal] = useState(false)
+	const [openPseudoModal, setOpenPseudoModal] = useState(false)
 	const { push } = useRouter()
 
 	useEffect(() => {
 		if (!userData) push("/login")
 	}, [push, userData])
+
+	const handleUpdatePseudo = (newPseudo: string) => {
+		setUserData((old) => ({
+			...old,
+			user: {
+				...old.user,
+				pseudo: newPseudo,
+			},
+		}))
+		setOpenPseudoModal(false)
+	}
 
 	if (!userData) return <div>Redirect to login page...</div>
 
@@ -117,6 +131,7 @@ const AccountSettingsPage = ({ userData }: Props) => {
 							type="button"
 							aria-label="Change email"
 							className="text-3xl cta flex items-center w-fit p-2 before:bottom-0 relative group hover:mr-2 transition-all duration-[0.4s]"
+							onClick={() => setOpenPseudoModal(true)}
 						>
 							<BiEdit />
 
@@ -124,6 +139,16 @@ const AccountSettingsPage = ({ userData }: Props) => {
 								Change
 							</span>
 						</button>
+						<Modal
+							isOpen={openPseudoModal}
+							close={() => setOpenPseudoModal(false)}
+							title="Change your pseudo"
+						>
+							<ChangePseudo
+								pseudo={userData.user.pseudo}
+								closeModal={handleUpdatePseudo}
+							/>
+						</Modal>
 					</div>
 
 					<div className="grid grid-profil-account items-center bg-gradient-to-l from-black/20 rounded-full px-2 py-2">
