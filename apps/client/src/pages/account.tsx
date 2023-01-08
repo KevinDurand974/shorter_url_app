@@ -1,5 +1,10 @@
 import { Modal } from "@components"
-import { ChangeEmail, ChangePassword, ChangePseudo } from "@components/form"
+import {
+	ChangeEmail,
+	ChangePassword,
+	ChangePseudo,
+	ChangeUrlName,
+} from "@components/form"
 import { getUserDataServer } from "@libs/trpcSsr"
 import { Profile } from "@shorter/backend/dist/entities"
 import { GetServerSideProps } from "next"
@@ -29,6 +34,7 @@ const AccountSettingsPage = (props: Props) => {
 	const [openEmailModal, setOpenEmailModal] = useState(false)
 	const [openPasswordModal, setOpenPasswordModal] = useState(false)
 	const [openPseudoModal, setOpenPseudoModal] = useState(false)
+	const [openUrlNameModal, setOpenUrlNameModal] = useState(false)
 	const { push } = useRouter()
 
 	useEffect(() => {
@@ -44,6 +50,14 @@ const AccountSettingsPage = (props: Props) => {
 			},
 		}))
 		setOpenPseudoModal(false)
+	}
+
+	const handleUpdateUrlName = (newUrlName: string) => {
+		setUserData((old) => ({
+			...old,
+			urlName: newUrlName,
+		}))
+		setOpenUrlNameModal(false)
 	}
 
 	if (!userData) return <div>Redirect to login page...</div>
@@ -161,6 +175,7 @@ const AccountSettingsPage = (props: Props) => {
 							type="button"
 							aria-label="Change email"
 							className="text-3xl cta flex items-center w-fit p-2 before:bottom-0 relative group hover:mr-2 transition-all duration-[0.4s]"
+							onClick={() => setOpenUrlNameModal(true)}
 						>
 							<BiEdit />
 
@@ -168,6 +183,16 @@ const AccountSettingsPage = (props: Props) => {
 								Change
 							</span>
 						</button>
+						<Modal
+							isOpen={openUrlNameModal}
+							close={() => setOpenUrlNameModal(false)}
+							title="Change your personal url"
+						>
+							<ChangeUrlName
+								urlName={userData.urlName}
+								closeModal={handleUpdateUrlName}
+							/>
+						</Modal>
 					</div>
 
 					{/* IF email not verified */}
