@@ -21,6 +21,7 @@
 - [ ] Create Delete account and all his datas
 - [ ] Create counter for global and personal urls
 - [ ] Create a counter of number of click for all urls
+- [ ] Add a date of change for urlname, make it this cant be changed for 30 days
 
 ##### Navigation
 
