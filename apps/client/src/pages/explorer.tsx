@@ -1,6 +1,7 @@
 import useHasMounted from "@hooks/useHasMounted"
 import { trpc } from "@libs/trpc"
-import { useEffect, useState } from "react"
+import Head from "next/head"
+import { Fragment, useEffect, useState } from "react"
 
 const ExplorerUrlPage = () => {
 	const [data, setData] = useState<any>(null)
@@ -21,7 +22,20 @@ const ExplorerUrlPage = () => {
 		run()
 	}, [])
 
-	return <h1>My Urls</h1>
+	return (
+		<Fragment>
+			<Head>
+				<title>My Urls - Url Shorten</title>
+				<meta name="description" content="Create an url." />
+			</Head>
+
+			<span id="main" className="fixed translate-y-[-99999999]" tabIndex={-1} />
+
+			<section className="p-2 sm:p-4 box flex flex-col gap-4 w-full">
+				<h1 className="font-fredoka sm:text-3xl text-center">My Urls</h1>
+			</section>
+		</Fragment>
+	)
 }
 
 export default ExplorerUrlPage
