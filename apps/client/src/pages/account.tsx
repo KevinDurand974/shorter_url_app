@@ -60,8 +60,6 @@ const AccountSettingsPage = (props: Props) => {
 		setOpenUrlNameModal(false)
 	}
 
-	// FIX - Validate email if not validated
-
 	if (!userData) return <div>Redirect to login page...</div>
 
 	return (
@@ -197,8 +195,9 @@ const AccountSettingsPage = (props: Props) => {
 						</Modal>
 					</div>
 
+					{/* // FIX - Validate email if not validated */}
 					{/* IF email not verified */}
-					{!!userData.verified && (
+					{!userData.verified && (
 						<div className="flex items-center gap-2 px-4 py-2 border-2 border-warning rounded-full w-fit bg-warning/70 font-fredoka tracking-wide mx-auto">
 							<BsFillQuestionCircleFill />
 							<span>
