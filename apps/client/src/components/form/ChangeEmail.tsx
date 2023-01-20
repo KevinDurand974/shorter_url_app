@@ -106,10 +106,7 @@ const ChangeEmail = ({ currentEmail }: Props) => {
 				/>
 			</div>
 
-			<Button
-				type="submit"
-				className="px-5 py-3 font-fredoka tracking-wider bg-gradient-to-r from-gradient-top to-accent mt-4 uppercase transition-all duration-[0.4s] text-sm sm:text-lg flex justify-center items-center gap-2 disabled:grayscale disabled:opacity-20"
-			>
+			<Button className="px-5 py-3 font-fredoka tracking-wider bg-gradient-to-r from-gradient-top to-accent mt-4 uppercase transition-all duration-[0.4s] text-sm sm:text-lg flex justify-center items-center gap-2 disabled:grayscale disabled:opacity-20">
 				Validate new email!
 			</Button>
 
