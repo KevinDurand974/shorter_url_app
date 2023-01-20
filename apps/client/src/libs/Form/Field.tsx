@@ -11,7 +11,13 @@ type Props = Omit<JSX.IntrinsicElements["input"], "onInput"> & {
 	onInput?: (v: unknown | null) => void
 }
 
-const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
+const Field = ({
+	onInput,
+	schema,
+	addValidation,
+	className,
+	...props
+}: Props) => {
 	const {
 		getInputValue,
 		addError,
@@ -115,6 +121,7 @@ const Field = ({ onInput, schema, addValidation, ...props }: Props) => {
 		<input
 			ref={inputRef}
 			defaultValue={(getInputValue(props.name) as any) || undefined}
+			className={`disabled:grayscale ${className}`}
 			{...props}
 		/>
 	)

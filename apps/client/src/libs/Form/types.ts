@@ -12,3 +12,9 @@ export type FormValues = {
 export type ErrorValues = {
 	[key: string]: string
 }
+
+export type FormOnChange = {
+	values: FormValues
+	addError: (name: string, message: string) => void
+	removeErrors: () => void
+}

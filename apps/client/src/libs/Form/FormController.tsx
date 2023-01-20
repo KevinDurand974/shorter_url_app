@@ -19,7 +19,7 @@ import {
 	merge,
 } from "rxjs"
 import { object, ZodError, ZodIssue, ZodSchema } from "zod"
-import { ErrorValues, FormValues } from "./types"
+import { AddValidation, ErrorValues, FormOnChange, FormValues } from "./types"
 import { getFirstZodErrors, isSameValueFromInitial } from "./utils"
 
 type ContextValues = {
@@ -36,10 +36,10 @@ type ContextValues = {
 type FormProps = Omit<JSX.IntrinsicElements["form"], "onSubmit" | "onInput"> &
 	PropsWithChildren<{
 		initialValues: FormValues
-		schema: ZodSchema
+		schema?: ZodSchema
 		validateOnMount?: boolean
 		onSubmit?: (values: FormValues) => Promise<void> | void
-		onChange?: (values: FormValues) => Promise<void> | void
+		onChange?: (values: FormOnChange) => Promise<void> | void
 	}>
 
 // NOTE - Create Form Context
@@ -80,6 +80,10 @@ export const FormController = ({
 		setErrors(({ [name]: _r, ...rest }) => rest)
 	}
 
+	const removeErrors = () => {
+		setErrors({})
+	}
+
 	useEffect(() => {
 		if (
 			!isSameValueFromInitial(initialValues, formValues) &&
@@ -94,11 +98,13 @@ export const FormController = ({
 	}, [errors, formValues, initialValues])
 
 	useEffect(() => {
-		console.log("Error", errors)
+		console.log(">> Error")
+		console.table(errors)
 	}, [errors])
 
 	useEffect(() => {
-		console.log("Form", formValues)
+		console.log(">> Form")
+		console.table(formValues)
 	}, [formValues])
 
 	const values = {
@@ -125,13 +131,15 @@ export const FormController = ({
 		if (Object.keys(errors).length > 0) return
 
 		// NOTE - If schema
-		try {
-			validatedData = schema.parse(validatedData)
-		} catch (e: any) {
-			parseZodError(e.issues).forEach((error) =>
-				addError(error.key, error.message)
-			)
-			return
+		if (schema) {
+			try {
+				validatedData = schema.parse(validatedData)
+			} catch (e: any) {
+				parseZodError(e.issues).forEach((error) =>
+					addError(error.key, error.message)
+				)
+				return
+			}
 		}
 
 		// NOTE - Trigger onSubmit method
@@ -146,15 +154,27 @@ export const FormController = ({
 		// NOTE - Parse schema and trigger onChange if enabled
 		if (onChange) {
 			;(async () => {
-				try {
-					const data = await schema.parseAsync(formValues)
-					setErrors({})
-					onChange(data)
-				} catch (err: any) {
-					const errors = getFirstZodErrors(err)
-					if (!errors) return
-					Object.entries(errors).forEach(([name, message]) => {
-						addError(name, message)
+				if (schema) {
+					try {
+						const data = await schema.parseAsync(formValues)
+						setErrors({})
+						onChange({
+							values: data,
+							removeErrors,
+							addError,
+						})
+					} catch (err: any) {
+						const errors = getFirstZodErrors(err)
+						if (!errors) return
+						Object.entries(errors).forEach(([name, message]) => {
+							addError(name, message)
+						})
+					}
+				} else {
+					onChange({
+						values: formValues,
+						removeErrors,
+						addError,
 					})
 				}
 			})()
