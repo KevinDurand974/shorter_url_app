@@ -58,7 +58,13 @@ a {
 	.grid-stats-account {
 		grid-template-columns: 40% auto;
 	}
+	.grid-form-range {
+		grid-template-columns: auto 1fr auto;
+	}
 	.simple-url {
-		@apply underline underline-offset-2 text-text transition-all hover:text-secondary;
+		@apply underline underline-offset-2 text-text transition-all hover:text-secondary shadow-md;
+	}
+	.shadow-inside:focus {
+		box-shadow: 0 0 10px black;
 	}
 }
