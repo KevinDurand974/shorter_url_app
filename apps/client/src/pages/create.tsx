@@ -8,10 +8,18 @@ import {
 	FormOnChange,
 } from "@libs/Form"
 import { trpc } from "@libs/trpc"
+import { getUserDataServer } from "@libs/trpcSsr"
+import { Profile } from "@shorter/backend/dist/entities"
 import { createUrlSchema } from "@shorter/validators"
+import { GetServerSideProps } from "next"
 import Head from "next/head"
-import { Fragment, useState } from "react"
+import { useRouter } from "next/router"
+import { Fragment, useEffect, useState } from "react"
 import { ZodError } from "zod"
+
+type Props = {
+	userData: Profile
+}
 
 type DurationChoice = typeof durationChoices[number]
 
@@ -69,7 +77,13 @@ const prepateFormValues = (values: any) => {
 	}
 }
 
-const CreateUrlPage = () => {
+const CreateUrlPage = ({ userData }: Props) => {
+	const { push } = useRouter()
+
+	useEffect(() => {
+		if (!userData) push("/login")
+	}, [push, userData])
+
 	const [isEphemeral, setEphemeral] = useState(true)
 	const [isCustomEnabled, setCustomEnabled] = useState(false)
 
@@ -100,8 +114,9 @@ const CreateUrlPage = () => {
 	const onSubmit = async (values: any) => {
 		try {
 			const preparedValues = prepateFormValues(values)
+			const formValues = createUrlSchema.parse(preparedValues)
 			const ac = new AbortController()
-			const data = await trpc.createUrl.mutate(preparedValues, {
+			const data = await trpc.createUrl.mutate(formValues, {
 				signal: ac.signal,
 			})
 			alert("Url Created: >> " + data.url)
@@ -110,6 +125,8 @@ const CreateUrlPage = () => {
 			console.log(err.message)
 		}
 	}
+
+	// FIX - Show a message that user cant create url without validating his email
 
 	return (
 		<Fragment>
@@ -140,6 +157,7 @@ const CreateUrlPage = () => {
 						className="sm:box sm:p-4 flex flex-col gap-4"
 						onChange={handleFormOnChange}
 						onSubmit={onSubmit}
+						dev
 					>
 						<div className="flex flex-col gap-4">
 							<label
@@ -223,10 +241,7 @@ const CreateUrlPage = () => {
 						</div>
 
 						<div className="flex flex-col gap-4">
-							<label
-								htmlFor="custom"
-								className="custom-underline before:right-0 before:bottom-[-2px] w-fit font-bold caps-small text-lg tracking-wider pr-4"
-							>
+							<label className="custom-underline before:right-0 before:bottom-[-2px] w-fit font-bold caps-small text-lg tracking-wider pr-4">
 								&gt; Use personal Url
 							</label>
 							<Checkbox
@@ -246,6 +261,24 @@ const CreateUrlPage = () => {
 			</section>
 		</Fragment>
 	)
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+	try {
+		const userData = await getUserDataServer(req.headers.cookie)
+		if (!userData) throw new Error("User not exist!")
+		return {
+			props: {
+				userData,
+			},
+		}
+	} catch (err: any) {
+		return {
+			props: {
+				userData: null,
+			},
+		}
+	}
 }
 
 export default CreateUrlPage
