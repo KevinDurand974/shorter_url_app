@@ -60,6 +60,8 @@ const AccountSettingsPage = (props: Props) => {
 		setOpenUrlNameModal(false)
 	}
 
+	// FIX - Validate email if not validated
+
 	if (!userData) return <div>Redirect to login page...</div>
 
 	return (
