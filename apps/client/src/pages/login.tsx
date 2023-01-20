@@ -81,7 +81,7 @@ const LoginPage = (props: Props) => {
 					<FormController
 						initialValues={{
 							// FIX: Leave only rememberme to true
-							email: "test1@test.fr",
+							email: "test1@test.f",
 							password: "Azerty&1",
 							rememberme: true,
 						}}
@@ -139,10 +139,7 @@ const LoginPage = (props: Props) => {
 							<label htmlFor="rememberme">Keep me logged</label>
 						</div>
 
-						<Button
-							type="submit"
-							className="px-5 py-3 font-fredoka tracking-wider bg-gradient-to-r from-gradient-top to-accent mt-4 uppercase transition-all duration-[0.4s] text-sm sm:text-lg disabled:grayscale disabled:opacity-20"
-						>
+						<Button className="px-5 py-3 font-fredoka tracking-wider bg-gradient-to-r from-gradient-top to-accent mt-4 uppercase transition-all duration-[0.4s] text-sm sm:text-lg disabled:grayscale disabled:opacity-20">
 							Connect me!
 						</Button>
 					</FormController>
