@@ -40,6 +40,7 @@ type FormProps = Omit<JSX.IntrinsicElements["form"], "onSubmit" | "onInput"> &
 		validateOnMount?: boolean
 		onSubmit?: (values: FormValues) => Promise<void> | void
 		onChange?: (values: FormOnChange) => Promise<void> | void
+		dev?: boolean
 	}>
 
 // NOTE - Create Form Context
@@ -53,6 +54,7 @@ export const FormController = ({
 	schema,
 	validateOnMount,
 	initialValues,
+	dev,
 	...props
 }: FormProps) => {
 	// SECTION - Provider
@@ -98,14 +100,13 @@ export const FormController = ({
 	}, [errors, formValues, initialValues])
 
 	useEffect(() => {
-		console.log(">> Error")
-		console.table(errors)
-	}, [errors])
-
-	useEffect(() => {
-		console.log(">> Form")
-		console.table(formValues)
-	}, [formValues])
+		if (dev) {
+			console.log(">> Error")
+			console.table(errors)
+			console.log(">> Form")
+			console.table(formValues)
+		}
+	}, [dev, errors, formValues])
 
 	const values = {
 		fields: formValues,
