@@ -6,13 +6,6 @@ import { Add, Close } from "@components/svg"
 import Link from "next/link"
 
 const Home: NextPage = () => {
-	useEffect(() => {
-		const run = async () => {
-			// const test = await trpc...
-		}
-		run()
-	}, [])
-
 	const moreInfoRef = useRef<HTMLElement>(null)
 	const handleScrollToMoreInfo = () => {
 		let header = document.querySelector("header")

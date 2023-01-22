@@ -2,6 +2,7 @@ import { AuthContext } from "@contexts"
 import useLocalStorage from "@hooks/useLocalStorage"
 import {
 	Button,
+	Checkbox,
 	ErrorMessage,
 	Field,
 	FormController,
@@ -24,13 +25,14 @@ type FormatedValues = {
 }
 
 type Props = {
-	redirect: string | false
+	redirect: string | null
 }
 
 const LoginPage = (props: Props) => {
 	const router = useRouter()
 	const { setUser } = useContext(AuthContext)
 	const { isStorageAvailable, setStorageValue } = useLocalStorage()
+	const [calledPush, setCalledPush] = useState(false)
 
 	const [enabledCookie, setEnabledCookie] = useState(false)
 	useEffect(() => {
@@ -38,8 +40,11 @@ const LoginPage = (props: Props) => {
 	}, [])
 
 	useEffect(() => {
-		if (props.redirect) router.push(props.redirect)
-	}, [props.redirect, router])
+		if (!calledPush && props.redirect) {
+			router.push(props.redirect, undefined, { shallow: true })
+			setCalledPush(true)
+		}
+	}, [calledPush, props.redirect, router])
 
 	const onSubmit = async (values: FormValues) => {
 		try {
@@ -130,13 +135,11 @@ const LoginPage = (props: Props) => {
 						</div>
 
 						<div className="flex gap-2">
-							<Field
-								id="rememberme"
-								type="checkbox"
+							<Checkbox
 								name="rememberme"
-								className="cursor-pointer"
+								label="Keep me logged"
+								className="h-8 w-8 border-image border-4 bg-t-alt/60 shadow-lg shadow-transparent hover:shadow-accent/50 transition-all duration-[0.4s]"
 							/>
-							<label htmlFor="rememberme">Keep me logged</label>
 						</div>
 
 						<Button className="px-5 py-3 font-fredoka tracking-wider bg-gradient-to-r from-gradient-top to-accent mt-4 uppercase transition-all duration-[0.4s] text-sm sm:text-lg disabled:grayscale disabled:opacity-20">
@@ -164,7 +167,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 		if (isAuth) throw new Error("User already connected!")
 		return {
 			props: {
-				redirect: false,
+				redirect: null,
 			},
 		}
 	} catch (err: any) {
