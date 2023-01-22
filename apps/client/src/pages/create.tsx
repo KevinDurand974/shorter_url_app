@@ -84,6 +84,11 @@ const CreateUrlPage = ({ userData }: Props) => {
 		if (!userData) push("/login")
 	}, [push, userData])
 
+	const urlRemaining = userData.availableUrls
+	const urlRemainingPercent = Math.round(
+		(userData.availableUrls / userData.maxUrls) * 100
+	)
+
 	const [isEphemeral, setEphemeral] = useState(true)
 	const [isCustomEnabled, setCustomEnabled] = useState(false)
 
@@ -95,6 +100,23 @@ const CreateUrlPage = ({ userData }: Props) => {
 		try {
 			removeErrors()
 			const preparedValues = prepateFormValues(values)
+
+			if (values.enable_custom && preparedValues.custom) {
+				const alreadyExist = await trpc.checkUserCustomUrl.mutate(
+					{ customUrl: preparedValues.custom },
+					{ signal: new AbortController().signal }
+				)
+				if (alreadyExist) {
+					throw new ZodError([
+						{
+							code: "custom",
+							path: ["custom"],
+							message: "You already use this custom url",
+						},
+					])
+				}
+			}
+
 			createUrlSchema.parse(preparedValues)
 		} catch (err: any) {
 			if (err.name === "ZodError") {
@@ -119,7 +141,9 @@ const CreateUrlPage = ({ userData }: Props) => {
 			const data = await trpc.createUrl.mutate(formValues, {
 				signal: ac.signal,
 			})
-			alert("Url Created: >> " + data.url)
+			// FIX - Remove this after testing
+			console.table(["Url", data.url])
+			push("/explorer")
 		} catch (err: any) {
 			// FIX: Use a toast to show the error
 			console.log(err.message)
@@ -157,8 +181,14 @@ const CreateUrlPage = ({ userData }: Props) => {
 						className="sm:box sm:p-4 flex flex-col gap-4"
 						onChange={handleFormOnChange}
 						onSubmit={onSubmit}
-						dev
+						// dev
 					>
+						<h2 className="text-2xl font-fredoka text-center">
+							Url remaining:{" "}
+							<span className="url">
+								{urlRemaining} ({urlRemainingPercent}%)
+							</span>
+						</h2>
 						<div className="flex flex-col gap-4">
 							<label
 								htmlFor="to"
@@ -197,7 +227,6 @@ const CreateUrlPage = ({ userData }: Props) => {
 									step={1}
 									max={1440}
 									placeholder="24"
-									schema={createUrlSchema.shape.duration}
 									className="w-full bg-t-alt/60 border-2 sm:border-4 px-5 py-3 font-fredoka tracking-wider  placeholder:text-text/20 shadow-lg shadow-transparent hover:shadow-accent/50 transition-all duration-[0.4s] outline-none focus:shadow-gradient-top text-sm sm:text-base border-image"
 									disabled={!isEphemeral}
 								/>
