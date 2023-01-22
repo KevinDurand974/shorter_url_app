@@ -1,13 +1,22 @@
 import {
+  checkCustomUrlSchema,
   createUrlSchema,
   deleteUrlSchema,
   getUrlSchema,
   updateUrlActiveStatusSchema,
   updateUrlSchema,
 } from '@shorter/validators';
-import { createUrl, deleteUrl, getUrl, getUrls, updateUrl, updateUrlActiveStatus } from '../../../models';
+import {
+  checkUserCustomUrl,
+  createUrl,
+  deleteUrl,
+  getUrl,
+  getUrls,
+  updateUrl,
+  updateUrlActiveStatus,
+} from '../../../models';
 import { getDataSource } from '../../typeorm';
-import { router, verifiedEmailProcedure } from '../configuration';
+import { router, verifiedEmailProcedure, authProcedure } from '../configuration';
 
 export const urlRouter = router({
   createUrl: verifiedEmailProcedure.input(createUrlSchema).mutation(async ({ input, ctx }) => {
@@ -33,5 +42,9 @@ export const urlRouter = router({
   getUrls: verifiedEmailProcedure.query(async ({ ctx }) => {
     const datasource = await getDataSource();
     return getUrls(datasource, ctx);
+  }),
+  checkUserCustomUrl: authProcedure.input(checkCustomUrlSchema).mutation(async ({ input, ctx }) => {
+    const datasource = await getDataSource();
+    return checkUserCustomUrl(datasource, input, ctx);
   }),
 });
