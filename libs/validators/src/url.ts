@@ -60,6 +60,13 @@ export const updateUrlActiveStatusSchema = z.object({
 	active: z.boolean(),
 })
 
+export const checkCustomUrlSchema = z.object({
+	customUrl: z
+		.string()
+		.min(5, "Must be contain at least 5 characters")
+		.max(60, "Can contain up to 60 characters"),
+})
+
 export type CreateUrlSchema = z.infer<typeof createUrlSchema>
 export type DeleteUrlSchema = z.infer<typeof deleteUrlSchema>
 export type UpdateUrlSchema = z.infer<typeof updateUrlSchema>
@@ -67,3 +74,4 @@ export type GetUrlSchema = z.infer<typeof getUrlSchema>
 export type UpdateUrlActiveStatusSchema = z.infer<
 	typeof updateUrlActiveStatusSchema
 >
+export type CheckCustomUrlSchema = z.infer<typeof checkCustomUrlSchema>
