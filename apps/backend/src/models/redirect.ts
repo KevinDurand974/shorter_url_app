@@ -1,4 +1,4 @@
-import { addSeconds, isAfter } from 'date-fns';
+import { addHours, isAfter } from 'date-fns';
 import { DataSource } from 'typeorm';
 
 import { GetRedirectUrlSchema } from '@shorter/validators';
@@ -20,7 +20,7 @@ export const getRedirectUrl = async (datasource: DataSource, data: GetRedirectUr
 
     // If the url is ephemeral, check if it has expired
     if (url.ephemeral) {
-      const maxDate = addSeconds(url.updatedAt, url.duration);
+      const maxDate = addHours(url.updatedAt, url.duration);
       const now = new Date();
       if (isAfter(now, maxDate)) throw createError400('This url has expired');
     }
