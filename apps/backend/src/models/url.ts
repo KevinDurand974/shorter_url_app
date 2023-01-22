@@ -6,6 +6,7 @@ import type {
   UpdateUrlSchema,
   GetUrlSchema,
   UpdateUrlActiveStatusSchema,
+  CheckCustomUrlSchema,
 } from '@shorter/validators';
 
 import { Context } from '../libs/trpc';
@@ -233,6 +234,34 @@ export const getUrls = async (datasource: DataSource, ctx: ContextWithPayload) =
 
     // Return the urls
     return profile.urls;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const checkUserCustomUrl = async (
+  datasource: DataSource,
+  input: CheckCustomUrlSchema,
+  ctx: ContextWithPayload
+) => {
+  try {
+    // Get uuid from context
+    const { uuid } = ctx.payload;
+
+    // If the user exist
+    const ProfileRep = datasource.getRepository(Profile);
+    const profile = await findOneProfileByUuid(ProfileRep, uuid);
+    if (!profile) {
+      throw createError404('Profile not found');
+    }
+
+    // Search for any url with custom name within his urls
+    const UrlRep = datasource.getRepository(Url);
+    return UrlRep.exist({
+      where: {
+        generatedUrl: `${profile.urlName}/${input.customUrl}`,
+      },
+    });
   } catch (err) {
     throw err;
   }
