@@ -86,6 +86,7 @@ export const FormController = ({
 		setErrors({})
 	}
 
+	// TODO - To be reviewed because it sucks
 	useEffect(() => {
 		if (
 			!isSameValueFromInitial(initialValues, formValues) &&
@@ -99,6 +100,7 @@ export const FormController = ({
 		}
 	}, [errors, formValues, initialValues])
 
+	// FIX - Just remove it after all good
 	useEffect(() => {
 		if (dev) {
 			console.log(">> Error")
@@ -121,6 +123,10 @@ export const FormController = ({
 	// !SECTION - End Provider
 
 	// SECTION - Component
+	const formValues$ = new BehaviorSubject(formValues)
+		.asObservable()
+		.pipe(debounceTime(400))
+
 	const handleOnSubmit = (v: FormValues) => onSubmit && onSubmit(v)
 
 	const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
@@ -134,6 +140,7 @@ export const FormController = ({
 		// NOTE - If schema
 		if (schema) {
 			try {
+				removeErrors()
 				validatedData = schema.parse(validatedData)
 			} catch (e: any) {
 				parseZodError(e.issues).forEach((error) =>
@@ -148,40 +155,36 @@ export const FormController = ({
 	}
 
 	useEffect(() => {
-		// NOTE - Cancel on mount
-		if (!validateOnMount && isSameValueFromInitial(initialValues, formValues))
-			return
+		const sub$ = formValues$.subscribe((values) => {
+			// NOTE - Cancel on mount
+			if (!validateOnMount && isSameValueFromInitial(initialValues, values))
+				return
 
-		// NOTE - Parse schema and trigger onChange if enabled
-		if (onChange) {
-			;(async () => {
+			if (onChange) {
+				let datas = values
+
 				if (schema) {
 					try {
-						const data = await schema.parseAsync(formValues)
-						setErrors({})
-						onChange({
-							values: data,
-							removeErrors,
-							addError,
-						})
+						datas = schema.parse(datas)
+						removeErrors()
 					} catch (err: any) {
 						const errors = getFirstZodErrors(err)
-						if (!errors) return
-						Object.entries(errors).forEach(([name, message]) => {
-							addError(name, message)
-						})
+						if (errors) {
+							Object.entries(errors).forEach(([name, message]) => {
+								addError(name, message)
+							})
+						}
 					}
-				} else {
-					onChange({
-						values: formValues,
-						removeErrors,
-						addError,
-					})
 				}
-			})()
-		}
-	}, [formValues, initialValues, onChange, schema, validateOnMount])
 
+				onChange({ values: datas, removeErrors, addError })
+			}
+		})
+
+		return () => {
+			sub$.unsubscribe()
+		}
+	}, [formValues$, initialValues, onChange, schema, validateOnMount])
 	// !SECTION - End Component
 
 	return (

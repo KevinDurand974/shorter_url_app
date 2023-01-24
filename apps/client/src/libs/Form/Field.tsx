@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useEffect, useRef } from "react"
-import { debounceTime, fromEvent, map } from "rxjs"
+import { debounceTime, filter, fromEvent, map } from "rxjs"
 import { ZodError, ZodSchema } from "zod"
 import { AddValidation } from "./types"
 import useForm from "./useForm"
@@ -39,7 +39,7 @@ const Field = ({
 		return value
 	}
 
-	const handleOnInput = useCallback(
+	const prepareData = useCallback(
 		async (data: unknown) => {
 			let hasError = false
 
@@ -76,46 +76,42 @@ const Field = ({
 				})
 			}
 
-			addInputValue(props.name, d)
-
-			// NOTE - Call onInput method, if used
-			if (!hasError && !!onInput) onInput(d)
+			return { data: d, hasError }
 		},
-		[
-			addError,
-			addInputValue,
-			addValidation,
-			fields,
-			getError,
-			onInput,
-			props.name,
-			removeError,
-			schema,
-		]
+		[addError, addValidation, fields, getError, props.name, removeError, schema]
 	)
 
 	useEffect(() => {
 		if (!inputRef.current) return
 
-		const sub$ = fromEvent<ChangeEvent<HTMLInputElement>>(
+		const input$ = fromEvent<ChangeEvent<HTMLInputElement>>(
 			inputRef.current,
 			"input"
-		)
+		).pipe(map(async (e) => prepareData(e.target.value)))
+
+		const ctxSub$ = input$.subscribe(async (input) => {
+			const { data } = await input
+			addInputValue(props.name, data)
+		})
+
+		const onInput$ = input$
 			.pipe(
 				debounceTime(400),
-				map((e) => {
-					if (props.type && ["checkbox", "radio"].includes(props.type)) {
-						return e.target.checked
-					}
-					return e.target.value
-				})
+				filter(() => !!onInput)
 			)
-			.subscribe(handleOnInput)
+			.subscribe(async (input) => {
+				// NOTE - Call onInput method, if used
+				if (!!onInput) {
+					const { data, hasError } = await input
+					if (!hasError) onInput(data)
+				}
+			})
 
 		return () => {
-			sub$.unsubscribe()
+			ctxSub$.unsubscribe()
+			onInput$.unsubscribe()
 		}
-	}, [addError, handleOnInput, props.type])
+	}, [addInputValue, onInput, prepareData, props.name])
 
 	return (
 		<input
