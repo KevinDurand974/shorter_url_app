@@ -303,8 +303,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 		}
 	} catch (err: any) {
 		return {
-			props: {
-				userData: null,
+			redirect: {
+				destination: "/login",
+				permanent: false,
 			},
 		}
 	}
