@@ -24,27 +24,15 @@ type FormatedValues = {
 	enabledCookie: boolean
 }
 
-type Props = {
-	redirect: string | null
-}
-
-const LoginPage = (props: Props) => {
+const LoginPage = () => {
 	const router = useRouter()
 	const { setUser } = useContext(AuthContext)
 	const { isStorageAvailable, setStorageValue } = useLocalStorage()
-	const [calledPush, setCalledPush] = useState(false)
 
 	const [enabledCookie, setEnabledCookie] = useState(false)
 	useEffect(() => {
 		setEnabledCookie(navigator.cookieEnabled)
 	}, [])
-
-	useEffect(() => {
-		if (!calledPush && props.redirect) {
-			router.push(props.redirect, undefined, { shallow: true })
-			setCalledPush(true)
-		}
-	}, [calledPush, props.redirect, router])
 
 	const onSubmit = async (values: FormValues) => {
 		try {
@@ -62,8 +50,6 @@ const LoginPage = (props: Props) => {
 			console.log(err.message)
 		}
 	}
-
-	if (props.redirect) return null
 
 	return (
 		<Fragment>
@@ -107,6 +93,7 @@ const LoginPage = (props: Props) => {
 								name="email"
 								placeholder="exemple@gmail.com"
 								className="bg-t-alt/60 border-2 sm:border-4 px-5 py-3 font-fredoka tracking-wider  placeholder:text-text/20 shadow-lg shadow-transparent hover:shadow-accent/50 transition-all duration-[0.4s] outline-none focus:shadow-gradient-top text-sm sm:text-base border-image"
+								schema={loginSchema.shape.email}
 							/>
 							<ErrorMessage
 								name="email"
@@ -166,14 +153,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 		const isAuth = await isAuthServer(req.headers.cookie)
 		if (isAuth) throw new Error("User already connected!")
 		return {
-			props: {
-				redirect: null,
-			},
+			props: {},
 		}
 	} catch (err: any) {
 		return {
-			props: {
-				redirect: "/",
+			redirect: {
+				destination: "/",
+				permanent: false,
 			},
 		}
 	}
