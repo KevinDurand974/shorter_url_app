@@ -1,4 +1,4 @@
-import { Profile } from "@shorter/backend/dist/entities"
+import { Profile, Url } from "@shorter/backend/dist/entities"
 import axios from "axios"
 
 const sTrpc = axios.create({
@@ -26,6 +26,15 @@ export const getUserDataServer = async (cookies?: string) => {
 		signal,
 	})
 	return res.data.result.data as Profile
+}
+
+export const getUserUrlsServer = async (cookies?: string) => {
+	const { signal } = new AbortController()
+	const res = await sTrpc.get("/getUrls", {
+		headers: { cookie: cookies || "" },
+		signal,
+	})
+	return res.data.result.data as Url[]
 }
 
 export default sTrpc
