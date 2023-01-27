@@ -22,6 +22,7 @@ module.exports = {
 				danger: "#e01e5a",
 				success: "#3ae717",
 				warning: "#fca903",
+				"dark-danger": "#221c1c",
 				"gradient-top": "#7209b7",
 				"gradient-bottom": "#3a0ca3",
 			},
