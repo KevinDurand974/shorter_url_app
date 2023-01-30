@@ -51,13 +51,15 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 		| "restricted"
 
 	const filterBy = (data: Url[], sortBy: SortBy) => {
+		const filterByNumber = (a: number, b: number) => {
+			if (a > b) return 1
+			if (a < b) return -1
+			return 0
+		}
+
 		switch (sortBy) {
 			case "id":
-				return data.sort((curr, prev) => {
-					if (curr.id > prev.id) return 1
-					if (curr.id < prev.id) return -1
-					return 0
-				})
+				return data.sort((curr, prev) => filterByNumber(curr.id, prev.id))
 			case "generatedUrl":
 				return data.sort((curr, prev) => {
 					if (curr.generatedUrl > prev.generatedUrl) return 1
@@ -71,37 +73,25 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 
 					if (isBefore(currParsed, new Date())) return -100
 
-					if (currParsed.getTime() > prevParsed.getTime()) return 1
-					if (currParsed.getTime() < prevParsed.getTime()) return -1
-
-					return 0
+					return filterByNumber(currParsed.getTime(), prevParsed.getTime())
 				})
 			case "createdAt":
 				return data.sort((curr, prev) => {
 					const currDate = new Date(curr.createdAt).getTime()
 					const prevDate = new Date(prev.createdAt).getTime()
-
-					if (currDate > prevDate) return 1
-					if (currDate < prevDate) return -1
-					return 0
+					return filterByNumber(currDate, prevDate)
 				})
 			case "UpdatedAt":
 				return data.sort((curr, prev) => {
 					const currDate = new Date(curr.updatedAt).getTime()
 					const prevDate = new Date(prev.updatedAt).getTime()
-
-					if (currDate > prevDate) return 1
-					if (currDate < prevDate) return -1
-					return 0
+					return filterByNumber(currDate, prevDate)
 				})
 			case "useCount":
 				return data.sort((curr, prev) => {
 					const currNb = Number(curr.useCount)
 					const prevNb = Number(prev.useCount)
-
-					if (currNb > prevNb) return 1
-					if (currNb < prevNb) return -1
-					return 0
+					return filterByNumber(currNb, prevNb)
 				})
 			case "restricted":
 				return data.sort((curr, prev) => {
