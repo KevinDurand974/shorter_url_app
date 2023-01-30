@@ -11,12 +11,26 @@ import { HiOutlineEye } from "react-icons/hi2"
 import { IoClose } from "react-icons/io5"
 import { GoLock } from "react-icons/go"
 import { FiCopy } from "react-icons/fi"
+import {
+	TiArrowUnsorted,
+	TiArrowSortedUp,
+	TiArrowSortedDown,
+} from "react-icons/ti"
 import RestrictedArea from "@components/RestrictedArea"
 
 type ServerProps = GetServerSideProps<{
 	isLogged: boolean
 	urls: Url[]
 }>
+
+type SortBy =
+	| "id"
+	| "generatedUrl"
+	| "expireIn"
+	| "createdAt"
+	| "UpdatedAt"
+	| "useCount"
+	| "restricted"
 
 type ClientProps = InferGetServerSidePropsType<typeof getServerSideProps>
 
@@ -25,6 +39,8 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 
 	const [calledPush, setCalledPush] = useState(false)
 	// const [data, setData] = useState<Url[]>(urls)
+	const [getFilter, setFilter] = useState<SortBy>("id")
+	const [orderAsc, setOrderAsc] = useState<boolean | null>(true)
 
 	useEffect(() => {
 		if (!calledPush && !isLogged) {
@@ -41,33 +57,32 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 		})
 	}
 
-	type SortBy =
-		| "id"
-		| "generatedUrl"
-		| "expireIn"
-		| "createdAt"
-		| "UpdatedAt"
-		| "useCount"
-		| "restricted"
-
-	const filterBy = (data: Url[], sortBy: SortBy) => {
+	const filterBy = (
+		data: Url[],
+		sortBy: SortBy,
+		asc: boolean | null = true
+	) => {
 		const filterByNumber = (a: number, b: number) => {
 			if (a > b) return 1
 			if (a < b) return -1
 			return 0
 		}
 
+		let sort = []
+
 		switch (sortBy) {
 			case "id":
-				return data.sort((curr, prev) => filterByNumber(curr.id, prev.id))
+				sort = data.sort((curr, prev) => filterByNumber(curr.id, prev.id))
+				break
 			case "generatedUrl":
-				return data.sort((curr, prev) => {
+				sort = data.sort((curr, prev) => {
 					if (curr.generatedUrl > prev.generatedUrl) return 1
 					if (curr.generatedUrl < prev.generatedUrl) return -1
 					return 0
 				})
+				break
 			case "expireIn":
-				return data.sort((curr, prev) => {
+				sort = data.sort((curr, prev) => {
 					const currParsed = addHours(new Date(curr.createdAt), curr.duration)
 					const prevParsed = addHours(new Date(prev.createdAt), prev.duration)
 
@@ -75,30 +90,66 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 
 					return filterByNumber(currParsed.getTime(), prevParsed.getTime())
 				})
+				break
 			case "createdAt":
-				return data.sort((curr, prev) => {
+				sort = data.sort((curr, prev) => {
 					const currDate = new Date(curr.createdAt).getTime()
 					const prevDate = new Date(prev.createdAt).getTime()
 					return filterByNumber(currDate, prevDate)
 				})
+				break
 			case "UpdatedAt":
-				return data.sort((curr, prev) => {
+				sort = data.sort((curr, prev) => {
 					const currDate = new Date(curr.updatedAt).getTime()
 					const prevDate = new Date(prev.updatedAt).getTime()
 					return filterByNumber(currDate, prevDate)
 				})
+				break
 			case "useCount":
-				return data.sort((curr, prev) => {
+				sort = data.sort((curr, prev) => {
 					const currNb = Number(curr.useCount)
 					const prevNb = Number(prev.useCount)
 					return filterByNumber(currNb, prevNb)
 				})
+				break
 			case "restricted":
-				return data.sort((curr, prev) => {
+				sort = data.sort((curr, prev) => {
 					if (curr.restricted && !prev.restricted) return -1
 					if (!curr.restricted && prev.restricted) return 1
 					return 0
 				})
+				break
+		}
+		if (asc === null) return data
+		if (asc) return sort
+		return sort.reverse()
+	}
+
+	const setFilterIcon = (name: SortBy) => {
+		if (getFilter === name) {
+			if (orderAsc === null) return <TiArrowUnsorted className="opacity-25" />
+			if (orderAsc) return <TiArrowSortedDown />
+			if (!orderAsc) return <TiArrowSortedUp />
+		}
+		return <TiArrowUnsorted className="opacity-25" />
+	}
+
+	const handleSortChange = (name: SortBy) => {
+		if (getFilter === name) {
+			switch (orderAsc) {
+				case true:
+					setOrderAsc(false)
+					break
+				case false:
+					setOrderAsc(null)
+					break
+				case null:
+					setOrderAsc(true)
+					break
+			}
+		} else {
+			setFilter(name)
+			setOrderAsc(true)
 		}
 	}
 
@@ -120,21 +171,49 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 					<div className="table overflow-wrap w-full">
 						<div className="table-header-group bg-tertiary font-fredoka tracking-wider text-white text-center">
 							<div className="table-cell p-2 border-r border-s-alt w-20">
-								N°
+								<button
+									type="button"
+									className="flex gap-1 items-center justify-center w-full"
+									onClick={() => handleSortChange("id")}
+								>
+									<span>N°</span>
+									{setFilterIcon("id")}
+								</button>
 							</div>
 							<div className="table-cell p-2 border-r border-s-alt">
-								Generated Url
+								<button
+									type="button"
+									className="flex gap-1 items-center justify-center w-full"
+									onClick={() => handleSortChange("generatedUrl")}
+								>
+									<span>Generated Url</span>
+									{setFilterIcon("generatedUrl")}
+								</button>
 							</div>
 							<div className="table-cell p-2 border-r border-s-alt w-40">
-								Expire In
+								<button
+									type="button"
+									className="flex gap-1 items-center justify-center w-full"
+									onClick={() => handleSortChange("expireIn")}
+								>
+									<span>Expire In</span>
+									{setFilterIcon("expireIn")}
+								</button>
 							</div>
 							<div className="table-cell p-2 border-r border-s-alt w-32">
-								Created At
+								<button
+									type="button"
+									className="flex gap-1 items-center justify-center w-full"
+									onClick={() => handleSortChange("createdAt")}
+								>
+									<span>Created At</span>
+									{setFilterIcon("createdAt")}
+								</button>
 							</div>
 							<div className="table-cell p-2 w-80">Actions</div>
 						</div>
 						<div className="table-row-group">
-							{filterBy(urls, "id").map((row, index) => (
+							{filterBy(urls, getFilter, orderAsc).map((row, index) => (
 								<div
 									className="table-row odd:bg-primary even:bg-secondary text-white relative"
 									key={row.uuid}
