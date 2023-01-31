@@ -17,7 +17,7 @@ import {
 	TiArrowSortedDown,
 } from "react-icons/ti"
 import RestrictedArea from "@components/RestrictedArea"
-import { CopyButton } from "@components"
+import { CopyButton, Pagination } from "@components"
 
 type ServerProps = GetServerSideProps<{
 	isLogged: boolean
@@ -42,6 +42,9 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 	// const [data, setData] = useState<Url[]>(urls)
 	const [getFilter, setFilter] = useState<SortBy>("id")
 	const [orderAsc, setOrderAsc] = useState<boolean | null>(true)
+	const [page, setPage] = useState<number>(1)
+
+	const maxPerPage = 10
 
 	useEffect(() => {
 		if (!calledPush && !isLogged) {
@@ -136,9 +139,10 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 				})
 				break
 		}
-		if (asc === null) return data
-		if (asc) return sort
-		return sort.reverse()
+		if (asc === null)
+			return data.slice((page - 1) * maxPerPage, page * maxPerPage)
+		if (asc) return sort.slice((page - 1) * maxPerPage, page * maxPerPage)
+		return sort.reverse().slice((page - 1) * maxPerPage, page * maxPerPage)
 	}
 
 	const setFilterIcon = (name: SortBy) => {
@@ -173,6 +177,10 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 			setFilter(name)
 			setOrderAsc(true)
 		}
+	}
+
+	const handlePageChange = (page: number) => {
+		setPage(page)
 	}
 
 	return (
@@ -255,16 +263,6 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 										{format(new Date(row.createdAt), "P")}
 									</div>
 									<div className="table-cell p-2 text-center">
-										{/* <button
-											type="button"
-											disabled={row.restricted}
-											className="text-3xl cta p-2 mr-2 disabled:grayscale disabled:pointer-events-none"
-											onClick={() =>
-												handleCopyLink(`kurl.app/${row.generatedUrl}`)
-											}
-										>
-											<FiCopy />
-										</button> */}
 										<CopyButton
 											copy={`kurl.app/${row.generatedUrl}`}
 											disabled={
@@ -292,7 +290,14 @@ const ExplorerUrlPage = ({ isLogged, urls }: ClientProps) => {
 							))}
 						</div>
 					</div>
-					<div className="p-2">Page IDK</div>
+					<div className="p-2 flex justify-end">
+						<Pagination
+							data={urls}
+							maxItemPerPage={10}
+							currentPage={page}
+							onPageChange={handlePageChange}
+						/>
+					</div>
 				</div>
 			</section>
 		</Fragment>
